@@ -1,11 +1,13 @@
 import 'package:agap_mobile_v01/router/route_list.dart';
 import 'package:agap_mobile_v01/services/auth_service.dart';
+import 'package:agap_mobile_v01/services/setting_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   await Get.putAsync(() => AuthService().init());
+  await Get.putAsync(() => SettingService().init());
   runApp(const MyApp());
 }
 

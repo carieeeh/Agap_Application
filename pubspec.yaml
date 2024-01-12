@@ -17,6 +17,7 @@ dependencies:
   shared_preferences: ^2.2.2
   geolocator: ^10.1.0
   camera: ^0.10.5+9
+  fl_chart: ^0.66.0
 
 dev_dependencies:
   flutter_test:

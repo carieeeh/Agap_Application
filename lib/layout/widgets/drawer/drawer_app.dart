@@ -23,7 +23,46 @@ class _DrawerAppState extends State<DrawerApp> {
               padding: EdgeInsets.zero,
               children: [
                 Container(
+                  margin: const EdgeInsets.only(top: 20),
                   height: Get.height * .2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.white,
+                            child: Image.asset(
+                              'assets/images/person.png',
+                              fit: BoxFit.cover,
+                              height: 45,
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: const Icon(
+                                Icons.health_and_safety_rounded,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "Juan Dela Cruz",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.person, color: Colors.white),
@@ -56,6 +95,19 @@ class _DrawerAppState extends State<DrawerApp> {
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {},
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.health_and_safety,
+                    color: Colors.white,
+                  ),
+                  title: const Text(
+                    "Emergency Reports",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    Get.toNamed('/reports');
+                  },
                 ),
               ],
             ),

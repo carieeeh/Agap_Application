@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await Get.putAsync(() => AuthService().init());
   await Get.putAsync(() => SettingService().init());
   runApp(const MyApp());

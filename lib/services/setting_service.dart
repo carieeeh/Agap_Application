@@ -1,16 +1,17 @@
 import 'dart:developer';
 
+import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
 class SettingService extends GetxService {
   late Rx<Position> currentPosstion;
+  late RxList<CameraDescription> cameras;
 
   Future<SettingService> init() async {
-    await _determinePosition().then((value) {
-      currentPosstion = value.obs;
-    });
-    log(currentPosstion.value.toString());
+    await _determinePosition().then((value) => currentPosstion = value.obs);
+    await availableCameras().then((value) => cameras = value.obs);
+    log(cameras.toString());
     return this;
   }
 

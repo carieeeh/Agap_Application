@@ -16,12 +16,31 @@ class _SettingsPageState extends State<SettingsPage> {
       title: "Settings",
       body: Column(
         children: [
+          const SizedBox(height: 20),
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: const Icon(Icons.person_2_outlined),
             title: const Text("Account"),
             onTap: () {
               Get.toNamed('/profile');
             },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.visibility_outlined),
+            title: const Text("Appearance"),
+            onTap: () {},
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.phone_outlined),
+            title: const Text("Contact"),
+            onTap: () {},
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.question_mark_outlined),
+            title: const Text("About us"),
+            onTap: () {},
           ),
         ],
       ),

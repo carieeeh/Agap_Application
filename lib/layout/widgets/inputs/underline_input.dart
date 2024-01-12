@@ -39,8 +39,10 @@ class _UnderlineInputState extends State<UnderlineInput> {
         enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: darkGray),
         ),
-        labelText: widget.label,
-        labelStyle: const TextStyle(color: darkGray),
+        hintText: widget.label,
+        hintStyle: const TextStyle(color: lightGray),
+        // labelText: widget.label,
+        // labelStyle: const TextStyle(color: darkGray),
         suffixIcon: !widget.isPassword
             ? Icon(widget.icon, color: darkGray)
             : InkWell(

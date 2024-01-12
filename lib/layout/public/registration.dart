@@ -1,3 +1,5 @@
+import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/underline_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,12 +20,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: Get.height * .1),
-              Image.asset(
-                'assets/images/red_no_bg_logo.png',
-                width: Get.width * .8,
+              const SizedBox(height: 50),
+              Center(
+                child: Image.asset(
+                  'assets/images/red_no_bg_logo.png',
+                  width: Get.width * .5,
+                ),
               ),
+              const SizedBox(height: 20),
+              const Text(
+                "Sign up to start using our App: ",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 10),
               UnderlineInput(
                 label: 'First Name',
                 isPassword: false,
@@ -53,6 +64,31 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 label: 'Email',
                 isPassword: false,
                 textController: _firstName,
+              ),
+              const SizedBox(height: 40),
+              RoundedCustomButton(
+                onPressed: () {},
+                label: 'Sign up',
+                size: Size(Get.width, 40),
+                bgColor: primaryRed,
+              ),
+              Center(
+                child: SizedBox(
+                  width: Get.width * .8,
+                  child: const Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "By Singing up you agree to our",
+                        ),
+                        TextSpan(
+                          text: " Terms and Condition.",
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ],
           ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class FloatingInput extends StatefulWidget {
   final String label;
   final bool isPassword;
-  final IconData icon;
+  final IconData? icon;
   final TextEditingController textController;
 
   const FloatingInput({
@@ -12,7 +12,7 @@ class FloatingInput extends StatefulWidget {
     required this.label,
     required this.isPassword,
     required this.textController,
-    required this.icon,
+    this.icon,
   });
 
   @override
@@ -49,8 +49,10 @@ class _FloatingInputState extends State<FloatingInput> {
         style: const TextStyle(color: darkGray, fontSize: 15),
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
-          labelText: widget.label,
-          labelStyle: const TextStyle(color: darkGray),
+          hintText: widget.label,
+          hintStyle: const TextStyle(color: lightGray),
+          // labelText: widget.label,
+          // labelStyle: const TextStyle(color: darkGray),
           suffixIcon: !widget.isPassword
               ? Icon(widget.icon, color: darkGray)
               : InkWell(

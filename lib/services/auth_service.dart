@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class AuthService extends GetxService {
-  RxBool autheticated = false.obs;
+  RxBool autheticated = true.obs;
 
   Future<AuthService> init() async {
     print('$runtimeType delays 2 sec');

@@ -51,7 +51,9 @@ class _ReportsListState extends State<ReportsList> {
                 return Column(
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.toNamed('/reports/feedback');
+                      },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(

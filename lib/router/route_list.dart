@@ -1,6 +1,8 @@
 import 'package:agap_mobile_v01/layout/private/home/homepage.dart';
+import 'package:agap_mobile_v01/layout/private/profile/profile.dart';
 import 'package:agap_mobile_v01/layout/private/reports/report_feedback.dart';
 import 'package:agap_mobile_v01/layout/private/reports/reports_list.dart';
+import 'package:agap_mobile_v01/layout/private/settings/settings.dart';
 import 'package:agap_mobile_v01/layout/public/login.dart';
 import 'package:agap_mobile_v01/layout/public/registration.dart';
 import 'package:agap_mobile_v01/router/auth_guard.dart';
@@ -24,8 +26,13 @@ List<GetPage> routeList = [
     ],
   ),
   GetPage(
-    name: '/',
-    page: () => const HomePage(),
+    name: '/settings',
+    page: () => const SettingsPage(),
+    middlewares: [AuthGuard()],
+  ),
+  GetPage(
+    name: '/profile',
+    page: () => const Profile(),
     middlewares: [AuthGuard()],
   ),
   GetPage(

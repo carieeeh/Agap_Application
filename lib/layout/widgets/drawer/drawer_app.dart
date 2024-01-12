@@ -70,7 +70,9 @@ class _DrawerAppState extends State<DrawerApp> {
                     "Profile",
                     style: TextStyle(color: Colors.white),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed('/profile');
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.home, color: Colors.white),
@@ -96,7 +98,9 @@ class _DrawerAppState extends State<DrawerApp> {
                     "Settings",
                     style: TextStyle(color: Colors.white),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed('/settings');
+                  },
                 ),
                 ListTile(
                   leading: const Icon(

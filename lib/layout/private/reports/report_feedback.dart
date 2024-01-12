@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
@@ -16,22 +17,9 @@ class _ReportFeedbackState extends State<ReportFeedback> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Feedback",
-          style: TextStyle(color: Colors.white),
-        ),
-        leading: Builder(builder: (context) {
-          return BackButton(
-            onPressed: () {
-              Get.back();
-            },
-            color: Colors.white,
-          );
-        }),
-        backgroundColor: primaryRed,
-      ),
+    return MainContainer(
+      isLeadingBackBtn: true,
+      title: "Feedback",
       body: SingleChildScrollView(
         child: Column(
           children: [

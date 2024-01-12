@@ -78,7 +78,9 @@ class _DrawerAppState extends State<DrawerApp> {
                     "Home",
                     style: TextStyle(color: Colors.white),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed('/');
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.dashboard, color: Colors.white),

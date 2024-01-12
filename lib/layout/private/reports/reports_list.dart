@@ -1,4 +1,4 @@
-import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,22 +12,8 @@ class ReportsList extends StatefulWidget {
 class _ReportsListState extends State<ReportsList> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Report Status",
-          style: TextStyle(color: Colors.white),
-        ),
-        leading: Builder(builder: (context) {
-          return IconButton(
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-            icon: const Icon(Icons.menu_rounded, color: Colors.white),
-          );
-        }),
-        backgroundColor: primaryRed,
-      ),
+    return MainContainer(
+      title: "Report Status",
       body: Column(
         children: [
           const Padding(

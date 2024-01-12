@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/emergency_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
-import 'package:agap_mobile_v01/layout/widgets/drawer/drawer_app.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,19 +21,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Builder(builder: (context) {
-          return IconButton(
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-            icon: const Icon(Icons.menu_rounded, color: Colors.white),
-          );
-        }),
-        backgroundColor: primaryRed,
-      ),
-      drawer: const DrawerApp(),
+    return MainContainer(
+      title: "",
       body: SizedBox(
         height: Get.height,
         child: Stack(

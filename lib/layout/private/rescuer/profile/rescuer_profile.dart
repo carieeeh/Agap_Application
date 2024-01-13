@@ -3,14 +3,14 @@ import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class RescuerProfile extends StatefulWidget {
+  const RescuerProfile({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<RescuerProfile> createState() => _RescuerProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _RescuerProfileState extends State<RescuerProfile> {
   @override
   Widget build(BuildContext context) {
     return MainContainer(
@@ -47,7 +47,7 @@ class _ProfileState extends State<Profile> {
                 ),
                 child: const Center(
                     child: Text(
-                  "User Name",
+                  "Rescuer Name",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 )),
               ),
@@ -74,6 +74,19 @@ class _ProfileState extends State<Profile> {
                     ListTile(
                       title: const Text(
                         "About Me",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      subtitle: const Padding(
+                        padding: EdgeInsets.fromLTRB(10, 15, 0, 0),
+                        child: Text(
+                            "Lorem ipsum dolor sit amet. Aut velit dolorem et magni suscipit est accusamus"),
+                      ),
+                      onTap: () {},
+                    ),
+                    const Divider(),
+                    ListTile(
+                      title: const Text(
+                        "Department",
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       subtitle: const Padding(

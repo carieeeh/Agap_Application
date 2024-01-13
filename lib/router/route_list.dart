@@ -3,6 +3,11 @@ import 'package:agap_mobile_v01/layout/private/home/homepage.dart';
 import 'package:agap_mobile_v01/layout/private/profile/profile.dart';
 import 'package:agap_mobile_v01/layout/private/reports/report_feedback.dart';
 import 'package:agap_mobile_v01/layout/private/reports/reports_list.dart';
+import 'package:agap_mobile_v01/layout/private/rescuer/dashboard/rescuer_dashboard.dart';
+import 'package:agap_mobile_v01/layout/private/rescuer/home/recuer_interactive_map.dart';
+import 'package:agap_mobile_v01/layout/private/rescuer/profile/rescuer_profile.dart';
+import 'package:agap_mobile_v01/layout/private/rescuer/reports/rescuer_reports_list.dart';
+import 'package:agap_mobile_v01/layout/private/rescuer/settings/rescuer_settings.dart';
 import 'package:agap_mobile_v01/layout/private/settings/settings.dart';
 import 'package:agap_mobile_v01/layout/public/login.dart';
 import 'package:agap_mobile_v01/layout/public/registration.dart';
@@ -16,8 +21,18 @@ List<GetPage> routeList = [
     middlewares: [AuthGuard()],
   ),
   GetPage(
+    name: '/interactive_map',
+    page: () => const RescuerInteractiveMap(),
+    middlewares: [AuthGuard()],
+  ),
+  GetPage(
     name: '/dashboard',
     page: () => const Dashboard(),
+    middlewares: [AuthGuard()],
+  ),
+  GetPage(
+    name: '/rescuer_dashboard',
+    page: () => const RescuerDashboard(),
     middlewares: [AuthGuard()],
   ),
   GetPage(
@@ -32,13 +47,28 @@ List<GetPage> routeList = [
     ],
   ),
   GetPage(
+    name: '/rescuer_reports',
+    page: () => const RescuerReportsList(),
+    middlewares: [AuthGuard()],
+  ),
+  GetPage(
     name: '/settings',
     page: () => const SettingsPage(),
     middlewares: [AuthGuard()],
   ),
   GetPage(
+    name: '/rescuer_settings',
+    page: () => const RescuerSettingsPage(),
+    middlewares: [AuthGuard()],
+  ),
+  GetPage(
     name: '/profile',
     page: () => const Profile(),
+    middlewares: [AuthGuard()],
+  ),
+  GetPage(
+    name: '/rescuer_profile',
+    page: () => const RescuerProfile(),
     middlewares: [AuthGuard()],
   ),
   GetPage(

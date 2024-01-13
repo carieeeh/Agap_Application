@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,6 +11,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final AuthService _authService = Get.find<AuthService>();
   final TextEditingController _email = TextEditingController();
 
   @override
@@ -46,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 10),
               Container(
-                padding: EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
                   border: Border.all(color: gray),
                   borderRadius: BorderRadius.circular(10),
@@ -67,7 +69,9 @@ class _LoginPageState extends State<LoginPage> {
                     Expanded(
                       child: InkWell(
                         onTap: () {
-                          Get.toNamed('/');
+                          _authService.isRescuer.value = false;
+                          Get.offNamed('/');
+                          // : Get.toNamed('/interactive_map');
                         },
                         child: Container(
                           height: 50,
@@ -86,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
@@ -118,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     children: [
                       Text(
-                        "What to become a Rescuer? ",
+                        "Want to become a Rescuer? ",
                         style: TextStyle(fontSize: 12),
                       ),
                       Text(

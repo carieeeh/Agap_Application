@@ -1,6 +1,7 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/underline_input.dart';
+import 'package:agap_mobile_v01/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +13,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  final AuthService _authService = Get.find<AuthService>();
   final TextEditingController _firstName = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -87,7 +89,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
               RoundedCustomButton(
-                onPressed: () {},
+                onPressed: () {
+                  _authService.isRescuer.value = true;
+                  Get.offNamed('/interactive_map');
+                },
                 label: 'Sign up',
                 size: Size(Get.width, 40),
                 bgColor: primaryRed,

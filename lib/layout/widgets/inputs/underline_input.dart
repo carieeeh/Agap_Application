@@ -40,7 +40,7 @@ class _UnderlineInputState extends State<UnderlineInput> {
           borderSide: BorderSide(color: darkGray),
         ),
         hintText: widget.label,
-        hintStyle: const TextStyle(color: lightGray),
+        hintStyle: const TextStyle(color: gray),
         // labelText: widget.label,
         // labelStyle: const TextStyle(color: darkGray),
         suffixIcon: !widget.isPassword

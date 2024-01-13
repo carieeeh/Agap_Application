@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: '+639892837232',
-                          hintStyle: TextStyle(color: lightGray),
+                          hintStyle: TextStyle(color: gray),
                         ),
                         controller: _email,
                       ),
@@ -86,26 +86,49 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-              // Align(
-              //   alignment: Alignment.centerLeft,
-              //   child: SizedBox(
-              //     width: Get.width * .8,
-              //     child: const Text.rich(
-              //       TextSpan(
-              //         children: [
-              //           TextSpan(
-              //             text: "By Logging in you agree to our",
-              //           ),
-              //           TextSpan(
-              //             text: " Terms and Condition.",
-              //           ),
-              //         ],
-              //       ),
-              //       textAlign: TextAlign.start,
-              //     ),
-              //   ),
-              // ),
+              SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  width: Get.width * .8,
+                  child: const Text.rich(
+                    TextSpan(
+                      style: TextStyle(fontSize: 10),
+                      children: [
+                        TextSpan(
+                          text: "By Logging in you agree to our",
+                        ),
+                        TextSpan(
+                          text: " Terms and Condition.",
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              InkWell(
+                onTap: () {
+                  Get.toNamed('/registration');
+                },
+                child: const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Text(
+                        "What to become a Rescuer? ",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      Text(
+                        " Register here.",
+                        style: TextStyle(fontSize: 12, color: primaryRed),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

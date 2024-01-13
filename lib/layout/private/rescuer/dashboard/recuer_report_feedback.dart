@@ -32,7 +32,7 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
                 maxRating: 5.0,
                 onChanged: (double rating) {
                   // Handle the rating change here
-                  print('Rating: $rating');
+                  // print('Rating: $rating');
                 },
                 displayRatingValue: true,
                 interactiveTooltips: true,
@@ -45,7 +45,7 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
               ),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Align(
             alignment: Alignment.centerLeft,
             child: Container(

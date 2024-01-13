@@ -31,7 +31,7 @@ class _BadgeButtonState extends State<BadgeButton> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Positioned(
+          const Positioned(
             top: 0,
             right: 0,
             child: Icon(Icons.lock_outline, color: Colors.black),

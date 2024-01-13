@@ -114,7 +114,7 @@ class _RescuerDrawerAppState extends State<RescuerDrawerApp> {
                 content: Container(),
                 cancel: RoundedCustomButton(
                   onPressed: () {
-                    Get.toNamed("/login");
+                    Get.offAllNamed("/login");
                   },
                   label: "Yes",
                   size: Size(Get.width * .5, 40),

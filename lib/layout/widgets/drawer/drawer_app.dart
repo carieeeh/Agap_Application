@@ -115,7 +115,7 @@ class _DrawerAppState extends State<DrawerApp> {
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    Get.toNamed('/reports');
+                    Get.offAllNamed('/reports');
                   },
                 ),
               ],

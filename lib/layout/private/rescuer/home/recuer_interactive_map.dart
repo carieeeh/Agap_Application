@@ -84,13 +84,19 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
               bottom: 0,
               height: Get.height * .7,
               width: Get.width,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.amber,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                child: const Center(
-                  child: Text("Google Maps goes in this container!"),
+              child: InkWell(
+                onTap: () {
+                  Get.toNamed('/report_details');
+                },
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  child: const Center(
+                    child: Text("Google Maps goes in this container!"),
+                  ),
                 ),
               ),
             ),

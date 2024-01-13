@@ -1,3 +1,4 @@
+import 'package:agap_mobile_v01/layout/private/rescuer/home/report_details.dart';
 import 'package:agap_mobile_v01/layout/private/resident/dashboard/dashboard.dart';
 import 'package:agap_mobile_v01/layout/private/resident/home/homepage.dart';
 import 'package:agap_mobile_v01/layout/private/resident/profile/profile.dart';
@@ -23,6 +24,11 @@ List<GetPage> routeList = [
   GetPage(
     name: '/interactive_map',
     page: () => const RescuerInteractiveMap(),
+    middlewares: [AuthGuard()],
+  ),
+  GetPage(
+    name: '/report_details',
+    page: () => const ReportDetails(),
     middlewares: [AuthGuard()],
   ),
   GetPage(

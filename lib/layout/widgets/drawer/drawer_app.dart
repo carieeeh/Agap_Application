@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -90,7 +91,9 @@ class _DrawerAppState extends State<DrawerApp> {
                     "Dashboard",
                     style: TextStyle(color: Colors.white),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed('/dashboard');
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.settings, color: Colors.white),
@@ -124,7 +127,28 @@ class _DrawerAppState extends State<DrawerApp> {
               "Logout",
               style: TextStyle(color: Colors.white),
             ),
-            onTap: () {},
+            onTap: () {
+              Get.defaultDialog(
+                title: "Are you sure you want to log out?",
+                content: Container(),
+                cancel: RoundedCustomButton(
+                  onPressed: () {
+                    Get.toNamed("/login");
+                  },
+                  label: "Yes",
+                  size: Size(Get.width * .5, 40),
+                  bgColor: primaryRed,
+                ),
+                confirm: RoundedCustomButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  label: "No",
+                  size: Size(Get.width * .5, 40),
+                  bgColor: gray,
+                ),
+              );
+            },
           )
         ],
       ),

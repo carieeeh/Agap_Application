@@ -31,7 +31,7 @@ class _ReportsListState extends State<ReportsList> {
           SizedBox(
             height: Get.height * .80,
             child: ListView.builder(
-              itemCount: 20,
+              itemCount: 5,
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
                 return Column(

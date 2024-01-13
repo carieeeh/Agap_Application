@@ -15,6 +15,13 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return MainContainer(
       title: "Profile",
+      actionButton: Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.edit, color: Colors.white),
+        ),
+      ),
       body: SizedBox(
         height: Get.height,
         child: Stack(

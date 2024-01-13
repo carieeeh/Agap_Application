@@ -1,3 +1,4 @@
+import 'package:agap_mobile_v01/layout/private/dashboard/dashboard.dart';
 import 'package:agap_mobile_v01/layout/private/home/homepage.dart';
 import 'package:agap_mobile_v01/layout/private/profile/profile.dart';
 import 'package:agap_mobile_v01/layout/private/reports/report_feedback.dart';
@@ -12,6 +13,11 @@ List<GetPage> routeList = [
   GetPage(
     name: '/',
     page: () => const HomePage(),
+    middlewares: [AuthGuard()],
+  ),
+  GetPage(
+    name: '/dashboard',
+    page: () => const Dashboard(),
     middlewares: [AuthGuard()],
   ),
   GetPage(

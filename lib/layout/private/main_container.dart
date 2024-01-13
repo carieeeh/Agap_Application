@@ -7,12 +7,14 @@ class MainContainer extends StatefulWidget {
   final String title;
   final Widget body;
   final bool? isLeadingBackBtn;
+  final Widget? actionButton;
 
   const MainContainer({
     super.key,
     required this.title,
     required this.body,
     this.isLeadingBackBtn,
+    this.actionButton,
   });
 
   @override
@@ -44,6 +46,9 @@ class _MainContainerState extends State<MainContainer> {
                 );
               }),
         backgroundColor: primaryRed,
+        actions: [
+          widget.actionButton ?? Container(),
+        ],
       ),
       drawer: const DrawerApp(),
       body: widget.body,

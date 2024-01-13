@@ -42,6 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
             title: const Text("About us"),
             onTap: () {},
           ),
+          const Divider(),
         ],
       ),
     );

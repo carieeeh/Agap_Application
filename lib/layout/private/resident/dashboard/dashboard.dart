@@ -1,6 +1,6 @@
 import 'package:agap_mobile_v01/global/constant.dart';
-import 'package:agap_mobile_v01/layout/private/dashboard/agap_points.dart';
-import 'package:agap_mobile_v01/layout/private/dashboard/report_incidents.dart';
+import 'package:agap_mobile_v01/layout/private/resident/dashboard/agap_points.dart';
+import 'package:agap_mobile_v01/layout/private/resident/dashboard/report_incidents.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

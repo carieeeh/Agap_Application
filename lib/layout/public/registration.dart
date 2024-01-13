@@ -22,7 +22,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 130),
               Center(
                 child: Image.asset(
                   'assets/images/red_no_bg_logo.png',
@@ -34,38 +34,58 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 "Sign up to start using our App: ",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
-              const SizedBox(height: 10),
-              UnderlineInput(
-                label: 'First Name',
-                isPassword: false,
-                textController: _firstName,
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color:
+                  //         Colors.grey.withOpacity(0.5), // Color of the shadow
+                  //     spreadRadius: 2, // Spread radius
+                  //     blurRadius: 2, // Blur radius
+                  //     offset: const Offset(4, 4), // Offset (x, y)
+                  //   )
+                  // ],
+                ),
+                child: Column(
+                  children: [
+                    UnderlineInput(
+                      label: 'First Name',
+                      isPassword: false,
+                      textController: _firstName,
+                    ),
+                    UnderlineInput(
+                      label: 'Middle Name',
+                      isPassword: false,
+                      textController: _firstName,
+                    ),
+                    UnderlineInput(
+                      label: 'Last Name',
+                      isPassword: false,
+                      textController: _firstName,
+                    ),
+                    UnderlineInput(
+                      label: 'Contact No.',
+                      isPassword: false,
+                      textController: _firstName,
+                    ),
+                    UnderlineInput(
+                      label: 'Emergency Contact No.',
+                      isPassword: false,
+                      textController: _firstName,
+                    ),
+                    UnderlineInput(
+                      label: 'Email',
+                      isPassword: false,
+                      textController: _firstName,
+                    ),
+                  ],
+                ),
               ),
-              UnderlineInput(
-                label: 'Middle Name',
-                isPassword: false,
-                textController: _firstName,
-              ),
-              UnderlineInput(
-                label: 'Last Name',
-                isPassword: false,
-                textController: _firstName,
-              ),
-              UnderlineInput(
-                label: 'Contact No.',
-                isPassword: false,
-                textController: _firstName,
-              ),
-              UnderlineInput(
-                label: 'Emergency Contact No.',
-                isPassword: false,
-                textController: _firstName,
-              ),
-              UnderlineInput(
-                label: 'Email',
-                isPassword: false,
-                textController: _firstName,
-              ),
-              const SizedBox(height: 40),
               RoundedCustomButton(
                 onPressed: () {},
                 label: 'Sign up',
@@ -77,16 +97,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   width: Get.width * .8,
                   child: const Text.rich(
                     TextSpan(
+                      style: TextStyle(fontSize: 10),
                       children: [
                         TextSpan(
-                          text: "By Singing up you agree to our",
+                          text: "By Sinign up you agree to our",
                         ),
                         TextSpan(
                           text: " Terms and Condition.",
+                          style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                   ),
                 ),
               ),

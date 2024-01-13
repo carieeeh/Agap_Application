@@ -1,6 +1,4 @@
 import 'package:agap_mobile_v01/global/constant.dart';
-import 'package:agap_mobile_v01/layout/private/main_container.dart';
-import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,88 +11,140 @@ class RescuerReportFeedback extends StatefulWidget {
 }
 
 class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
-  final TextEditingController _comments = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    return MainContainer(
-      isLeadingBackBtn: true,
-      title: "Feedback",
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Center(
-                child: Image.asset(
-                  'assets/images/red_no_bg_logo.png',
-                  width: Get.width * .70,
-                ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          const Text("Feebacks", style: TextStyle(fontSize: 24)),
+          const SizedBox(height: 25),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Overall Rating: ",
+                style: TextStyle(fontSize: 16),
+              ),
+              AnimatedRatingStars(
+                initialRating: 5.0,
+                minRating: 0.0,
+                maxRating: 5.0,
+                onChanged: (double rating) {
+                  // Handle the rating change here
+                  print('Rating: $rating');
+                },
+                displayRatingValue: true,
+                interactiveTooltips: true,
+                customFilledIcon: Icons.star,
+                customHalfFilledIcon: Icons.star_half,
+                customEmptyIcon: Icons.star_border,
+                animationDuration: const Duration(milliseconds: 300),
+                animationCurve: Curves.easeInOut,
+                readOnly: true,
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              margin: const EdgeInsets.only(left: 15),
+              width: 100,
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+              decoration: BoxDecoration(
+                color: lightGray,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.filter_alt),
+                  Text("Filter"),
+                ],
               ),
             ),
-            const Text(
-              "Thank you for reporting the incident!",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: 15.0,
-                horizontal: 30,
-              ),
-              child: Text(
-                "Let us know your feedback/ suggestions for the emergency responders.",
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const Text(
-                  "Rate: ",
-                  style: TextStyle(fontSize: 16),
+                Text(
+                  "Date",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
                 ),
-                AnimatedRatingStars(
-                  initialRating: 3.5,
-                  minRating: 0.0,
-                  maxRating: 5.0,
-                  onChanged: (double rating) {
-                    // Handle the rating change here
-                    print('Rating: $rating');
-                  },
-                  displayRatingValue: true,
-                  interactiveTooltips: true,
-                  customFilledIcon: Icons.star,
-                  customHalfFilledIcon: Icons.star_half,
-                  customEmptyIcon: Icons.star_border,
-                  animationDuration: const Duration(milliseconds: 300),
-                  animationCurve: Curves.easeInOut,
-                  readOnly: false,
+                Text(
+                  "Rating",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  width: 85,
+                  child: Text(
+                    "Comments",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextFormField(
-                controller: _comments,
-                maxLines: 5,
-                decoration: InputDecoration(
-                  hintText: "Suggestions/ Comments",
-                  hintStyle: const TextStyle(color: gray),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
+          ),
+          const Divider(),
+          SizedBox(
+            height: Get.height * .75,
+            child: ListView.builder(
+              itemCount: 5,
+              padding: EdgeInsets.zero,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            "12/10/2024",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            "4.5",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 120,
+                            child: Text(
+                              "Thank you! Did a Great Job!",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                  ],
+                );
+              },
             ),
-            RoundedCustomButton(
-              onPressed: () {},
-              label: "Submit",
-              size: Size(Get.width * .75, 40),
-              bgColor: primaryRed,
-              radius: 10,
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

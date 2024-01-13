@@ -24,7 +24,7 @@ class _RescuerDashboardState extends State<RescuerDashboard>
     ),
     const Tab(
       child: Text(
-        'Feedback',
+        'Feedbacks',
         style: TextStyle(color: Colors.black),
       ),
     ),

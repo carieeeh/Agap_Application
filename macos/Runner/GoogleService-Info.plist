@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1060919755818-tr143ma4can5t8e2u51it7b0j1rb92g5.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1060919755818-tr143ma4can5t8e2u51it7b0j1rb92g5</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDNSu7WKHH8YKM4Gg2iN-cE8JVyEPGYNY0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1060919755818</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.rabelen.agapMobileV01.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>agap-f4c32</string>
+	<key>STORAGE_BUCKET</key>
+	<string>agap-f4c32.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1060919755818:ios:3d042c9dd241422a516f53</string>
+	<key>DATABASE_URL</key>
+	<string>https://agap-f4c32-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>

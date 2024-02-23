@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1060919755818",
+    "firebase_url": "https://agap-f4c32-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "agap-f4c32",
+    "storage_bucket": "agap-f4c32.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060919755818:android:03fd9e4926aae636516f53",
+        "android_client_info": {
+          "package_name": "com.rabelen.agap_mobile_v01"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060919755818-9g5s9vhj6iibd4gq38puvbb7hll0q0t5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi_s01lorl3UheOb8_Zyec3HvPYO6VX6c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060919755818-9g5s9vhj6iibd4gq38puvbb7hll0q0t5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1060919755818-ned0al1qul447qe787j8ohlm3s7rofm1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rabelen.agapMobileV01"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

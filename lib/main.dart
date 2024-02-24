@@ -18,6 +18,9 @@ void main() async {
   runApp(const MyApp());
 }
 
+// TODO: Attribute links
+// <a href="https://www.flaticon.com/free-animated-icons/earthquake" title="earthquake animated icons">Earthquake animated icons created by Freepik - Flaticon</a>
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

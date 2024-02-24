@@ -5,7 +5,7 @@ import 'package:agap_mobile_v01/layout/private/resident/profile/profile.dart';
 import 'package:agap_mobile_v01/layout/private/resident/reports/report_feedback.dart';
 import 'package:agap_mobile_v01/layout/private/resident/reports/reports_list.dart';
 import 'package:agap_mobile_v01/layout/private/rescuer/dashboard/rescuer_dashboard.dart';
-import 'package:agap_mobile_v01/layout/private/rescuer/home/recuer_interactive_map.dart';
+import 'package:agap_mobile_v01/layout/private/rescuer/home/rescuer_interactive_map.dart';
 import 'package:agap_mobile_v01/layout/private/rescuer/profile/rescuer_profile.dart';
 import 'package:agap_mobile_v01/layout/private/rescuer/reports/rescuer_reports_list.dart';
 import 'package:agap_mobile_v01/layout/private/rescuer/settings/rescuer_settings.dart';

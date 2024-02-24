@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                         EmergencyButton(
                           onPressed: _takeImageReport,
                           title: 'Police',
-                          imagePath: 'assets/images/police-hat.gif',
+                          imagePath: 'assets/images/security-guard.gif',
                         ),
                         EmergencyButton(
                           onPressed: _takeImageReport,

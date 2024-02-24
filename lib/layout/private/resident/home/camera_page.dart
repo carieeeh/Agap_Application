@@ -1,4 +1,4 @@
-import 'package:agap_mobile_v01/services/setting_service.dart';
+import 'package:agap_mobile_v01/global/services/setting_service.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:get/get.dart';

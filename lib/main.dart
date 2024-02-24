@@ -1,6 +1,6 @@
 import 'package:agap_mobile_v01/router/route_list.dart';
-import 'package:agap_mobile_v01/services/auth_service.dart';
-import 'package:agap_mobile_v01/services/setting_service.dart';
+import 'package:agap_mobile_v01/global/services/auth_service.dart';
+import 'package:agap_mobile_v01/global/services/setting_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

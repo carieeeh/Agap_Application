@@ -1,5 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
-import 'package:agap_mobile_v01/services/auth_service.dart';
+import 'package:agap_mobile_v01/global/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: SizedBox(
                   width: Get.width * .8,
                   child: const Text(
-                    'Enter your e-mail or phone number:',
+                    'Enter your 10 digit phone number:',
                     style: TextStyle(
                       color: darkGray,
                       fontSize: 16,
@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: TextField(
                         decoration: const InputDecoration(
                           border: InputBorder.none,
-                          hintText: '+639892837232',
+                          hintText: '9928372321',
                           hintStyle: TextStyle(color: gray),
                         ),
                         controller: _email,

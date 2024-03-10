@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,8 @@ class DrawerApp extends StatefulWidget {
 }
 
 class _DrawerAppState extends State<DrawerApp> {
+  final AuthController _auth = Get.find<AuthController>();
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -133,7 +136,7 @@ class _DrawerAppState extends State<DrawerApp> {
                 content: Container(),
                 cancel: RoundedCustomButton(
                   onPressed: () {
-                    Get.toNamed("/login");
+                    _auth.logOut();
                   },
                   label: "Yes",
                   size: Size(Get.width * .5, 40),

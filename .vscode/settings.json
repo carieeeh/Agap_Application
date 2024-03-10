@@ -5,4 +5,10 @@
         "editor.formatOnSave": true
     },
     "java.configuration.updateBuildConfiguration": "interactive",
+    "cSpell.words": [
+        "agap",
+        "ARGB",
+        "Getx",
+        "pinput"
+    ],
 }

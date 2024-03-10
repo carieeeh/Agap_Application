@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1060919755818-d2r8taenbdmk7m7d0okksrd2oku7epl7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rabelen.agap_mobile_v01",
+            "certificate_hash": "5516d1008f926ed4c4ae70f40ce3da5de795b3b2"
+          }
+        },
+        {
           "client_id": "1060919755818-9g5s9vhj6iibd4gq38puvbb7hll0q0t5.apps.googleusercontent.com",
           "client_type": 3
         }

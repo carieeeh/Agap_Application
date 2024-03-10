@@ -1,7 +1,10 @@
 import 'package:agap_mobile_v01/global/constant.dart';
-import 'package:agap_mobile_v01/global/services/auth_service.dart';
+import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
+import 'package:agap_mobile_v01/layout/widgets/inputs/phone_number_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:pinput/pinput.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,9 +14,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final AuthService _authService = Get.find<AuthService>();
-  final TextEditingController _email = TextEditingController();
-
+  final AuthController _auth = Get.find<AuthController>();
+  final TextEditingController _phoneNumber = TextEditingController();
+  String? _phoneNumberError;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,48 +50,30 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: gray),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: Get.width * .70,
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '9928372321',
-                          hintStyle: TextStyle(color: gray),
-                        ),
-                        controller: _email,
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          _authService.isRescuer.value = false;
-                          Get.offNamed('/');
-                          // : Get.toNamed('/interactive_map');
-                        },
-                        child: Container(
-                          height: 50,
-                          decoration: const BoxDecoration(
-                            color: primaryRed,
-                            borderRadius: BorderRadius.horizontal(
-                                right: Radius.circular(10)),
-                          ),
-                          child: const Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+              PhoneNumberInput(
+                controller: _phoneNumber,
+                errorText: _phoneNumberError,
+                onChanged: (_) {
+                  setState(() {
+                    _phoneNumberError = null;
+                  });
+                },
+                submit: () {
+                  setState(() {
+                    print(_phoneNumber.text);
+                    if (_phoneNumber.text.isEmpty) {
+                      _phoneNumberError = 'Please enter a number.';
+                    } else if (_phoneNumber.text.length < 10) {
+                      _phoneNumberError =
+                          'Please enter a at least 10 digit phone number.';
+                    } else {
+                      _auth.phoneNumber.value = _phoneNumber.text;
+                      _auth.requestOTP();
+                      _auth.pinCode.value.setText('');
+                      Get.toNamed('/otp-page');
+                    }
+                  });
+                },
               ),
               const SizedBox(height: 10),
               Align(

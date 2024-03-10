@@ -1,3 +1,4 @@
+import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/router/route_list.dart';
 import 'package:agap_mobile_v01/global/services/auth_service.dart';
 import 'package:agap_mobile_v01/global/services/setting_service.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    Get.lazyPut(() => AuthController());
 
     return GetMaterialApp(
       title: 'Agap',

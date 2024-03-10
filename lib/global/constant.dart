@@ -11,21 +11,13 @@ const gray = Color(0xFF888888);
 const orange = Color(0xFFF9A425);
 
 const textMuted = Color(0xFF8F8F90);
-const textblack = Color(0xFF444444);
+const textBlack = Color(0xFF444444);
 
 const colorQuestion = Color(0xFF3066BE);
 const colorError = Color(0xFFCB1212);
-const colorSuccess = Color(0xFF04AA32);
+const colorSuccess = Color.fromARGB(255, 86, 162, 107);
 const colorNoRecord = Color(0xFFC2C2C2);
 
 const yellow = Color(0xFFFFC700);
 const primaryRed = Color(0xFFFF1F1E);
-
-// Red - FF1F1E
-// Light Gray - ECEAEA
-// Dark Gray - D9D9D9
-// White - 
-// Yellow - FFC700
-// Green - 04AA32
-// Blue - 3E1EFF
-// Sky Blue - 17C1CC
+const lightRed = Color.fromARGB(255, 251, 95, 95);

@@ -8,7 +8,10 @@
     "cSpell.words": [
         "agap",
         "ARGB",
+        "Firestore",
+        "geopoint",
         "Getx",
-        "pinput"
+        "pinput",
+        "uids"
     ],
 }

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
@@ -15,9 +14,11 @@ class AuthController extends GetxController {
   int? _forceResendingToken;
   PhoneAuthCredential? _userCredential;
   String _verificationId = '';
+  User? currentUser;
 
   // request otp for phone number ex. 9487123123
   Future<void> requestOTP() async {
+    isLoading.value = true;
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: "+63${phoneNumber.value}",
       timeout: const Duration(minutes: 2),
@@ -46,12 +47,11 @@ class AuthController extends GetxController {
       forceResendingToken: _forceResendingToken,
       codeAutoRetrievalTimeout: (verificationId) {},
     );
+    isLoading.value = false;
   }
 
   // verify otp and login the user
   Future<void> verifyOTP() async {
-    final SharedPreferences localStorage =
-        await SharedPreferences.getInstance();
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId, smsCode: pinCode.value.text);
     _userCredential = credential;
@@ -59,13 +59,9 @@ class AuthController extends GetxController {
     await FirebaseAuth.instance
         .signInWithCredential(_userCredential!)
         .then((value) {
-      log(value.toString());
-      log(value.user.toString());
-
-      User? user = FirebaseAuth.instance.currentUser;
-      log(user.toString());
-      localStorage.setString('user', jsonEncode(value.user));
       isAuth.value = true;
+      currentUser = value.user;
+      log(currentUser.toString());
       Get.offAllNamed('/');
     }).catchError((error) {
       Get.dialog(
@@ -81,6 +77,25 @@ class AuthController extends GetxController {
         ),
       );
     });
+  }
+
+  Future<void> getCurrentUser() async {
+    currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      Get.dialog(
+        barrierDismissible: false,
+        const GetDialog(
+          type: 'error',
+          title: 'Login Failed',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message:
+              'Error: No user found! \nPlease log out then log in your account',
+        ),
+      );
+    }
   }
 
   Future<void> logOut() async {

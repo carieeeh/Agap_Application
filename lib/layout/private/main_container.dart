@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/drawer/drawer_app.dart';
 import 'package:agap_mobile_v01/layout/widgets/drawer/rescuer_drawer_app.dart';
 import 'package:agap_mobile_v01/global/services/auth_service.dart';
@@ -24,7 +25,7 @@ class MainContainer extends StatefulWidget {
 }
 
 class _MainContainerState extends State<MainContainer> {
-  final AuthService _authService = Get.find<AuthService>();
+  final AuthController _auth = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class _MainContainerState extends State<MainContainer> {
         ],
       ),
       drawer: Obx(
-        () => _authService.isRescuer.isFalse
+        () => _auth.isRescuer.isFalse
             ? const DrawerApp()
             : const RescuerDrawerApp(),
       ),

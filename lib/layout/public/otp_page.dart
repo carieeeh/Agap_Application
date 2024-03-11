@@ -4,6 +4,7 @@ import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dar
 import 'package:agap_mobile_v01/layout/widgets/inputs/otp_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 class OTPPage extends StatefulWidget {
   const OTPPage({super.key});
@@ -55,13 +56,15 @@ class _OTPPageState extends State<OTPPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  RoundedCustomButton(
-                    onPressed: () {
-                      _auth.verifyOTP();
-                    },
-                    label: 'Verify',
-                    bgColor: colorSuccess,
-                    size: Size(Get.width * .8, 40),
+                  Obx(
+                    () => RoundedCustomButton(
+                      onPressed: () {
+                        _auth.isLoading.isTrue ? null : _auth.verifyOTP();
+                      },
+                      label: 'Verify',
+                      bgColor: _auth.isLoading.isTrue ? gray : colorSuccess,
+                      size: Size(Get.width * .8, 40),
+                    ),
                   ),
                   const SizedBox(height: 50),
                   TextButton(

@@ -216,9 +216,9 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
                           backgroundColor: colorSuccess,
+                          side: const BorderSide(color: colorSuccess),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
-                            side: const BorderSide(color: colorSuccess),
                           ),
                         ),
                         child: const Row(

@@ -3,8 +3,6 @@ import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/global/controller/storage_controller.dart';
 import 'package:agap_mobile_v01/router/route_list.dart';
-import 'package:agap_mobile_v01/global/services/auth_service.dart';
-import 'package:agap_mobile_v01/global/services/setting_service.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,8 +35,6 @@ void main() async {
     appleProvider: AppleProvider.appAttest,
   );
 
-  await Get.putAsync(() => AuthService().init());
-  await Get.putAsync(() => SettingService().init());
   runApp(const MyApp());
 }
 

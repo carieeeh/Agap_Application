@@ -2,7 +2,6 @@ import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/drawer/drawer_app.dart';
 import 'package:agap_mobile_v01/layout/widgets/drawer/rescuer_drawer_app.dart';
-import 'package:agap_mobile_v01/global/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

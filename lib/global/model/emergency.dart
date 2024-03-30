@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Emergency {
   String? address;
-  DateTime? createdAt;
   String? description;
   List<String>? fileUrls;
   List<String>? rescuerUids;
@@ -11,11 +10,11 @@ class Emergency {
   String? status;
   int? totalUnits;
   String? type;
-  DateTime? updatedAt;
+  Timestamp createdAt = Timestamp.now();
+  Timestamp updatedAt = Timestamp.now();
 
   Emergency({
     this.address,
-    this.createdAt,
     this.fileUrls,
     this.rescuerUids,
     this.geopoint,
@@ -23,16 +22,14 @@ class Emergency {
     this.status,
     this.totalUnits,
     this.type,
-    this.updatedAt,
     this.description,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory Emergency.fromJson(Map<String, dynamic>? json) {
     return Emergency(
       address: json?['address'],
-      createdAt: json?['created_at'] != null
-          ? DateTime.parse(json?['created_at'])
-          : null,
       description: json?['address'],
       fileUrls: (json?['file_urls'] as List?)?.map((e) => e as String).toList(),
       rescuerUids:
@@ -42,16 +39,15 @@ class Emergency {
       status: json?['status'],
       totalUnits: json?['total_units'],
       type: json?['type'],
-      updatedAt: json?['updated_at'] != null
-          ? DateTime.parse(json?['updated_at'])
-          : null,
+      createdAt: json?['created_at'],
+      updatedAt: json?['updated_at'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'address': address,
-      'created_at': createdAt?.toUtc().toString(),
+      'created_at': createdAt,
       'file_urls': fileUrls,
       'description': description,
       'geopoint': geopoint,
@@ -60,7 +56,7 @@ class Emergency {
       'status': status,
       'total_units': totalUnits,
       'type': type,
-      'updated_at': updatedAt?.toUtc().toString(),
+      'updated_at': updatedAt,
     };
   }
 }

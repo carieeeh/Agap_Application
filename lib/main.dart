@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
     Get.put(AuthController());
     Get.put(LocationsController());
     Get.put(StorageController());
-    Get.lazyPut(() => ReportController());
+    Get.put(ReportController());
 
     return GetMaterialApp(
       title: 'Agap',

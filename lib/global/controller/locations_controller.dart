@@ -1,9 +1,11 @@
+import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_geocoding_api/google_geocoding_api.dart';
 
 class LocationsController extends GetxController {
-  RxBool isPermitted = false.obs;
+  RxBool isPermitted = false.obs, isLoading = false.obs;
 
   Future<void> checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
@@ -35,5 +37,17 @@ class LocationsController extends GetxController {
 
   Future<Position> getUserLocation() async {
     return await Geolocator.getCurrentPosition();
+  }
+
+  Future<String> getAddressByCoordinates(Position position) async {
+    isLoading.value = true;
+    final api = GoogleGeocodingApi(googleApiKey, isLogged: true);
+    final reversedSearchResults = await api.reverse(
+      '${position.latitude}, ${position.longitude}',
+      language: 'en',
+    );
+    isLoading.value = false;
+
+    return reversedSearchResults.results.firstOrNull?.formattedAddress ?? "";
   }
 }

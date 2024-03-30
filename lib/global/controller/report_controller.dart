@@ -1,18 +1,14 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
-import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/storage_controller.dart';
 import 'package:agap_mobile_v01/global/model/emergency.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ReportController extends GetxController {
   final AuthController _authController = Get.find<AuthController>();
-  final LocationsController _locationsController =
-      Get.find<LocationsController>();
   final StorageController _storageController = Get.find<StorageController>();
   RxBool isLoading = false.obs;
 
@@ -20,26 +16,28 @@ class ReportController extends GetxController {
     required XFile file,
     required String type,
     required String description,
+    required String address,
+    required double lat,
+    required double lng,
   }) async {
     isLoading.value = true;
     try {
       await _authController.getCurrentUser();
       FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
-      Position position = await _locationsController.getUserLocation();
       String? imageUrl = await _storageController.uploadFile(file);
 
       if (imageUrl != null) {
         Emergency emergency = Emergency(
           residentUid: _authController.currentUser!.uid,
           description: description,
-          geopoint: GeoPoint(position.latitude, position.longitude),
+          geopoint: GeoPoint(lat, lng),
           type: type,
-          address: 'asd',
+          address: address,
           totalUnits: 1,
           status: 'pending',
           fileUrls: [imageUrl],
-          createdAt: DateTime.timestamp(),
-          updatedAt: DateTime.timestamp(),
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now(),
         );
 
         DocumentReference docRef = await firestoreDb

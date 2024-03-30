@@ -1,12 +1,16 @@
 import 'dart:io';
 
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
+import 'package:agap_mobile_v01/layout/private/resident/home/google_places_view.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/emergency_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pinput/pinput.dart';
@@ -23,7 +27,25 @@ class _HomePageState extends State<HomePage> {
   final ImagePicker _imagePicker = ImagePicker();
   final TextEditingController _reportDescriptionController =
       TextEditingController();
+  final LocationsController _locController = Get.find<LocationsController>();
+  late Position _incidentPosition;
+  String currentAddress = "Use Current Location";
+  String? _incidentAddress;
+  double? lat, lng;
+
   XFile? photo;
+
+  @override
+  void initState() {
+    initFunction();
+    super.initState();
+  }
+
+  Future initFunction() async {
+    _incidentPosition = await _locController.getUserLocation();
+    currentAddress =
+        await _locController.getAddressByCoordinates(_incidentPosition);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,22 +95,58 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    width: Get.width,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.my_location_outlined),
-                        SizedBox(width: 10),
-                        Text("Use Current Location"),
-                      ],
+                  const SizedBox(height: 10),
+                  InkWell(
+                    onTap: () async {
+                      _locController.isLoading.value = true;
+                      var googleResult = await Get.to(() => GooglePlacesView());
+
+                      if (googleResult != null) {
+                        _incidentAddress = googleResult['description'];
+                        lat = googleResult['lat'] as double;
+                        lng = googleResult['lng'] as double;
+                      } else {
+                        _incidentAddress = currentAddress;
+                        lat = _incidentPosition.latitude;
+                        lng = _incidentPosition.longitude;
+                      }
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Obx(
+                        () => Row(
+                          children: [
+                            const Icon(Icons.my_location_outlined),
+                            const SizedBox(width: 10),
+                            Visibility(
+                              visible: _locController.isLoading.isFalse,
+                              child: SizedBox(
+                                width: Get.width * .75,
+                                child: Text(
+                                  _incidentAddress ?? currentAddress,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: _locController.isLoading.isTrue,
+                              child: SizedBox(
+                                width: Get.width * .75,
+                                child: const LinearProgressIndicator(
+                                  color: bgPrimaryBlue,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   )
                 ],
@@ -96,7 +154,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Positioned(
               bottom: 0,
-              height: Get.height * .7,
+              height: Get.height * .71,
               width: Get.width,
               child: Container(
                 decoration: const BoxDecoration(
@@ -253,6 +311,9 @@ class _HomePageState extends State<HomePage> {
                                 file: photo!,
                                 type: type,
                                 description: _reportDescriptionController.text,
+                                address: _incidentAddress ?? currentAddress,
+                                lat: lat ?? _incidentPosition.latitude,
+                                lng: lng ?? _incidentPosition.longitude,
                               )
                                   .then((value) {
                                 if (value != null) {

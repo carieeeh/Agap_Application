@@ -1,7 +1,14 @@
+import 'dart:async';
+
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
+import 'package:agap_mobile_v01/layout/widgets/google_maps/google_places_view.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RescuerInteractiveMap extends StatefulWidget {
   const RescuerInteractiveMap({super.key});
@@ -11,6 +18,31 @@ class RescuerInteractiveMap extends StatefulWidget {
 }
 
 class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
+  static const CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(14.5871, 120.9845),
+    zoom: 15,
+  );
+
+  final LocationsController _locController = Get.find<LocationsController>();
+  late Position _incidentPosition;
+  String currentAddress = "Use Current Location";
+  String? _incidentAddress;
+  double? lat, lng;
+
+  @override
+  void initState() {
+    initFunction();
+    super.initState();
+  }
+
+  Future initFunction() async {
+    _incidentPosition = await _locController.getUserLocation();
+    currentAddress =
+        await _locController.getAddressByCoordinates(_incidentPosition);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MainContainer(
@@ -59,22 +91,59 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    width: Get.width,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.my_location_outlined),
-                        SizedBox(width: 10),
-                        Text("Use Current Location"),
-                      ],
+                  const SizedBox(height: 10),
+                  InkWell(
+                    onTap: () async {
+                      _locController.isLoading.value = true;
+                      var googleResult = await Get.to(() => GooglePlacesView());
+
+                      if (googleResult != null) {
+                        _incidentAddress = googleResult['description'];
+                        lat = googleResult['lat'] as double;
+                        lng = googleResult['lng'] as double;
+                      } else {
+                        _incidentAddress = currentAddress;
+                        lat = _incidentPosition.latitude;
+                        lng = _incidentPosition.longitude;
+                      }
+                      _locController.isLoading.value = false;
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Obx(
+                        () => Row(
+                          children: [
+                            const Icon(Icons.my_location_outlined),
+                            const SizedBox(width: 10),
+                            Visibility(
+                              visible: _locController.isLoading.isFalse,
+                              child: SizedBox(
+                                width: Get.width * .75,
+                                child: Text(
+                                  _incidentAddress ?? currentAddress,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: _locController.isLoading.isTrue,
+                              child: SizedBox(
+                                width: Get.width * .75,
+                                child: const LinearProgressIndicator(
+                                  color: bgPrimaryBlue,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   )
                 ],
@@ -82,21 +151,42 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
             ),
             Positioned(
               bottom: 0,
-              height: Get.height * .7,
+              height: Get.height * .71,
               width: Get.width,
-              child: InkWell(
-                onTap: () {
-                  Get.toNamed('/report_details');
-                },
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
+                  color: Colors.white,
+                  child: GoogleMap(
+                    mapType: MapType.normal,
+                    myLocationButtonEnabled: true,
+                    myLocationEnabled: true,
+                    zoomControlsEnabled: false,
+                    initialCameraPosition: _kGooglePlex,
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                    },
                   ),
-                  child: const Center(
-                    child: Text("Google Maps goes in this container!"),
-                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: IconButton(
+                onPressed: () async {
+                  await launchUrl(Uri.parse(
+                      'google.navigation:q=14.5871,120.9845&key=$googleApiKey'));
+                },
+                style: IconButton.styleFrom(
+                  backgroundColor: colorSuccess,
+                ),
+                icon: const Icon(
+                  Icons.navigation_rounded,
+                  size: 30,
+                  color: Colors.white,
                 ),
               ),
             ),

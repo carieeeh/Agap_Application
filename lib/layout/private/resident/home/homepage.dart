@@ -4,7 +4,7 @@ import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
-import 'package:agap_mobile_v01/layout/private/resident/home/google_places_view.dart';
+import 'package:agap_mobile_v01/layout/widgets/google_maps/google_places_view.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/emergency_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';

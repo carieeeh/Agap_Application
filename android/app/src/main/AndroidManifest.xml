@@ -7,6 +7,10 @@
         android:label="Agap"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
+        <meta-data 
+              android:name="com.google.android.geo.API_KEY"
+              android:value="AIzaSyAi_s01lorl3UheOb8_Zyec3HvPYO6VX6c"
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -23,10 +27,6 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-            <meta-data 
-              android:name="com.google.android.geo.API_KEY"
-              android:value="AIzaSyAi_s01lorl3UheOb8_Zyec3HvPYO6VX6c"
-            />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -38,4 +38,20 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <queries>
+        <!-- If your app checks for SMS support -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="sms" />
+        </intent>
+        <!-- If your app checks for call support -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
+        </intent>
+        <!-- If your application checks for inAppBrowserView launch mode support -->
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+    </queries>
 </manifest>

@@ -4,14 +4,9 @@ import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dar
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class DrawerApp extends StatefulWidget {
-  const DrawerApp({super.key});
+class DrawerApp extends StatelessWidget {
+  DrawerApp({super.key});
 
-  @override
-  State<DrawerApp> createState() => _DrawerAppState();
-}
-
-class _DrawerAppState extends State<DrawerApp> {
   final AuthController _auth = Get.find<AuthController>();
 
   @override
@@ -134,13 +129,16 @@ class _DrawerAppState extends State<DrawerApp> {
               Get.defaultDialog(
                 title: "Are you sure you want to log out?",
                 content: Container(),
-                cancel: RoundedCustomButton(
-                  onPressed: () {
-                    _auth.logOut();
-                  },
-                  label: "Yes",
-                  size: Size(Get.width * .5, 40),
-                  bgColor: primaryRed,
+                cancel: Obx(
+                  () => RoundedCustomButton(
+                    onPressed: () {
+                      _auth.logOut();
+                    },
+                    isLoading: _auth.isLoading.isTrue,
+                    label: "Yes",
+                    size: Size(Get.width * .5, 40),
+                    bgColor: primaryRed,
+                  ),
                 ),
                 confirm: RoundedCustomButton(
                   onPressed: () {

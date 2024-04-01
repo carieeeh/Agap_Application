@@ -86,13 +86,16 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                 ),
               ),
             ),
-            RoundedCustomButton(
-              onPressed: () {},
-              label: "Submit",
-              size: Size(Get.width * .75, 40),
-              bgColor: primaryRed,
-              radius: 10,
-            )
+            Obx(
+              () => RoundedCustomButton(
+                onPressed: () {},
+                isLoading: true,
+                label: "Submit",
+                size: Size(Get.width * .75, 40),
+                bgColor: primaryRed,
+                radius: 10,
+              ),
+            ),
           ],
         ),
       ),

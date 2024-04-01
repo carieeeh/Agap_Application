@@ -13,7 +13,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  final AuthController _authService = Get.find<AuthController>();
+  final AuthController _auth = Get.find<AuthController>();
   final TextEditingController _firstName = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -98,14 +98,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ],
                     ),
                   ),
-                  RoundedCustomButton(
-                    onPressed: () {
-                      _authService.isRescuer.value = true;
-                      Get.offNamed('/interactive_map');
-                    },
-                    label: 'Sign up',
-                    size: Size(Get.width, 40),
-                    bgColor: primaryRed,
+                  Obx(
+                    () => RoundedCustomButton(
+                      onPressed: () {
+                        _auth.isRescuer.value = true;
+                        Get.offNamed('/interactive_map');
+                      },
+                      isLoading: _auth.isLoading.isTrue,
+                      label: 'Sign up',
+                      size: Size(Get.width, 40),
+                      bgColor: primaryRed,
+                    ),
                   ),
                   const Center(
                     child: Text.rich(

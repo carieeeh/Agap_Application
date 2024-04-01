@@ -98,12 +98,15 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<void> rescuerRegister() async {}
+
   Future<void> logOut() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-
+    isLoading.value = true;
     localStorage.clear();
     await FirebaseAuth.instance.signOut();
     isAuth.value = false;
+    isLoading.value = false;
     Get.offAllNamed('/login');
   }
 }

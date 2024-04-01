@@ -55,9 +55,7 @@ class _MainContainerState extends State<MainContainer> {
         ],
       ),
       drawer: Obx(
-        () => _auth.isRescuer.isFalse
-            ? const DrawerApp()
-            : const RescuerDrawerApp(),
+        () => _auth.isRescuer.isFalse ? DrawerApp() : RescuerDrawerApp(),
       ),
       body: widget.body,
     );

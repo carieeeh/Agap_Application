@@ -58,12 +58,15 @@ class _ReportDetailsState extends State<ReportDetails> {
                 ),
               ),
               const SizedBox(height: 10),
-              RoundedCustomButton(
-                onPressed: () {},
-                label: "RESPOND!",
-                size: Size(Get.width * .85, 40),
-                radius: 10,
-                bgColor: primaryRed,
+              Obx(
+                () => RoundedCustomButton(
+                  onPressed: () {},
+                  label: "RESPOND!",
+                  isLoading: true,
+                  size: Size(Get.width * .85, 40),
+                  radius: 10,
+                  bgColor: primaryRed,
+                ),
               )
             ],
           ),

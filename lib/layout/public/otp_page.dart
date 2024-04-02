@@ -1,5 +1,6 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
+import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/otp_input.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,17 @@ class OTPPage extends StatefulWidget {
 
 class _OTPPageState extends State<OTPPage> {
   final AuthController _auth = Get.find<AuthController>();
+  final SettingsController _settings = Get.find<SettingsController>();
+
+  @override
+  void initState() {
+    // _settings.startCountdown(
+    //   () {
+    //     print("Finish");
+    //   },
+    // );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,16 +74,26 @@ class _OTPPageState extends State<OTPPage> {
                       },
                       label: 'Verify',
                       isLoading: _auth.isLoading.isTrue,
+                      loaderColor: colorSuccess,
                       bgColor: _auth.isLoading.isTrue ? gray : colorSuccess,
                       size: Size(Get.width * .8, 40),
                     ),
                   ),
                   const SizedBox(height: 50),
                   TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Resend code in: 00:00',
-                      style: TextStyle(color: darkGray),
+                    onPressed: () {
+                      if (_settings.isTimerFinish.isTrue) {
+                        _auth.requestOTP();
+                        _settings.countdown.value = 300;
+                      }
+                    },
+                    child: Obx(
+                      () => Text(
+                        _settings.isTimerFinish.isTrue
+                            ? 'Resend code'
+                            : 'Resend code in: ${_formatDuration(Duration(seconds: _settings.countdown.value))}',
+                        style: const TextStyle(color: darkGray),
+                      ),
                     ),
                   ),
                 ],
@@ -81,5 +103,12 @@ class _OTPPageState extends State<OTPPage> {
         ),
       ),
     );
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
   }
 }

@@ -79,7 +79,6 @@ class ReportController extends GetxController {
         .where('resident_uid', isEqualTo: _authController.currentUser!.uid)
         .get()
         .then((value) {
-      print(value);
       value.docs.forEach((doc) {
         print('${doc.id} => ${doc.data()}');
       });

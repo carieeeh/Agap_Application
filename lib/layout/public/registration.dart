@@ -14,7 +14,13 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final AuthController _auth = Get.find<AuthController>();
-  final TextEditingController _firstName = TextEditingController();
+  final TextEditingController _firstName = TextEditingController(),
+      _middleName = TextEditingController(),
+      _lastName = TextEditingController(),
+      _contactNumber = TextEditingController(),
+      _emeContactNumber = TextEditingController(),
+      _email = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,15 +59,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color:
-                      //         Colors.grey.withOpacity(0.5), // Color of the shadow
-                      //     spreadRadius: 2, // Spread radius
-                      //     blurRadius: 2, // Blur radius
-                      //     offset: const Offset(4, 4), // Offset (x, y)
-                      //   )
-                      // ],
                     ),
                     child: Column(
                       children: [
@@ -73,27 +70,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         UnderlineInput(
                           label: 'Middle Name',
                           isPassword: false,
-                          textController: _firstName,
+                          textController: _middleName,
                         ),
                         UnderlineInput(
                           label: 'Last Name',
                           isPassword: false,
-                          textController: _firstName,
+                          textController: _lastName,
                         ),
                         UnderlineInput(
                           label: 'Contact No.',
+                          hintText: '9928372321',
+                          keyboardType: TextInputType.number,
+                          maxLength: 10,
                           isPassword: false,
-                          textController: _firstName,
+                          textController: _contactNumber,
                         ),
                         UnderlineInput(
                           label: 'Emergency Contact No.',
+                          hintText: '9928372321',
+                          keyboardType: TextInputType.number,
+                          maxLength: 10,
                           isPassword: false,
-                          textController: _firstName,
+                          textController: _emeContactNumber,
                         ),
                         UnderlineInput(
                           label: 'Email',
+                          hintText: 'example@email.com',
+                          keyboardType: TextInputType.emailAddress,
                           isPassword: false,
-                          textController: _firstName,
+                          textController: _email,
                         ),
                       ],
                     ),
@@ -101,8 +106,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   Obx(
                     () => RoundedCustomButton(
                       onPressed: () {
-                        _auth.isRescuer.value = true;
-                        Get.offNamed('/interactive_map');
+                        _auth.rescuerRegister(
+                          firstName: _firstName.text,
+                          middleName: _middleName.text,
+                          lastName: _lastName.text,
+                          contactNumber: _contactNumber.text,
+                          emeContactNumber: _emeContactNumber.text,
+                          email: _email.text,
+                        );
                       },
                       isLoading: _auth.isLoading.isTrue,
                       label: 'Sign up',

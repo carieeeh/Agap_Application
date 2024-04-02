@@ -1,6 +1,7 @@
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
+import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
 import 'package:agap_mobile_v01/global/controller/storage_controller.dart';
 import 'package:agap_mobile_v01/router/route_list.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    Get.put(SettingsController());
     Get.put(AuthController());
     Get.put(LocationsController());
     Get.put(StorageController());

@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final AuthController _auth = Get.find<AuthController>();
   final TextEditingController _phoneNumber = TextEditingController();
   String? _phoneNumberError;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,13 +61,13 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 submit: () {
                   setState(() {
-                    print(_phoneNumber.text);
                     if (_phoneNumber.text.isEmpty) {
                       _phoneNumberError = 'Please enter a number.';
                     } else if (_phoneNumber.text.length < 10) {
                       _phoneNumberError =
                           'Please enter a at least 10 digit phone number.';
                     } else {
+                      _auth.isRescuer.value = false;
                       _auth.phoneNumber.value = _phoneNumber.text;
                       _auth.requestOTP();
                       _auth.pinCode.value.setText('');

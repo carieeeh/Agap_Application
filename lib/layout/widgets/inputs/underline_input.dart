@@ -1,10 +1,14 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class UnderlineInput extends StatefulWidget {
   final String label;
   final bool isPassword;
   final IconData? icon;
+  final String? hintText;
+  final int? maxLength;
+  final TextInputType? keyboardType;
   final TextEditingController textController;
   const UnderlineInput({
     super.key,
@@ -12,6 +16,9 @@ class UnderlineInput extends StatefulWidget {
     required this.isPassword,
     this.icon,
     required this.textController,
+    this.hintText,
+    this.maxLength,
+    this.keyboardType,
   });
 
   @override
@@ -33,16 +40,20 @@ class _UnderlineInputState extends State<UnderlineInput> {
       obscureText: widget.isPassword ? _isObscure : false,
       controller: widget.textController,
       style: const TextStyle(color: darkGray, fontSize: 15),
+      keyboardType: widget.keyboardType,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(widget.maxLength ?? 100)
+      ],
       decoration: InputDecoration(
         focusedBorder:
             const UnderlineInputBorder(borderSide: BorderSide(color: darkGray)),
         enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: darkGray),
         ),
-        hintText: widget.label,
+        hintText: widget.hintText ?? '',
         hintStyle: const TextStyle(color: gray),
-        // labelText: widget.label,
-        // labelStyle: const TextStyle(color: darkGray),
+        labelText: widget.label,
+        labelStyle: const TextStyle(color: darkGray),
         suffixIcon: !widget.isPassword
             ? Icon(widget.icon, color: darkGray)
             : InkWell(

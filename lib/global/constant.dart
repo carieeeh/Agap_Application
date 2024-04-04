@@ -22,6 +22,6 @@ const Color yellow = Color(0xFFFFC700);
 const Color primaryRed = Color(0xFFFF1F1E);
 const Color lightRed = Color.fromARGB(255, 251, 95, 95);
 
-const String googleApiKey = 'AIzaSyAi_s01lorl3UheOb8_Zyec3HvPYO6VX6c';
+const String googleApiKey = 'AIzaSyDhHbTksP6L2sw2qAk2ozLzi-utU47uh5A';
 const String fireStoreDoc = 'staging';
 // const String fireStoreDoc = 'production';

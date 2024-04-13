@@ -26,7 +26,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -50,23 +53,11 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAi_s01lorl3UheOb8_Zyec3HvPYO6VX6c',
+    apiKey: 'AIzaSyDaDxXbWEoJWXqyjqOFtAjDbSJ9bLZgzxc',
     appId: '1:1060919755818:android:03fd9e4926aae636516f53',
     messagingSenderId: '1060919755818',
     projectId: 'agap-f4c32',
     databaseURL: 'https://agap-f4c32-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'agap-f4c32.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDNSu7WKHH8YKM4Gg2iN-cE8JVyEPGYNY0',
-    appId: '1:1060919755818:ios:24919809981a5b06516f53',
-    messagingSenderId: '1060919755818',
-    projectId: 'agap-f4c32',
-    databaseURL: 'https://agap-f4c32-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'agap-f4c32.appspot.com',
-    androidClientId: '1060919755818-d2r8taenbdmk7m7d0okksrd2oku7epl7.apps.googleusercontent.com',
-    iosClientId: '1060919755818-ned0al1qul447qe787j8ohlm3s7rofm1.apps.googleusercontent.com',
-    iosBundleId: 'com.rabelen.agapMobileV01',
   );
 }

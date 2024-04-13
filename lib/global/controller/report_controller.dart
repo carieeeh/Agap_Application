@@ -13,7 +13,7 @@ class ReportController extends GetxController {
   RxBool isLoading = false.obs;
 
   Future<DocumentSnapshot?> sendEmergencyReport({
-    required XFile file,
+    required List<XFile> files,
     required String type,
     required String description,
     required String address,
@@ -24,9 +24,13 @@ class ReportController extends GetxController {
     try {
       await _authController.getCurrentUser();
       FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
-      String? imageUrl = await _storageController.uploadFile(file);
+      List<String> imageUrls = [];
 
-      if (imageUrl != null) {
+      for (var file in files) {
+        imageUrls.add(await _storageController.uploadFile(file));
+      }
+
+      if (imageUrls.isNotEmpty) {
         Emergency emergency = Emergency(
           residentUid: _authController.currentUser!.uid,
           description: description,
@@ -35,7 +39,7 @@ class ReportController extends GetxController {
           address: address,
           totalUnits: 1,
           status: 'pending',
-          fileUrls: [imageUrl],
+          fileUrls: imageUrls,
           createdAt: Timestamp.now(),
           updatedAt: Timestamp.now(),
         );
@@ -79,9 +83,9 @@ class ReportController extends GetxController {
         .where('resident_uid', isEqualTo: _authController.currentUser!.uid)
         .get()
         .then((value) {
-      value.docs.forEach((doc) {
+      for (var doc in value.docs) {
         print('${doc.id} => ${doc.data()}');
-      });
+      }
     });
   }
 }

@@ -61,4 +61,8 @@ class UserModel {
       'status': status,
     };
   }
+
+  String fullName() {
+    return "$firstName $lastName";
+  }
 }

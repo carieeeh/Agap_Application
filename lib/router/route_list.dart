@@ -13,12 +13,13 @@ import 'package:agap_mobile_v01/layout/private/resident/settings/settings.dart';
 import 'package:agap_mobile_v01/layout/public/login.dart';
 import 'package:agap_mobile_v01/layout/public/otp_page.dart';
 import 'package:agap_mobile_v01/layout/public/registration.dart';
+import 'package:agap_mobile_v01/layout/public/splash_screen.dart';
 import 'package:agap_mobile_v01/router/auth_guard.dart';
 import 'package:get/get.dart';
 
 List<GetPage> routeList = [
   GetPage(
-    name: '/',
+    name: '/home',
     page: () => const HomePage(),
     middlewares: [AuthGuard()],
   ),
@@ -90,4 +91,5 @@ List<GetPage> routeList = [
     name: '/registration',
     page: () => const RegistrationPage(),
   ),
+  GetPage(name: "/", page: () => const SplashScreen()),
 ];

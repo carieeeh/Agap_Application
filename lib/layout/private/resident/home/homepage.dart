@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
@@ -9,7 +10,6 @@ import 'package:agap_mobile_v01/layout/widgets/buttons/emergency_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,6 +23,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final AuthController _authController = Get.find<AuthController>();
   final ReportController _reportController = Get.find<ReportController>();
   final ImagePicker _imagePicker = ImagePicker();
   final TextEditingController _reportDescriptionController =
@@ -32,8 +33,7 @@ class _HomePageState extends State<HomePage> {
   String currentAddress = "Use Current Location";
   String? _incidentAddress;
   double? lat, lng;
-
-  XFile? photo;
+  List<XFile> photoList = [];
 
   @override
   void initState() {
@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future initFunction() async {
+    await _locController.checkLocationPermission();
     _incidentPosition = await _locController.getUserLocation();
     currentAddress =
         await _locController.getAddressByCoordinates(_incidentPosition);
@@ -55,103 +56,7 @@ class _HomePageState extends State<HomePage> {
         height: Get.height,
         child: Stack(
           children: [
-            Container(
-              height: Get.height * .25,
-              color: primaryRed,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "WELCOME,",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            "User Name",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.white,
-                        child: Image.asset(
-                          'assets/images/person.png',
-                          fit: BoxFit.cover,
-                          height: 45,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  InkWell(
-                    onTap: () async {
-                      _locController.isLoading.value = true;
-                      var googleResult = await Get.to(() => GooglePlacesView());
-
-                      if (googleResult != null) {
-                        _incidentAddress = googleResult['description'];
-                        lat = googleResult['lat'] as double;
-                        lng = googleResult['lng'] as double;
-                      } else {
-                        _incidentAddress = currentAddress;
-                        lat = _incidentPosition.latitude;
-                        lng = _incidentPosition.longitude;
-                      }
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      width: Get.width,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Obx(
-                        () => Row(
-                          children: [
-                            const Icon(Icons.my_location_outlined),
-                            const SizedBox(width: 10),
-                            Visibility(
-                              visible: _locController.isLoading.isFalse,
-                              child: SizedBox(
-                                width: Get.width * .75,
-                                child: Text(
-                                  _incidentAddress ?? currentAddress,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: _locController.isLoading.isTrue,
-                              child: SizedBox(
-                                width: Get.width * .75,
-                                child: const LinearProgressIndicator(
-                                  color: bgPrimaryBlue,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
+            header(),
             Positioned(
               bottom: 0,
               height: Get.height * .71,
@@ -175,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     EmergencyButton(
                       onPressed: () {
-                        _takeImageReport('earthquake');
+                        _sendReport('earthquake');
                       },
                       title: 'Earthquake',
                       imagePath: 'assets/images/earthquake.gif',
@@ -186,14 +91,14 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         EmergencyButton(
                           onPressed: () {
-                            _takeImageReport('medical');
+                            _sendReport('medical');
                           },
                           title: 'Medical',
                           imagePath: 'assets/images/medicine.gif',
                         ),
                         EmergencyButton(
                           onPressed: () {
-                            _takeImageReport('fire');
+                            _sendReport('fire');
                           },
                           title: 'Fire',
                           imagePath: 'assets/images/fire.gif',
@@ -206,14 +111,14 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         EmergencyButton(
                           onPressed: () {
-                            _takeImageReport('police');
+                            _sendReport('police');
                           },
                           title: 'Police',
                           imagePath: 'assets/images/security-guard.gif',
                         ),
                         EmergencyButton(
                           onPressed: () {
-                            _takeImageReport('flood');
+                            _sendReport('flood');
                           },
                           title: 'Flood',
                           imagePath: 'assets/images/floods.gif',
@@ -230,140 +135,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future _takeImageReport(String type) async {
-    photo = await _imagePicker.pickImage(
-      source: ImageSource.camera,
-    );
-    if (photo != null) {
+  Future _sendReport(String type) async {
+    await takeImage();
+    if (photoList.isNotEmpty) {
       Get.dialog(
         Dialog(
           child: SingleChildScrollView(
             padding: EdgeInsets.zero,
             child: Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Center(
-                        child: Text(
-                          'Verify your report:',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                      const Text(
-                        "Are you sure you want to send this picture as your report?",
-                        textAlign: TextAlign.center,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Image.file(
-                          File(photo!.path),
-                          height: 300,
-                          width: 300,
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                      OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: colorSuccess,
-                          side: const BorderSide(color: colorSuccess),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.add, color: Colors.white),
-                            Text(
-                              'Add image',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      TextFormField(
-                        controller: _reportDescriptionController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Description... (optional)',
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                        ),
-                        maxLines: 3,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RoundedCustomButton(
-                            onPressed: () {
-                              _reportController
-                                  .sendEmergencyReport(
-                                file: photo!,
-                                type: type,
-                                description: _reportDescriptionController.text,
-                                address: _incidentAddress ?? currentAddress,
-                                lat: lat ?? _incidentPosition.latitude,
-                                lng: lng ?? _incidentPosition.longitude,
-                              )
-                                  .then((value) {
-                                if (value != null) {
-                                  Get.back();
-                                  Get.snackbar(
-                                    "Success: Report Successfully Submitted",
-                                    "You successfully submit a report!",
-                                    backgroundColor: colorSuccess,
-                                    colorText: Colors.white,
-                                  );
-                                  _reportDescriptionController.setText('');
-                                } else {
-                                  Get.dialog(
-                                    barrierDismissible: false,
-                                    const GetDialog(
-                                      type: 'error',
-                                      title: 'Report Failed',
-                                      hasMessage: true,
-                                      buttonNumber: 0,
-                                      hasCustomWidget: false,
-                                      withCloseButton: true,
-                                      message: 'Please try again.',
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                            label: "Yes",
-                            size: const Size(100, 50),
-                            bgColor: primaryRed,
-                          ),
-                          const SizedBox(width: 10),
-                          RoundedCustomButton(
-                            onPressed: () {
-                              Get.back();
-                              Get.snackbar(
-                                "Warning: No report submitted",
-                                "You did not submit your report!",
-                                backgroundColor: yellow,
-                              );
-                            },
-                            label: "No",
-                            size: const Size(100, 50),
-                            bgColor: gray,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
+                reportForm(type),
                 Positioned(
                   child: Obx(
                     () => Visibility(
@@ -399,12 +180,252 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       );
+    }
+  }
+
+  Widget header() {
+    return Container(
+      height: Get.height * .25,
+      color: primaryRed,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "WELCOME,",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    _authController.userModel!.fullName(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.white,
+                child: Image.asset(
+                  'assets/images/person.png',
+                  fit: BoxFit.cover,
+                  height: 45,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          InkWell(
+            onTap: () {
+              openSearchLocation();
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              width: Get.width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Obx(
+                () => Row(
+                  children: [
+                    const Icon(Icons.my_location_outlined),
+                    const SizedBox(width: 10),
+                    Visibility(
+                      visible: _locController.isLoading.isFalse,
+                      child: SizedBox(
+                        width: Get.width * .75,
+                        child: Text(
+                          _incidentAddress ?? currentAddress,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: _locController.isLoading.isTrue,
+                      child: SizedBox(
+                        width: Get.width * .75,
+                        child: const LinearProgressIndicator(
+                          color: bgPrimaryBlue,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget reportForm(String type) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Center(
+            child: Text(
+              'Verify your report:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+          ),
+          const Text(
+            "Are you sure you want to send this picture as your report?",
+            textAlign: TextAlign.center,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Image.file(
+              File(photoList.first.path),
+              height: 300,
+              width: 300,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+          OutlinedButton(
+            onPressed: () {},
+            style: OutlinedButton.styleFrom(
+              backgroundColor: colorSuccess,
+              side: const BorderSide(color: colorSuccess),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add, color: Colors.white),
+                Text(
+                  'Add image',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          TextFormField(
+            controller: _reportDescriptionController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Description... (optional)',
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+            ),
+            maxLines: 3,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RoundedCustomButton(
+                onPressed: () {
+                  onReportConfirm(type);
+                },
+                label: "Yes",
+                size: const Size(100, 50),
+                bgColor: primaryRed,
+              ),
+              const SizedBox(width: 10),
+              RoundedCustomButton(
+                onPressed: () {
+                  Get.back();
+                  Get.snackbar(
+                    "Warning: No report submitted",
+                    "You did not submit your report!",
+                    backgroundColor: yellow,
+                  );
+                },
+                label: "No",
+                size: const Size(100, 50),
+                bgColor: gray,
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> takeImage() async {
+    final photo = await _imagePicker.pickImage(
+      source: ImageSource.camera,
+    );
+    if (photo != null) {
+      photoList.add(photo);
     } else {
       Get.snackbar(
         "Warning: No image taken",
         "You did not take any image with your camera!",
         backgroundColor: yellow,
       );
+    }
+  }
+
+  void onReportConfirm(String type) {
+    _reportController
+        .sendEmergencyReport(
+      files: photoList,
+      type: type,
+      description: _reportDescriptionController.text,
+      address: _incidentAddress ?? currentAddress,
+      lat: lat ?? _incidentPosition.latitude,
+      lng: lng ?? _incidentPosition.longitude,
+    )
+        .then((value) {
+      if (value != null) {
+        Get.back();
+        Get.snackbar(
+          "Success: Report Successfully Submitted",
+          "You successfully submit a report!",
+          backgroundColor: colorSuccess,
+          colorText: Colors.white,
+        );
+        _reportDescriptionController.setText('');
+      } else {
+        Get.dialog(
+          barrierDismissible: false,
+          const GetDialog(
+            type: 'error',
+            title: 'Report Failed',
+            hasMessage: true,
+            buttonNumber: 0,
+            hasCustomWidget: false,
+            withCloseButton: true,
+            message: 'Please try again.',
+          ),
+        );
+      }
+    });
+  }
+
+  Future<void> openSearchLocation() async {
+    _locController.isLoading.value = true;
+    var googleResult = await Get.to(() => GooglePlacesView());
+
+    if (googleResult != null) {
+      _incidentAddress = googleResult['description'];
+      lat = googleResult['lat'] as double;
+      lng = googleResult['lng'] as double;
+    } else {
+      _incidentAddress = currentAddress;
+      lat = _incidentPosition.latitude;
+      lng = _incidentPosition.longitude;
     }
   }
 }

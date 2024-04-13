@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
@@ -19,5 +22,51 @@ class SettingsController extends GetxController {
         // Do something when countdown finishes
       }
     });
+  }
+
+  Future<void> initFirebaseMessaging() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print(settings);
+  }
+
+  void handleForegroundMessaging() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      log('Got a message whilst in the foreground!');
+      log('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        log('Message also contained a notification: ${message.notification}');
+      }
+    });
+  }
+
+  Future<void> callFunction(
+    String token,
+    Map<String, dynamic> data,
+  ) async {
+    final callable =
+        FirebaseFunctions.instance.httpsCallable("sendNotification");
+
+    try {
+      final result = await callable.call({
+        "token": token,
+        "data": data,
+      });
+
+      return result.data; // Return the response data if needed
+    } on FirebaseFunctionsException catch (error) {
+      print(error.message);
+    }
   }
 }

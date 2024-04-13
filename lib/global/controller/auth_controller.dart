@@ -3,13 +3,21 @@ import 'package:agap_mobile_v01/global/model/user_model.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
-  RxBool isLoading = false.obs, isRescuer = false.obs, isAuth = false.obs;
+  RxBool isLoading = false.obs,
+      isRescuer = false.obs,
+      isAuth = false.obs,
+      hasUser = false.obs,
+      isSupported = false.obs,
+      isBioEnabled = false.obs;
   RxString phoneNumber = ''.obs;
   Rx<TextEditingController> pinCode = TextEditingController().obs;
   int? _forceResendingToken;
@@ -17,6 +25,58 @@ class AuthController extends GetxController {
   String _verificationId = '';
   UserModel? userModel;
   User? currentUser;
+
+  Future<void> setLocalAuth() async {
+    final LocalAuthentication auth = LocalAuthentication();
+
+    auth.isDeviceSupported().then(
+        (bool isDeviceSupported) => isSupported.value = isDeviceSupported);
+    List<BiometricType> availableBiometrics =
+        await auth.getAvailableBiometrics();
+    isBioEnabled.value = availableBiometrics.isNotEmpty && isSupported.isTrue;
+  }
+
+  Future<void> localAuthenticate() async {
+    final LocalAuthentication auth = LocalAuthentication();
+
+    if (isBioEnabled.isTrue) {
+      try {
+        bool localAuthenticated = await auth.authenticate(
+            localizedReason: "Authenticate to Login in the system.",
+            options: const AuthenticationOptions(
+              stickyAuth: true,
+            ));
+        if (localAuthenticated) {
+          isAuth.value = localAuthenticated;
+          await findUserInfo(currentUser!.uid).then((Object? value) async {
+            if (value != null) {
+              signIn(value);
+            }
+          });
+        }
+      } on PlatformException catch (error) {
+        Get.dialog(
+          barrierDismissible: false,
+          GetDialog(
+            type: 'error',
+            title: 'Login failed.',
+            hasMessage: true,
+            buttonNumber: 0,
+            hasCustomWidget: false,
+            withCloseButton: true,
+            message: 'Please use the other option. \nError: $error',
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> checkAuth() async {
+    if (FirebaseAuth.instance.currentUser != null) {
+      currentUser = FirebaseAuth.instance.currentUser;
+      hasUser.value = true;
+    }
+  }
 
   // request otp for phone number ex. 9487123123
   Future<void> requestOTP() async {
@@ -65,7 +125,7 @@ class AuthController extends GetxController {
         .then((UserCredential userCredential) async {
       currentUser = userCredential.user;
 
-      await findUserInfo(currentUser!.uid).then((Object? value) {
+      await findUserInfo(currentUser!.uid).then((Object? value) async {
         if (value != null) {
           signIn(value);
         } else {
@@ -104,6 +164,7 @@ class AuthController extends GetxController {
 
   Future signIn(value) async {
     userModel = UserModel.fromJson(value);
+    await updateFCMToken(currentUser!.uid);
 
     isAuth.value = true;
     isLoading.value = false;
@@ -113,7 +174,7 @@ class AuthController extends GetxController {
       Get.offAllNamed('/interactive_map');
     } else {
       isRescuer.value = false;
-      Get.offAllNamed('/');
+      Get.offAllNamed("/home");
     }
   }
 
@@ -143,7 +204,7 @@ class AuthController extends GetxController {
         ),
       );
 
-      isRescuer.isFalse ? Get.offAllNamed('/') : Get.offAllNamed('/login');
+      isRescuer.isFalse ? Get.offAllNamed("/home") : Get.offAllNamed('/login');
     }).catchError((error) {
       isLoading.value = false;
 
@@ -229,5 +290,18 @@ class AuthController extends GetxController {
         .get();
 
     return querySnapShot.docs.isNotEmpty ? querySnapShot.docs[0].data() : null;
+  }
+
+  Future<void> updateFCMToken(String uid) async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+
+    final QuerySnapshot querySnapShot = await firestoreDb
+        .collection("agap_collection")
+        .doc(fireStoreDoc)
+        .collection('users')
+        .where('uid', isEqualTo: uid)
+        .get();
+    querySnapShot.docs.first.reference.update({"fcm_token": fcmToken});
   }
 }

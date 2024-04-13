@@ -56,9 +56,9 @@ class DrawerApp extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        "Juan Dela Cruz",
-                        style: TextStyle(color: Colors.white),
+                      Text(
+                        _auth.userModel!.fullName(),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
@@ -80,7 +80,7 @@ class DrawerApp extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    Get.toNamed('/');
+                    Get.toNamed("/home");
                   },
                 ),
                 ListTile(

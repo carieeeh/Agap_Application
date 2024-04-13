@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 class StorageController extends GetxController {
   RxBool isLoading = false.obs;
 
-  Future<String?> uploadFile(XFile file) async {
+  Future<String> uploadFile(XFile file) async {
     isLoading.value = true;
     try {
       final Reference storageRef =
@@ -32,7 +32,7 @@ class StorageController extends GetxController {
           message: 'Error code: $error',
         ),
       );
-      return null;
+      return "";
     } finally {
       isLoading.value = false;
     }

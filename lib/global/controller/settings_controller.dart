@@ -60,7 +60,12 @@ class SettingsController extends GetxController {
             description: "Need help ASAP!",
           ),
         );
-      } else {}
+      } else {
+        Get.snackbar(message.data["title"], message.data["message"]);
+        if (message.data["status"] == "accepted") {
+          Get.toNamed('/rescuer_map_view');
+        }
+      }
     });
   }
 

@@ -1,6 +1,7 @@
 import 'package:agap_mobile_v01/layout/private/rescuer/home/report_details.dart';
 import 'package:agap_mobile_v01/layout/private/resident/dashboard/dashboard.dart';
 import 'package:agap_mobile_v01/layout/private/resident/home/homepage.dart';
+import 'package:agap_mobile_v01/layout/private/resident/home/rescuer_map_view.dart';
 import 'package:agap_mobile_v01/layout/private/resident/profile/profile.dart';
 import 'package:agap_mobile_v01/layout/private/resident/reports/report_feedback.dart';
 import 'package:agap_mobile_v01/layout/private/resident/reports/reports_list.dart';
@@ -21,6 +22,11 @@ List<GetPage> routeList = [
   GetPage(
     name: '/home',
     page: () => const HomePage(),
+    middlewares: [AuthGuard()],
+  ),
+  GetPage(
+    name: '/rescuer_map_view',
+    page: () => const RescuerMapView(),
     middlewares: [AuthGuard()],
   ),
   GetPage(

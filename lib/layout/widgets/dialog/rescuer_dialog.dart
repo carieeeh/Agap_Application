@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,6 +26,8 @@ class RescuerDialog extends StatefulWidget {
 
 class _RescuerDialogState extends State<RescuerDialog>
     with TickerProviderStateMixin {
+  final RescuerController _rescuerController = Get.find<RescuerController>();
+
   final TextStyle labelStyle = const TextStyle(fontSize: 14);
   final TextStyle detailsStyle = const TextStyle(
     fontSize: 14,
@@ -146,8 +149,10 @@ class _RescuerDialogState extends State<RescuerDialog>
                 ),
                 const SizedBox(height: 10),
                 RoundedCustomButton(
-                  onPressed: () {},
-                  label: "Accept",
+                  onPressed: () {
+                    _rescuerController.startLocationUpdate();
+                  },
+                  label: "RESPOND!",
                   bgColor: colorSuccess,
                   size: Size(
                     Get.width * .8,

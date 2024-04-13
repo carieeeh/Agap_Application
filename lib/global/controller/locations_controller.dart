@@ -36,7 +36,10 @@ class LocationsController extends GetxController {
   }
 
   Future<Position> getUserLocation() async {
-    return await Geolocator.getCurrentPosition();
+    isLoading.value = true;
+    final position = await Geolocator.getCurrentPosition();
+    isLoading.value = false;
+    return position;
   }
 
   Future<String> getAddressByCoordinates(Position position) async {

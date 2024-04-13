@@ -22,15 +22,13 @@ class RescuerInteractiveMap extends StatefulWidget {
 class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(14.5871, 120.9845),
-    zoom: 15,
-  );
 
   final LocationsController _locController = Get.find<LocationsController>();
   final RescuerController _rescuerController = Get.find<RescuerController>();
   final AuthController _authController = Get.find<AuthController>();
-  late Position _incidentPosition;
+
+  CameraPosition? _kGooglePlex;
+  late Position _userPosition;
   String currentAddress = "Use Current Location";
   String? _incidentAddress;
   double? lat, lng;
@@ -43,15 +41,14 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
 
   Future initFunction() async {
     await _locController.checkLocationPermission();
-    _incidentPosition = await _locController.getUserLocation();
+    _userPosition = await _locController.getUserLocation();
+    _kGooglePlex = CameraPosition(
+      target: LatLng(_userPosition.latitude, _userPosition.longitude),
+      zoom: 15,
+    );
     currentAddress =
-        await _locController.getAddressByCoordinates(_incidentPosition);
+        await _locController.getAddressByCoordinates(_userPosition);
     await _rescuerController.updateRescuerLocation();
-    _rescuerController.startLocationUpdate();
-    Timer(const Duration(seconds: 30), () {
-      _rescuerController.stopLocationUpdate();
-      print('Stopped updating.');
-    });
   }
 
   @override
@@ -114,8 +111,8 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                         lng = googleResult['lng'] as double;
                       } else {
                         _incidentAddress = currentAddress;
-                        lat = _incidentPosition.latitude;
-                        lng = _incidentPosition.longitude;
+                        lat = _userPosition.latitude;
+                        lng = _userPosition.longitude;
                       }
                       _locController.isLoading.value = false;
                     },
@@ -175,7 +172,10 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                     myLocationButtonEnabled: true,
                     myLocationEnabled: true,
                     zoomControlsEnabled: false,
-                    initialCameraPosition: _kGooglePlex,
+                    initialCameraPosition: _kGooglePlex ??
+                        const CameraPosition(
+                          target: LatLng(14.5871, 120.9845),
+                        ),
                     onMapCreated: (GoogleMapController controller) {
                       _controller.complete(controller);
                     },

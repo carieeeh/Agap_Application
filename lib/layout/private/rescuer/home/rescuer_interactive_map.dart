@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
+import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/google_maps/google_places_view.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,8 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
   );
 
   final LocationsController _locController = Get.find<LocationsController>();
+  final RescuerController _rescuerController = Get.find<RescuerController>();
+  final AuthController _authController = Get.find<AuthController>();
   late Position _incidentPosition;
   String currentAddress = "Use Current Location";
   String? _incidentAddress;
@@ -38,9 +42,16 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
   }
 
   Future initFunction() async {
+    await _locController.checkLocationPermission();
     _incidentPosition = await _locController.getUserLocation();
     currentAddress =
         await _locController.getAddressByCoordinates(_incidentPosition);
+    await _rescuerController.updateRescuerLocation();
+    _rescuerController.startLocationUpdate();
+    Timer(const Duration(seconds: 30), () {
+      _rescuerController.stopLocationUpdate();
+      print('Stopped updating.');
+    });
   }
 
   @override
@@ -59,10 +70,10 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "WELCOME,",
                             style: TextStyle(
                               color: Colors.white,
@@ -71,8 +82,8 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                             ),
                           ),
                           Text(
-                            "Rescuer Name",
-                            style: TextStyle(
+                            _authController.userModel!.fullName(),
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 30,
                               fontWeight: FontWeight.w600,

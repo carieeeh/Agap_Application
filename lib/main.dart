@@ -1,18 +1,29 @@
+import 'package:agap_mobile_v01/firebase_options.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
+import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
 import 'package:agap_mobile_v01/global/controller/storage_controller.dart';
 import 'package:agap_mobile_v01/router/route_list.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// @pragma('vm:entry-point')
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   // If you're going to use other Firebase services in the background, such as Firestore,
+//   // make sure you call `initializeApp` before using other Firebase services.
+//   await Firebase.initializeApp();
+
+//   print("Handling a background message: ${message.messageId}");
+// }
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -42,6 +53,7 @@ class MyApp extends StatelessWidget {
     Get.put(LocationsController());
     Get.put(StorageController());
     Get.put(ReportController());
+    Get.put(RescuerController());
 
     return GetMaterialApp(
       title: 'Agap',

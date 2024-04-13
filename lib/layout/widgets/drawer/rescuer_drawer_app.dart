@@ -37,9 +37,9 @@ class RescuerDrawerApp extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        "Juan Dela Cruz",
-                        style: TextStyle(color: Colors.white),
+                      Text(
+                        _auth.userModel!.fullName(),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ],
                   ),

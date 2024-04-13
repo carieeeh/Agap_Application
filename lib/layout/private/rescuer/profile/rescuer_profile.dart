@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,8 @@ class RescuerProfile extends StatefulWidget {
   @override
   State<RescuerProfile> createState() => _RescuerProfileState();
 }
+
+final AuthController _auth = Get.find<AuthController>();
 
 class _RescuerProfileState extends State<RescuerProfile> {
   @override
@@ -45,11 +48,15 @@ class _RescuerProfileState extends State<RescuerProfile> {
                   border: Border.all(color: gray),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Center(
-                    child: Text(
-                  "Rescuer Name",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                )),
+                child: Center(
+                  child: Text(
+                    _auth.userModel!.fullName(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
             ),
             Positioned(

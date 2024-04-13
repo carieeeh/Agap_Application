@@ -9,6 +9,7 @@ class UserModel {
   String? contactNumber;
   String? emeContactNumber;
   String? email;
+  String? department;
   int? age;
   String? status;
   Timestamp? emailVerifyAt;
@@ -26,6 +27,7 @@ class UserModel {
     this.emailVerifyAt,
     /*required*/ this.status,
     /*required*/ this.contactNumber,
+    this.department,
     this.emeContactNumber,
   });
 
@@ -38,6 +40,7 @@ class UserModel {
       role: json['role'] as String?,
       email: json['email'] as String?,
       contactNumber: json['contact_number'] as String?,
+      department: json['department'] as String?,
       emeContactNumber: json['eme_contact_number'] as String?,
       emailVerifyAt: json['email_verify_at'] as Timestamp?,
       additionalInformation: json['additional_information'],
@@ -55,6 +58,7 @@ class UserModel {
       'role': role,
       'age': age,
       'contact_number': contactNumber,
+      'department': department,
       'eme_contact_number': emeContactNumber,
       'additional_information': additionalInformation,
       'email_verify_at': emailVerifyAt,

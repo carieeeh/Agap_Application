@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final AuthController _authController = Get.find<AuthController>();
   final ReportController _reportController = Get.find<ReportController>();
   final ImagePicker _imagePicker = ImagePicker();
@@ -34,11 +34,22 @@ class _HomePageState extends State<HomePage> {
   String? _incidentAddress;
   double? lat, lng;
   List<XFile> photoList = [];
+  late PageController _pageViewController;
+  late TabController _tabController;
 
   @override
   void initState() {
     initFunction();
+    _pageViewController = PageController();
+    _tabController = TabController(length: 3, vsync: this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageViewController.dispose();
+    _tabController.dispose();
   }
 
   Future initFunction() async {
@@ -287,20 +298,34 @@ class _HomePageState extends State<HomePage> {
             "Are you sure you want to send this picture as your report?",
             textAlign: TextAlign.center,
           ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Image.file(
-              File(photoList.first.path),
-              height: 300,
-              width: 300,
-              fit: BoxFit.fitWidth,
+          SizedBox(
+            height: Get.height * .5,
+            width: Get.width,
+            child: Stack(
+              children: [
+                PageView.builder(
+                  controller: _pageViewController,
+                  itemCount: photoList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Image.file(
+                        File(photoList[index].path),
+                        height: 280,
+                        width: 280,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
           OutlinedButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.back();
+              _sendReport(type);
+            },
             style: OutlinedButton.styleFrom(
               backgroundColor: colorSuccess,
               side: const BorderSide(color: colorSuccess),
@@ -308,12 +333,12 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(5),
               ),
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.add, color: Colors.white),
                 Text(
-                  'Add image',
+                  'Add image ${photoList.length}',
                   style: TextStyle(color: Colors.white),
                 ),
               ],
@@ -350,6 +375,10 @@ class _HomePageState extends State<HomePage> {
                     "You did not submit your report!",
                     backgroundColor: yellow,
                   );
+                  setState(() {
+                    photoList = [];
+                    _reportDescriptionController.text = '';
+                  });
                 },
                 label: "No",
                 size: const Size(100, 50),
@@ -411,6 +440,11 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       }
+    });
+
+    setState(() {
+      photoList = [];
+      _reportDescriptionController.text = '';
     });
   }
 

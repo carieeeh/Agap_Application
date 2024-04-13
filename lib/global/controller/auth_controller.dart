@@ -249,6 +249,7 @@ class AuthController extends GetxController {
     required String contactNumber,
     required String emeContactNumber,
     required String email,
+    required String department,
   }) async {
     isRescuer.value = true;
 
@@ -261,6 +262,7 @@ class AuthController extends GetxController {
       emeContactNumber: emeContactNumber,
       status: 'pending',
       email: email,
+      department: department,
     );
 
     phoneNumber.value = contactNumber;

@@ -5,12 +5,12 @@ import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
+import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/google_maps/google_places_view.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class RescuerInteractiveMap extends StatefulWidget {
   const RescuerInteractiveMap({super.key});
@@ -167,20 +167,34 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                 ),
                 child: Container(
                   color: Colors.white,
-                  child: GoogleMap(
-                    mapType: MapType.normal,
-                    myLocationButtonEnabled: true,
-                    myLocationEnabled: true,
-                    zoomControlsEnabled: false,
-                    markers: _rescuerController.markers,
-                    initialCameraPosition: _kGooglePlex ??
-                        const CameraPosition(
-                          target: LatLng(14.5871, 120.9845),
-                          zoom: 15,
+                  child: Obx(
+                    () => Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Visibility(
+                          visible: _rescuerController.isLoading.isFalse,
+                          child: GoogleMap(
+                            mapType: MapType.normal,
+                            myLocationButtonEnabled: true,
+                            myLocationEnabled: true,
+                            zoomControlsEnabled: false,
+                            markers: _rescuerController.markers,
+                            initialCameraPosition: _kGooglePlex ??
+                                const CameraPosition(
+                                  target: LatLng(14.5871, 120.9845),
+                                  zoom: 15,
+                                ),
+                            onMapCreated: (GoogleMapController controller) {
+                              _controller.complete(controller);
+                            },
+                          ),
                         ),
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                    },
+                        Visibility(
+                          visible: _rescuerController.isLoading.isTrue,
+                          child: const CircularProgressIndicator(),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -188,17 +202,45 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
             Positioned(
               bottom: 20,
               right: 20,
-              child: IconButton(
-                onPressed: () async {
-                  _rescuerController.navigateToEmergency();
-                },
-                style: IconButton.styleFrom(
-                  backgroundColor: colorSuccess,
+              child: Obx(
+                () => Visibility(
+                  visible: _rescuerController.hasEmergency.isTrue,
+                  child: IconButton(
+                    onPressed: () async {
+                      _rescuerController.navigateToEmergency();
+                    },
+                    style: IconButton.styleFrom(
+                      backgroundColor: colorSuccess,
+                    ),
+                    icon: const Icon(
+                      Icons.navigation_rounded,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-                icon: const Icon(
-                  Icons.navigation_rounded,
-                  size: 30,
-                  color: Colors.white,
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: Obx(
+                  () => Visibility(
+                    visible: _rescuerController.hasEmergency.isTrue,
+                    child: RoundedCustomButton(
+                      onPressed: () {
+                        _rescuerController.hasArrive.isTrue
+                            ? _rescuerController.declareArrive()
+                            : _rescuerController.declareFinish();
+                      },
+                      label: _rescuerController.hasArrive.isTrue
+                          ? "Mark as finish"
+                          : "Arrive at location",
+                      bgColor: primaryRed,
+                      size: Size(Get.width * .6, 40),
+                    ),
+                  ),
                 ),
               ),
             ),

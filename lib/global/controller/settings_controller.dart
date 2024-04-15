@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/layout/private/resident/reports/report_feedback.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/rescuer_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -11,7 +12,8 @@ import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
   RxInt countdown = 120.obs; // 5 minutes in seconds
-  RxBool isTimerFinish = false.obs, hasReport = true.obs;
+  RxBool isTimerFinish = false.obs, hasReport = false.obs;
+  RxString rescuerUid = "".obs, emergencyDocId = "".obs;
 
   Timer? _timer;
 
@@ -84,9 +86,19 @@ class SettingsController extends GetxController {
         );
       } else if (message.data.containsKey("purpose")) {
         if (message.data["purpose"] == "accepted") {
+          rescuerUid.value = message.data["rescuer_uid"];
           hasReport.value = true;
           Get.toNamed('/rescuer_map_view');
         }
+      } else if (message.data.containsKey("finish")) {
+        hasReport.value = false;
+        rescuerUid.value = message.data["rescuer_uid"];
+        emergencyDocId.value = message.data["emergency_id"];
+        Get.to(ReportFeedback(
+          emergencyDocId: message.data["emergency_id"],
+          role: "resident",
+          userUid: message.data["rescuer_uid"],
+        ));
       }
     });
   }

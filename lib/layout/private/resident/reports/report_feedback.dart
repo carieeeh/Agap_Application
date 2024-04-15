@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:animated_rating_stars/animated_rating_stars.dart';
@@ -6,7 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ReportFeedback extends StatefulWidget {
-  const ReportFeedback({super.key});
+  const ReportFeedback({
+    super.key,
+    required this.emergencyDocId,
+    required this.userUid,
+    required this.role,
+  });
+
+  final String emergencyDocId;
+  final String userUid;
+  final String role;
 
   @override
   State<ReportFeedback> createState() => _ReportFeedbackState();
@@ -14,7 +24,8 @@ class ReportFeedback extends StatefulWidget {
 
 class _ReportFeedbackState extends State<ReportFeedback> {
   final TextEditingController _comments = TextEditingController();
-
+  final ReportController _reportController = Get.find<ReportController>();
+  double emergencyRating = 0;
   @override
   Widget build(BuildContext context) {
     return MainContainer(
@@ -32,8 +43,10 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                 ),
               ),
             ),
-            const Text(
-              "Thank you for reporting the incident!",
+            Text(
+              widget.role == "rescuer"
+                  ? "Thank you for responding!"
+                  : "Thank you for reporting the incident!",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const Padding(
@@ -42,16 +55,19 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                 horizontal: 30,
               ),
               child: Text(
-                "Let us know your feedback/ suggestions for the emergency responders.",
+                "Let us know your feedback/ suggestions for the emergency.",
                 textAlign: TextAlign.center,
               ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "Rate: ",
-                  style: TextStyle(fontSize: 16),
+                Visibility(
+                  visible: widget.role == "resident",
+                  child: const Text(
+                    "Rate: ",
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
                 AnimatedRatingStars(
                   initialRating: 3.5,
@@ -60,6 +76,7 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                   onChanged: (double rating) {
                     // Handle the rating change here
                     // print('Rating: $rating');
+                    emergencyRating = rating;
                   },
                   displayRatingValue: true,
                   interactiveTooltips: true,
@@ -89,7 +106,7 @@ class _ReportFeedbackState extends State<ReportFeedback> {
             Obx(
               () => RoundedCustomButton(
                 onPressed: () {},
-                isLoading: true,
+                isLoading: _reportController.isLoading.isTrue,
                 label: "Submit",
                 size: Size(Get.width * .75, 40),
                 bgColor: primaryRed,

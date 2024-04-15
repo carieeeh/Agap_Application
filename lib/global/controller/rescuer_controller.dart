@@ -6,6 +6,7 @@ import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
+import 'package:agap_mobile_v01/layout/private/resident/reports/report_feedback.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
@@ -22,6 +23,8 @@ class RescuerController extends GetxController {
   Set<Marker> markers = {};
   Timer? _timer;
   bool _isRunning = false;
+  RxBool isLoading = false.obs, hasEmergency = false.obs, hasArrive = false.obs;
+  String _residentUid = "", _emergencyDocId = "";
 
   Future<void> updateRescuerLocation() async {
     FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
@@ -79,6 +82,9 @@ class RescuerController extends GetxController {
   Future<void> acceptEmergency(
       GeoPoint geoPoint, String residentUid, String emergencyId) async {
     try {
+      isLoading.value = true;
+      _residentUid = residentUid;
+      _emergencyDocId = emergencyId;
       await updateRescuerStatus("occupied");
       final residentInfo = jsonEncode(await _auth.findUserInfo(residentUid));
       final jsonInfo = jsonDecode(residentInfo);
@@ -102,7 +108,7 @@ class RescuerController extends GetxController {
 
       await _report.updateEmergency(emergencyId, {"status": "accepted"});
       await _settings.callFunction(jsonInfo["fcm_token"], data);
-
+      hasEmergency.value = true;
       Get.back();
       Get.snackbar(
         "Emergency accepted!",
@@ -113,17 +119,18 @@ class RescuerController extends GetxController {
     } catch (error) {
       Get.dialog(
         barrierDismissible: false,
-        const GetDialog(
+        GetDialog(
           type: 'error',
-          title: 'Login Failed',
+          title: 'Something went wrong',
           hasMessage: true,
           buttonNumber: 0,
           hasCustomWidget: false,
           withCloseButton: true,
-          message:
-              'Error: No user found! \nPlease log out then log in your account',
+          message: 'Error: ${error.toString()}',
         ),
       );
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -138,5 +145,83 @@ class RescuerController extends GetxController {
     await updateRescuerStatus("free");
     markers.clear();
     Get.back();
+  }
+
+  Future declareArrive() async {
+    try {
+      isLoading.value = true;
+      final residentInfo = jsonEncode(await _auth.findUserInfo(_residentUid));
+      final jsonInfo = jsonDecode(residentInfo);
+
+      final data = {
+        "purpose": "arrive",
+        "title": "Rescuer arrive at your location.",
+        "message": "Rescuer is on its way to your emergency.",
+        "rescuer_uid": _auth.currentUser?.uid,
+      };
+
+      await _report.updateEmergency(_emergencyDocId, {"status": "ongoing"});
+      await _settings.callFunction(jsonInfo["fcm_token"], data);
+      hasArrive.value = true;
+      stopLocationUpdate();
+    } catch (error) {
+      Get.dialog(
+        barrierDismissible: false,
+        GetDialog(
+          type: 'error',
+          title: 'Something went wrong',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message: 'Error: ${error.toString()}',
+        ),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future declareFinish() async {
+    try {
+      isLoading.value = true;
+
+      await updateRescuerStatus("free");
+      final residentInfo = jsonEncode(await _auth.findUserInfo(_residentUid));
+      final jsonInfo = jsonDecode(residentInfo);
+
+      final data = {
+        "purpose": "finish",
+        "title": "Emergency finish.",
+        "message": "Rescuer marks your emergency as finish.",
+        "emergency_id": _emergencyDocId,
+        "rescuer_uid": _auth.currentUser?.uid,
+      };
+
+      await _report.updateEmergency(_emergencyDocId, {"status": "finish"});
+      await _settings.callFunction(jsonInfo["fcm_token"], data);
+      hasArrive.value = true;
+      stopLocationUpdate();
+      Get.to(ReportFeedback(
+        emergencyDocId: _emergencyDocId,
+        userUid: _residentUid,
+        role: "rescuer",
+      ));
+    } catch (error) {
+      Get.dialog(
+        barrierDismissible: false,
+        GetDialog(
+          type: 'error',
+          title: 'Something went wrong',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message: 'Error: ${error.toString()}',
+        ),
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

@@ -129,4 +129,45 @@ class ReportController extends GetxController {
       }
     });
   }
+
+  Future sendEmergencyFeedback(
+    double? rating,
+    String emergencyId,
+    String comment,
+    String role,
+  ) async {
+    try {
+      isLoading.value = true;
+      await _authController.getCurrentUser();
+      FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+
+      final data = {
+        "emergency_id": emergencyId,
+        "comment": comment,
+        "role": role,
+        "rating": rating,
+      };
+
+      await firestoreDb
+          .collection("agap_collection")
+          .doc(fireStoreDoc)
+          .collection('emergency_feedbacks')
+          .add(data);
+    } catch (error) {
+      Get.dialog(
+        barrierDismissible: false,
+        GetDialog(
+          type: 'error',
+          title: 'Feedback Failed',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message: 'Error: $error',
+        ),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

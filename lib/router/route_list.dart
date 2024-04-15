@@ -3,7 +3,6 @@ import 'package:agap_mobile_v01/layout/private/resident/dashboard/dashboard.dart
 import 'package:agap_mobile_v01/layout/private/resident/home/homepage.dart';
 import 'package:agap_mobile_v01/layout/private/resident/home/rescuer_map_view.dart';
 import 'package:agap_mobile_v01/layout/private/resident/profile/profile.dart';
-import 'package:agap_mobile_v01/layout/private/resident/reports/report_feedback.dart';
 import 'package:agap_mobile_v01/layout/private/resident/reports/reports_list.dart';
 import 'package:agap_mobile_v01/layout/private/rescuer/dashboard/rescuer_dashboard.dart';
 import 'package:agap_mobile_v01/layout/private/rescuer/home/rescuer_interactive_map.dart';
@@ -53,12 +52,6 @@ List<GetPage> routeList = [
     name: '/reports',
     page: () => const ReportsList(),
     middlewares: [AuthGuard()],
-    children: [
-      GetPage(
-        name: '/feedback',
-        page: () => const ReportFeedback(),
-      ),
-    ],
   ),
   GetPage(
     name: '/rescuer_reports',

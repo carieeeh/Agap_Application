@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             header(),
             Positioned(
               bottom: 0,
-              height: Get.height * .71,
+              height: Get.height * .70,
               width: Get.width,
               child: Container(
                 decoration: const BoxDecoration(
@@ -242,7 +242,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               width: Get.width,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -336,10 +336,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.add, color: Colors.white),
+                const Icon(Icons.add, color: Colors.white),
                 Text(
                   'Add image ${photoList.length}',
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ],
             ),

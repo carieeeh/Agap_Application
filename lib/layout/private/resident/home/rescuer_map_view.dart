@@ -49,6 +49,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
   }
 
   Future initFunction() async {
+    _reportController.isLoading.value = true;
     await _locController.checkLocationPermission();
     _userPosition = await _locController.getUserLocation();
 
@@ -56,9 +57,11 @@ class _RescuerMapViewState extends State<RescuerMapView> {
       target: LatLng(_userPosition.latitude, _userPosition.longitude),
       zoom: 15,
     );
-
+    await _reportController
+        .getRescuerInfo(_settingsController.rescuerUid.value);
     rescuerIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration.empty, "assets/images/rescuer_icon.png");
+    _reportController.isLoading.value = false;
   }
 
   @override
@@ -68,60 +71,63 @@ class _RescuerMapViewState extends State<RescuerMapView> {
       body: SafeArea(
           child: Stack(
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            color: primaryRed,
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: Get.width * .30,
-                      child: Text("Rescuer name :", style: labelStyle),
-                    ),
-                    Expanded(
-                      child: Text(
-                        "Reydan John Belen",
-                        style: detailsStyle,
+          Obx(
+            () => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              color: primaryRed,
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: Get.width * .30,
+                        child: Text("Rescuer name :", style: labelStyle),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: Get.width * .30,
-                      child: Text("Contact no. :", style: labelStyle),
-                    ),
-                    Expanded(
-                      child: Text(
-                        "09321321321",
-                        style: detailsStyle,
+                      Expanded(
+                        child: Text(
+                          _reportController.rescuerData.value.fullName(),
+                          style: detailsStyle,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: Get.width * .30,
-                      child: Text("Department :", style: labelStyle),
-                    ),
-                    Expanded(
-                      child: Text(
-                        "Fire Department",
-                        style: detailsStyle,
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: Get.width * .30,
+                        child: Text("Contact no. :", style: labelStyle),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Expanded(
+                        child: Text(
+                          _reportController.rescuerData.value.contactNumber ??
+                              "",
+                          style: detailsStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: Get.width * .30,
+                        child: Text("Department :", style: labelStyle),
+                      ),
+                      Expanded(
+                        child: Text(
+                          _reportController.rescuerData.value.department ?? "",
+                          style: detailsStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           Positioned(
@@ -136,29 +142,49 @@ class _RescuerMapViewState extends State<RescuerMapView> {
               child: Container(
                 color: Colors.white,
                 child: StreamBuilder<DocumentSnapshot?>(
-                  stream: _reportController.getRescuerLoc(""),
+                  stream: _reportController
+                      .getRescuerLoc(_settingsController.rescuerUid.value),
                   builder: (context, snapshot) {
-                    return GoogleMap(
-                      mapType: MapType.normal,
-                      myLocationButtonEnabled: true,
-                      myLocationEnabled: true,
-                      zoomControlsEnabled: false,
-                      initialCameraPosition: _kGooglePlex ??
-                          const CameraPosition(
-                            target: LatLng(14.5871, 120.9845),
-                            zoom: 15,
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else {
+                      final DocumentSnapshot document = snapshot.data!;
+                      final GeoPoint geoPoint = document["geopoint"];
+
+                      return Obx(
+                        () => Visibility(
+                          visible: _reportController.isLoading.isFalse,
+                          child: GoogleMap(
+                            mapType: MapType.normal,
+                            myLocationButtonEnabled: true,
+                            myLocationEnabled: true,
+                            zoomControlsEnabled: false,
+                            initialCameraPosition: _kGooglePlex ??
+                                const CameraPosition(
+                                  target: LatLng(14.5871, 120.9845),
+                                  zoom: 15,
+                                ),
+                            markers: {
+                              Marker(
+                                markerId: const MarkerId('rescuer'),
+                                icon: rescuerIcon,
+                                position: LatLng(
+                                    geoPoint.latitude, geoPoint.longitude),
+                              )
+                            },
+                            onMapCreated: (GoogleMapController controller) {
+                              _controller.complete(controller);
+                            },
                           ),
-                      markers: {
-                        Marker(
-                          markerId: const MarkerId('rescuer'),
-                          icon: rescuerIcon,
-                          position: rescuerPosition,
-                        )
-                      },
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
-                      },
-                    );
+                        ),
+                      );
+                    }
                   },
                 ),
               ),

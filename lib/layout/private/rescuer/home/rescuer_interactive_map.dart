@@ -175,6 +175,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                     initialCameraPosition: _kGooglePlex ??
                         const CameraPosition(
                           target: LatLng(14.5871, 120.9845),
+                          zoom: 15,
                         ),
                     onMapCreated: (GoogleMapController controller) {
                       _controller.complete(controller);

@@ -5,7 +5,6 @@ import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
-import 'package:agap_mobile_v01/layout/private/resident/home/rescuer_map_view.dart';
 import 'package:agap_mobile_v01/layout/widgets/google_maps/google_places_view.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/emergency_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
@@ -239,8 +238,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           const SizedBox(height: 10),
           InkWell(
             onTap: () {
-              Get.to(() => const RescuerMapView());
-              // openSearchLocation();
+              openSearchLocation();
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),

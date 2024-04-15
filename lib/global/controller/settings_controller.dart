@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/rescuer_dialog.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,7 +9,8 @@ import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
   RxInt countdown = 120.obs; // 5 minutes in seconds
-  RxBool isTimerFinish = false.obs;
+  RxBool isTimerFinish = false.obs, hasReport = true.obs;
+
   Timer? _timer;
 
   void startCountdown(Function() onFinish) {
@@ -23,6 +25,10 @@ class SettingsController extends GetxController {
         // Do something when countdown finishes
       }
     });
+  }
+
+  void stopCountdown() {
+    _timer?.cancel();
   }
 
   Future<void> initFirebaseMessaging() async {
@@ -43,9 +49,17 @@ class SettingsController extends GetxController {
 
   void handleForegroundMessaging() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      log('Got a message whilst in the foreground!');
-      log('Message data: ${message.data}');
-      if (message.data.containsKey("for") && message.data["for"] == "rescuer") {
+      log('Message data: ${message.data.toString()}');
+
+      Get.snackbar(
+        message.data["title"],
+        message.data["message"],
+        duration: const Duration(seconds: 5),
+        backgroundColor: colorSuccess,
+      );
+
+      if (message.data.containsKey("purpose") &&
+          message.data["purpose"] == "rescuer") {
         Get.dialog(
           barrierDismissible: false,
           const RescuerDialog(
@@ -60,9 +74,9 @@ class SettingsController extends GetxController {
             description: "Need help ASAP!",
           ),
         );
-      } else {
-        Get.snackbar(message.data["title"], message.data["message"]);
-        if (message.data["status"] == "accepted") {
+      } else if (message.data.containsKey("purpose")) {
+        if (message.data["purpose"] == "accepted") {
+          hasReport.value = true;
           Get.toNamed('/rescuer_map_view');
         }
       }

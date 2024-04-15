@@ -19,11 +19,11 @@ class _OTPPageState extends State<OTPPage> {
 
   @override
   void initState() {
-    // _settings.startCountdown(
-    //   () {
-    //     print("Finish");
-    //   },
-    // );
+    _settings.startCountdown(
+      () {
+        print("Finish");
+      },
+    );
     super.initState();
   }
 
@@ -70,6 +70,7 @@ class _OTPPageState extends State<OTPPage> {
                   Obx(
                     () => RoundedCustomButton(
                       onPressed: () {
+                        _settings.stopCountdown();
                         _auth.verifyOTP();
                       },
                       label: 'Verify',

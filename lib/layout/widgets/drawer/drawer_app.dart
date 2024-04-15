@@ -1,13 +1,16 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
+import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class DrawerApp extends StatelessWidget {
   DrawerApp({super.key});
 
   final AuthController _auth = Get.find<AuthController>();
+  final SettingsController _settings = Get.find<SettingsController>();
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +118,22 @@ class DrawerApp extends StatelessWidget {
                   onTap: () {
                     Get.offAllNamed('/reports');
                   },
+                ),
+                Visibility(
+                  visible: _settings.hasReport.value,
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.map_rounded,
+                      color: Colors.white,
+                    ),
+                    title: const Text(
+                      "Ongoing Report",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onTap: () {
+                      Get.offAllNamed('/rescuer_map_view');
+                    },
+                  ),
                 ),
               ],
             ),

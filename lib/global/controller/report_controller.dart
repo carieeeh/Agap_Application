@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/storage_controller.dart';
 import 'package:agap_mobile_v01/global/model/emergency.dart';
+import 'package:agap_mobile_v01/global/model/user_model.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -11,7 +14,7 @@ class ReportController extends GetxController {
   final AuthController _authController = Get.find<AuthController>();
   final StorageController _storageController = Get.find<StorageController>();
   RxBool isLoading = false.obs;
-
+  Rx<UserModel> rescuerData = UserModel().obs;
   Future<DocumentSnapshot?> sendEmergencyReport({
     required List<XFile> files,
     required String type,
@@ -85,6 +88,32 @@ class ReportController extends GetxController {
         .then((value) {
       for (var doc in value.docs) {
         print('${doc.id} => ${doc.data()}');
+      }
+    });
+  }
+
+  Future<void> getRescuerInfo(String uid) async {
+    final data = jsonEncode(await _authController.findUserInfo(uid));
+    rescuerData.value = UserModel.fromJson(jsonDecode(data));
+
+    print(rescuerData.value);
+  }
+
+  Stream<DocumentSnapshot> getRescuerLoc(String uid) {
+    FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+    CollectionReference<Map<String, dynamic>> rescuerLocations = firestoreDb
+        .collection("agap_collection")
+        .doc('staging')
+        .collection('rescuer_locations');
+
+    return rescuerLocations
+        .where('uid', isEqualTo: uid)
+        .snapshots()
+        .map((querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first;
+      } else {
+        throw Exception('No document found');
       }
     });
   }

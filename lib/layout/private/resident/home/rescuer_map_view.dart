@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
+import 'package:agap_mobile_v01/global/controller/report_controller.dart';
+import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -18,7 +21,11 @@ class RescuerMapView extends StatefulWidget {
 class _RescuerMapViewState extends State<RescuerMapView> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+
   final LocationsController _locController = Get.find<LocationsController>();
+  final ReportController _reportController = Get.find<ReportController>();
+  final SettingsController _settingsController = Get.find<SettingsController>();
+
   late Position _userPosition;
   CameraPosition? _kGooglePlex;
   BitmapDescriptor rescuerIcon = BitmapDescriptor.defaultMarker;
@@ -43,26 +50,14 @@ class _RescuerMapViewState extends State<RescuerMapView> {
   Future initFunction() async {
     await _locController.checkLocationPermission();
     _userPosition = await _locController.getUserLocation();
+
     _kGooglePlex = CameraPosition(
       target: LatLng(_userPosition.latitude, _userPosition.longitude),
       zoom: 15,
     );
+
     rescuerIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration.empty, "assets/images/rescuer_icon.png");
-    timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
-      // Update marker position every 3 seconds
-      setState(() {
-        rescuerPosition = LatLng(
-          rescuerPosition.latitude +
-              0.001, // Example: Increment latitude by 0.01
-          rescuerPosition.longitude +
-              0.001, // Example: Increment longitude by 0.01
-        );
-      });
-    });
-    Timer.periodic(Duration(seconds: 30), (_) {
-      timer.cancel();
-    });
   }
 
   @override
@@ -139,10 +134,10 @@ class _RescuerMapViewState extends State<RescuerMapView> {
               ),
               child: Container(
                 color: Colors.white,
-                child: Obx(
-                  () => Visibility(
-                    visible: _locController.isLoading.isFalse,
-                    child: GoogleMap(
+                child: StreamBuilder<DocumentSnapshot?>(
+                  stream: _reportController.getRescuerLoc(""),
+                  builder: (context, snapshot) {
+                    return GoogleMap(
                       mapType: MapType.normal,
                       myLocationButtonEnabled: true,
                       myLocationEnabled: true,
@@ -150,6 +145,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                       initialCameraPosition: _kGooglePlex ??
                           const CameraPosition(
                             target: LatLng(14.5871, 120.9845),
+                            zoom: 15,
                           ),
                       markers: {
                         Marker(
@@ -161,8 +157,8 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                       onMapCreated: (GoogleMapController controller) {
                         _controller.complete(controller);
                       },
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
             ),

@@ -82,7 +82,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: Get.width * .30,
+                        width: Get.width * .35,
                         child: Text("Rescuer name :", style: labelStyle),
                       ),
                       Expanded(
@@ -98,7 +98,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: Get.width * .30,
+                        width: Get.width * .35,
                         child: Text("Contact no. :", style: labelStyle),
                       ),
                       Expanded(
@@ -115,7 +115,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: Get.width * .30,
+                        width: Get.width * .35,
                         child: Text("Department :", style: labelStyle),
                       ),
                       Expanded(

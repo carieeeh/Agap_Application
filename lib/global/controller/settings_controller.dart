@@ -89,16 +89,16 @@ class SettingsController extends GetxController {
           rescuerUid.value = message.data["rescuer_uid"];
           hasReport.value = true;
           Get.toNamed('/rescuer_map_view');
+        } else if (message.data["purpose"] == "finish") {
+          hasReport.value = false;
+          rescuerUid.value = message.data["rescuer_uid"];
+          emergencyDocId.value = message.data["emergency_id"];
+          Get.to(ReportFeedback(
+            emergencyDocId: message.data["emergency_id"],
+            role: "resident",
+            userUid: message.data["rescuer_uid"],
+          ));
         }
-      } else if (message.data.containsKey("finish")) {
-        hasReport.value = false;
-        rescuerUid.value = message.data["rescuer_uid"];
-        emergencyDocId.value = message.data["emergency_id"];
-        Get.to(ReportFeedback(
-          emergencyDocId: message.data["emergency_id"],
-          role: "resident",
-          userUid: message.data["rescuer_uid"],
-        ));
       }
     });
   }

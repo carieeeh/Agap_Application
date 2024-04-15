@@ -106,7 +106,14 @@ class _ReportFeedbackState extends State<ReportFeedback> {
             ),
             Obx(
               () => RoundedCustomButton(
-                onPressed: () {},
+                onPressed: () {
+                  _reportController.sendEmergencyFeedback(
+                    emergencyRating,
+                    widget.emergencyDocId,
+                    _comments.text,
+                    widget.role,
+                  );
+                },
                 isLoading: _reportController.isLoading.isTrue,
                 label: "Submit",
                 size: Size(Get.width * .75, 40),

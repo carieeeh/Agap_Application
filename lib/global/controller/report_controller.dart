@@ -153,6 +153,7 @@ class ReportController extends GetxController {
           .doc(fireStoreDoc)
           .collection('emergency_feedbacks')
           .add(data);
+      Get.snackbar("Feedback submitted", "Thank you for writing a feedback");
     } catch (error) {
       Get.dialog(
         barrierDismissible: false,

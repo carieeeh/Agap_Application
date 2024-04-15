@@ -231,8 +231,8 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                     child: RoundedCustomButton(
                       onPressed: () {
                         _rescuerController.hasArrive.isTrue
-                            ? _rescuerController.declareArrive()
-                            : _rescuerController.declareFinish();
+                            ? _rescuerController.declareFinish()
+                            : _rescuerController.declareArrive();
                       },
                       label: _rescuerController.hasArrive.isTrue
                           ? "Mark as finish"

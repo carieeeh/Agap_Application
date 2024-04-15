@@ -4,6 +4,7 @@ import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ReportFeedback extends StatefulWidget {
@@ -59,35 +60,35 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                 textAlign: TextAlign.center,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Visibility(
-                  visible: widget.role == "resident",
-                  child: const Text(
+            Visibility(
+              visible: widget.role == "resident",
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
                     "Rate: ",
                     style: TextStyle(fontSize: 16),
                   ),
-                ),
-                AnimatedRatingStars(
-                  initialRating: 3.5,
-                  minRating: 0.0,
-                  maxRating: 5.0,
-                  onChanged: (double rating) {
-                    // Handle the rating change here
-                    // print('Rating: $rating');
-                    emergencyRating = rating;
-                  },
-                  displayRatingValue: true,
-                  interactiveTooltips: true,
-                  customFilledIcon: Icons.star,
-                  customHalfFilledIcon: Icons.star_half,
-                  customEmptyIcon: Icons.star_border,
-                  animationDuration: const Duration(milliseconds: 300),
-                  animationCurve: Curves.easeInOut,
-                  readOnly: false,
-                ),
-              ],
+                  AnimatedRatingStars(
+                    initialRating: 3.5,
+                    minRating: 0.0,
+                    maxRating: 5.0,
+                    onChanged: (double rating) {
+                      // Handle the rating change here
+                      // print('Rating: $rating');
+                      emergencyRating = rating;
+                    },
+                    displayRatingValue: true,
+                    interactiveTooltips: true,
+                    customFilledIcon: Icons.star,
+                    customHalfFilledIcon: Icons.star_half,
+                    customEmptyIcon: Icons.star_border,
+                    animationDuration: const Duration(milliseconds: 300),
+                    animationCurve: Curves.easeInOut,
+                    readOnly: false,
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),

@@ -25,24 +25,24 @@ class _RescuerSettingsPageState extends State<RescuerSettingsPage> {
             },
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.visibility_outlined),
-            title: const Text("Appearance"),
-            onTap: () {},
-          ),
-          const Divider(),
+          // ListTile(
+          //   leading: const Icon(Icons.visibility_outlined),
+          //   title: const Text("Appearance"),
+          //   onTap: () {},
+          // ),
+          // const Divider(),
           ListTile(
             leading: const Icon(Icons.phone_outlined),
             title: const Text("Contact"),
             onTap: () {},
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.notifications),
-            title: const Text("Notification"),
-            onTap: () {},
-          ),
-          const Divider(),
+          // ListTile(
+          //   leading: const Icon(Icons.notifications),
+          //   title: const Text("Notification"),
+          //   onTap: () {},
+          // ),
+          // const Divider(),
           ListTile(
             leading: const Icon(Icons.question_mark_outlined),
             title: const Text("About us"),

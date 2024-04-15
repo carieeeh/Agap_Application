@@ -25,12 +25,12 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.visibility_outlined),
-            title: const Text("Appearance"),
-            onTap: () {},
-          ),
-          const Divider(),
+          // ListTile(
+          //   leading: const Icon(Icons.visibility_outlined),
+          //   title: const Text("Appearance"),
+          //   onTap: () {},
+          // ),
+          // const Divider(),
           ListTile(
             leading: const Icon(Icons.phone_outlined),
             title: const Text("Contact"),

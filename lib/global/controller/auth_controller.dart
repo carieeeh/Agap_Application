@@ -242,6 +242,24 @@ class AuthController extends GetxController {
     }
   }
 
+  String? findEmptyField({
+    required String firstName,
+    String? middleName,
+    required String lastName,
+    required String contactNumber,
+    required String emeContactNumber,
+    required String email,
+    required String department,
+  }) {
+    if (firstName.isEmpty) return 'First Name';
+    if (lastName.isEmpty) return 'Last Name';
+    if (contactNumber.isEmpty) return 'Contact Number';
+    if (emeContactNumber.isEmpty) return 'Emergency Contact Number';
+    if (email.isEmpty) return 'Email';
+    if (department.isEmpty) return 'Department';
+    return null; // Return null if all required fields are non-empty
+  }
+
   Future<void> rescuerRegister({
     required String firstName,
     String? middleName,
@@ -251,6 +269,31 @@ class AuthController extends GetxController {
     required String email,
     required String department,
   }) async {
+    String? emptyField = findEmptyField(
+      firstName: firstName,
+      lastName: lastName,
+      contactNumber: contactNumber,
+      emeContactNumber: emeContactNumber,
+      email: email,
+      department: department,
+    );
+
+    if (emptyField != null) {
+      Get.dialog(
+        barrierDismissible: false,
+        GetDialog(
+          type: 'error',
+          title: 'Registration Failed',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message: 'Empty field: $emptyField',
+        ),
+      );
+      return;
+    }
+
     isRescuer.value = true;
 
     userModel = UserModel(
@@ -275,6 +318,7 @@ class AuthController extends GetxController {
     isLoading.value = true;
     localStorage.clear();
     isRescuer.value = false;
+    hasUser.value = false;
     await FirebaseAuth.instance.signOut();
     isAuth.value = false;
     isLoading.value = false;

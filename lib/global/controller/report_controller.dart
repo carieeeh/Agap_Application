@@ -15,6 +15,7 @@ class ReportController extends GetxController {
   final StorageController _storageController = Get.find<StorageController>();
   RxBool isLoading = false.obs;
   Rx<UserModel> rescuerData = UserModel().obs;
+
   Future<DocumentSnapshot?> sendEmergencyReport({
     required List<XFile> files,
     required String type,
@@ -90,6 +91,17 @@ class ReportController extends GetxController {
         print('${doc.id} => ${doc.data()}');
       }
     });
+  }
+
+  Future<void> updateEmergency(String docId, Map<String, dynamic> data) async {
+    FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+
+    await firestoreDb
+        .collection("agap_collection")
+        .doc(fireStoreDoc)
+        .collection('emergencies')
+        .doc(docId)
+        .update(data);
   }
 
   Future<void> getRescuerInfo(String uid) async {

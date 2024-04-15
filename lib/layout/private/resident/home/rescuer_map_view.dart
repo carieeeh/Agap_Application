@@ -29,6 +29,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
   late Position _userPosition;
   CameraPosition? _kGooglePlex;
   BitmapDescriptor rescuerIcon = BitmapDescriptor.defaultMarker;
+  Set<Marker> markers = {};
 
   final TextStyle labelStyle =
       const TextStyle(fontSize: 14, color: Colors.white);

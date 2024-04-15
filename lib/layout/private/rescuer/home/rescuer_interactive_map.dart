@@ -172,6 +172,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                     myLocationButtonEnabled: true,
                     myLocationEnabled: true,
                     zoomControlsEnabled: false,
+                    markers: _rescuerController.markers,
                     initialCameraPosition: _kGooglePlex ??
                         const CameraPosition(
                           target: LatLng(14.5871, 120.9845),
@@ -189,8 +190,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
               right: 20,
               child: IconButton(
                 onPressed: () async {
-                  await launchUrl(Uri.parse(
-                      'google.navigation:q=14.5871,120.9845&key=$googleApiKey'));
+                  _rescuerController.navigateToEmergency();
                 },
                 style: IconButton.styleFrom(
                   backgroundColor: colorSuccess,

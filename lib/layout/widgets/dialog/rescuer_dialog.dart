@@ -1,6 +1,7 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +13,9 @@ class RescuerDialog extends StatefulWidget {
     required this.location,
     required this.totalUnits,
     required this.description,
+    required this.residentUid,
+    required this.geoPoint,
+    required this.emergencyId,
   });
 
   final List<String> imageUrls;
@@ -19,6 +23,9 @@ class RescuerDialog extends StatefulWidget {
   final String location;
   final String totalUnits;
   final String description;
+  final String residentUid;
+  final String emergencyId;
+  final GeoPoint geoPoint;
 
   @override
   State<RescuerDialog> createState() => _RescuerDialogState();
@@ -150,7 +157,11 @@ class _RescuerDialogState extends State<RescuerDialog>
                 const SizedBox(height: 10),
                 RoundedCustomButton(
                   onPressed: () {
-                    _rescuerController.startLocationUpdate();
+                    _rescuerController.acceptEmergency(
+                      widget.geoPoint,
+                      widget.residentUid,
+                      widget.emergencyId,
+                    );
                   },
                   label: "RESPOND!",
                   bgColor: colorSuccess,
@@ -160,7 +171,9 @@ class _RescuerDialogState extends State<RescuerDialog>
                   ),
                 ),
                 RoundedCustomButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _rescuerController.declineEmergency();
+                  },
                   label: "Decline",
                   bgColor: gray,
                   size: Size(

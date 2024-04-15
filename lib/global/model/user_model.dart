@@ -12,6 +12,7 @@ class UserModel {
   String? department;
   int? age;
   String? status;
+  String? fcmToken;
   Timestamp? emailVerifyAt;
   List? additionalInformation;
 
@@ -29,6 +30,7 @@ class UserModel {
     /*required*/ this.contactNumber,
     this.department,
     this.emeContactNumber,
+    this.fcmToken,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class UserModel {
       email: json['email'] as String?,
       contactNumber: json['contact_number'] as String?,
       department: json['department'] as String?,
+      fcmToken: json["fcm_token"] as String?,
       emeContactNumber: json['eme_contact_number'] as String?,
       emailVerifyAt: json['email_verify_at'] as Timestamp?,
       additionalInformation: json['additional_information'],
@@ -63,6 +66,7 @@ class UserModel {
       'additional_information': additionalInformation,
       'email_verify_at': emailVerifyAt,
       'status': status,
+      'fcm_token': fcmToken,
     };
   }
 

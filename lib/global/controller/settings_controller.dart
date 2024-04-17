@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/layout/private/resident/reports/report_feedback.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/rescuer_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +15,7 @@ class SettingsController extends GetxController {
   RxInt countdown = 120.obs; // 5 minutes in seconds
   RxBool isTimerFinish = false.obs, hasReport = false.obs;
   RxString rescuerUid = "".obs, emergencyDocId = "".obs;
+  final AuthController _auth = Get.find<AuthController>();
 
   Timer? _timer;
 
@@ -63,7 +65,8 @@ class SettingsController extends GetxController {
       );
 
       if (message.data.containsKey("purpose") &&
-          message.data["purpose"] == "rescuer") {
+          message.data["purpose"] == "rescuer" &&
+          _auth.isRescuer.isTrue) {
         final emergency = jsonDecode(message.data["emergency"]);
 
         List<String> fileUrls = emergency["file_urls"].cast<String>();
@@ -84,7 +87,8 @@ class SettingsController extends GetxController {
             emergencyId: emergency["docId"],
           ),
         );
-      } else if (message.data.containsKey("purpose")) {
+      } else if (message.data.containsKey("purpose") &&
+          _auth.isRescuer.isFalse) {
         if (message.data["purpose"] == "accepted") {
           rescuerUid.value = message.data["rescuer_uid"];
           hasReport.value = true;
@@ -93,11 +97,13 @@ class SettingsController extends GetxController {
           hasReport.value = false;
           rescuerUid.value = message.data["rescuer_uid"];
           emergencyDocId.value = message.data["emergency_id"];
-          Get.to(ReportFeedback(
-            emergencyDocId: message.data["emergency_id"],
-            role: "resident",
-            userUid: message.data["rescuer_uid"],
-          ));
+          Get.to(
+            ReportFeedback(
+              emergencyDocId: message.data["emergency_id"],
+              role: "resident",
+              userUid: message.data["rescuer_uid"],
+            ),
+          );
         }
       }
     });

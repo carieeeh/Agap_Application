@@ -118,7 +118,7 @@ class RescuerController extends GetxController {
       );
     } catch (error) {
       Get.dialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         GetDialog(
           type: 'error',
           title: 'Something went wrong',
@@ -142,9 +142,27 @@ class RescuerController extends GetxController {
   }
 
   Future declineEmergency() async {
-    await updateRescuerStatus("free");
-    markers.clear();
-    Get.back();
+    try {
+      isLoading.value = true;
+      await updateRescuerStatus("free");
+      markers.clear();
+      Get.back();
+    } catch (error) {
+      Get.dialog(
+        barrierDismissible: true,
+        GetDialog(
+          type: 'error',
+          title: 'Something went wrong',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message: 'Error: ${error.toString()}',
+        ),
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future declareArrive() async {
@@ -166,7 +184,7 @@ class RescuerController extends GetxController {
       stopLocationUpdate();
     } catch (error) {
       Get.dialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         GetDialog(
           type: 'error',
           title: 'Something went wrong',
@@ -209,7 +227,7 @@ class RescuerController extends GetxController {
       ));
     } catch (error) {
       Get.dialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         GetDialog(
           type: 'error',
           title: 'Something went wrong',

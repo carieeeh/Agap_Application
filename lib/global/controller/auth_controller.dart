@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:pinput/pinput.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
   RxBool isLoading = false.obs,
@@ -38,7 +37,7 @@ class AuthController extends GetxController {
 
   Future<void> localAuthenticate() async {
     final LocalAuthentication auth = LocalAuthentication();
-
+    isLoading.value = true;
     if (isBioEnabled.isTrue) {
       try {
         bool localAuthenticated = await auth.authenticate(
@@ -56,7 +55,7 @@ class AuthController extends GetxController {
         }
       } on PlatformException catch (error) {
         Get.dialog(
-          barrierDismissible: false,
+          barrierDismissible: true,
           GetDialog(
             type: 'error',
             title: 'Login failed.',
@@ -67,6 +66,8 @@ class AuthController extends GetxController {
             message: 'Please use the other option. \nError: $error',
           ),
         );
+      } finally {
+        isLoading.value = false;
       }
     }
   }
@@ -90,7 +91,7 @@ class AuthController extends GetxController {
       },
       verificationFailed: (error) {
         Get.dialog(
-          barrierDismissible: false,
+          barrierDismissible: true,
           GetDialog(
             type: 'error',
             title: 'Phone number verification failed',
@@ -148,7 +149,7 @@ class AuthController extends GetxController {
       isLoading.value = false;
 
       Get.dialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         GetDialog(
           type: 'error',
           title: 'Login Failed',
@@ -190,7 +191,7 @@ class AuthController extends GetxController {
       isLoading.value = false;
 
       await Get.dialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         GetDialog(
           type: 'success',
           title: 'Registration success',
@@ -209,7 +210,7 @@ class AuthController extends GetxController {
       isLoading.value = false;
 
       Get.dialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         GetDialog(
           type: 'success',
           title: 'Registration failed',
@@ -227,7 +228,7 @@ class AuthController extends GetxController {
     currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       Get.dialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         const GetDialog(
           type: 'error',
           title: 'Login Failed',
@@ -280,7 +281,7 @@ class AuthController extends GetxController {
 
     if (emptyField != null) {
       Get.dialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         GetDialog(
           type: 'error',
           title: 'Registration Failed',
@@ -314,15 +315,29 @@ class AuthController extends GetxController {
   }
 
   Future<void> logOut() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    isLoading.value = true;
-    localStorage.clear();
-    isRescuer.value = false;
-    hasUser.value = false;
-    await FirebaseAuth.instance.signOut();
-    isAuth.value = false;
-    isLoading.value = false;
-    Get.offAllNamed('/login');
+    try {
+      isLoading.value = true;
+      isRescuer.value = false;
+      isAuth.value = false;
+      isLoading.value = false;
+      // hasUser.value = false;
+      // await FirebaseAuth.instance.signOut();
+      Get.offAllNamed('/login');
+    } catch (error) {
+      Get.dialog(
+        barrierDismissible: true,
+        const GetDialog(
+          type: 'error',
+          title: 'Login Failed',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message:
+              'Error: No user found! \nPlease log out then log in your account',
+        ),
+      );
+    }
   }
 
   Future<Object?> findUserInfo(String uid) async {

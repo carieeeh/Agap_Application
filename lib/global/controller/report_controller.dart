@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ReportController extends GetxController {
-  final AuthController _authController = Get.find<AuthController>();
+  final AuthController _auth = Get.find<AuthController>();
   final StorageController _storageController = Get.find<StorageController>();
   RxBool isLoading = false.obs;
   Rx<UserModel> rescuerData = UserModel().obs;
@@ -26,7 +26,7 @@ class ReportController extends GetxController {
   }) async {
     isLoading.value = true;
     try {
-      await _authController.getCurrentUser();
+      await _auth.getCurrentUser();
       FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
       List<String> imageUrls = [];
 
@@ -36,7 +36,7 @@ class ReportController extends GetxController {
 
       if (imageUrls.isNotEmpty) {
         Emergency emergency = Emergency(
-          residentUid: _authController.currentUser!.uid,
+          residentUid: _auth.currentUser!.uid,
           description: description,
           geopoint: GeoPoint(lat, lng),
           type: type,
@@ -58,7 +58,7 @@ class ReportController extends GetxController {
       }
     } catch (error) {
       Get.dialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         GetDialog(
           type: 'error',
           title: 'Report Failed',
@@ -84,7 +84,7 @@ class ReportController extends GetxController {
             .collection('emergencies');
 
     emergenciesCollection
-        .where('resident_uid', isEqualTo: _authController.currentUser!.uid)
+        .where('resident_uid', isEqualTo: _auth.currentUser!.uid)
         .get()
         .then((value) {
       for (var doc in value.docs) {
@@ -105,7 +105,7 @@ class ReportController extends GetxController {
   }
 
   Future<void> getRescuerInfo(String uid) async {
-    final data = jsonEncode(await _authController.findUserInfo(uid));
+    final data = jsonEncode(await _auth.findUserInfo(uid));
     rescuerData.value = UserModel.fromJson(jsonDecode(data));
 
     print(rescuerData.value);
@@ -138,7 +138,7 @@ class ReportController extends GetxController {
   ) async {
     try {
       isLoading.value = true;
-      await _authController.getCurrentUser();
+      await _auth.getCurrentUser();
       FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
 
       final data = {
@@ -153,10 +153,37 @@ class ReportController extends GetxController {
           .doc(fireStoreDoc)
           .collection('emergency_feedbacks')
           .add(data);
-      Get.snackbar("Feedback submitted", "Thank you for writing a feedback");
+
+      Get.snackbar("Feedback submitted",
+          "Thank you for writing a feedback,\n you earn 1 AGAP Points");
+
+      final uid = _auth.currentUser!.uid;
+
+      final collection = await firestoreDb
+          .collection("agap_collection")
+          .doc(fireStoreDoc)
+          .collection('user_badges');
+
+      final QuerySnapshot querySnapShot =
+          await collection.where('uid', isEqualTo: uid).get();
+      if (querySnapShot.docs.isEmpty) {
+        await collection.add({
+          "uid": uid,
+          "badges": [],
+          "agap_points": 1,
+        });
+      } else {
+        final agapData = querySnapShot.docs.first.data();
+        final dataToJson = jsonEncode(agapData);
+        final jsonInfo = jsonDecode(dataToJson);
+        final totalPoints = jsonInfo["agap_points"] ?? 1;
+
+        querySnapShot.docs.first.reference
+            .update({"agap_points": totalPoints + 1});
+      }
     } catch (error) {
       Get.dialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         GetDialog(
           type: 'error',
           title: 'Feedback Failed',

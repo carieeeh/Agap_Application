@@ -67,121 +67,126 @@ class _RescuerDialogState extends State<RescuerDialog>
           width: Get.width,
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Center(
-                  child: Text(
-                    "EMERGENCY!",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            child: Obx(
+              () => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Center(
+                    child: Text(
+                      "EMERGENCY!",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 15),
-                SizedBox(
-                  height: Get.height * .3,
-                  width: Get.width,
-                  child: Stack(
+                  const SizedBox(height: 15),
+                  SizedBox(
+                    height: Get.height * .3,
+                    width: Get.width,
+                    child: Stack(
+                      children: [
+                        PageView.builder(
+                          controller: _pageViewController,
+                          itemCount: widget.imageUrls.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: Image.network(
+                                widget.imageUrls[index],
+                                height: 280,
+                                width: 280,
+                                fit: BoxFit.fitWidth,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      PageView.builder(
-                        controller: _pageViewController,
-                        itemCount: widget.imageUrls.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Image.network(
-                              widget.imageUrls[index],
-                              height: 280,
-                              width: 280,
-                              fit: BoxFit.fitWidth,
-                            ),
-                          );
-                        },
+                      SizedBox(
+                        width: Get.width * .25,
+                        child: Text("Type :", style: labelStyle),
+                      ),
+                      Expanded(child: Text(widget.type, style: detailsStyle)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: Get.width * .25,
+                        child: Text("Location :", style: labelStyle),
+                      ),
+                      Expanded(
+                        child: Text(widget.location, style: detailsStyle),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 15),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: Get.width * .25,
-                      child: Text("Type :", style: labelStyle),
-                    ),
-                    Expanded(child: Text(widget.type, style: detailsStyle)),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: Get.width * .25,
-                      child: Text("Location :", style: labelStyle),
-                    ),
-                    Expanded(
-                      child: Text(widget.location, style: detailsStyle),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: Get.width * .25,
-                      child: Text("Total units :", style: labelStyle),
-                    ),
-                    Expanded(
-                        child: Text(
-                      widget.totalUnits,
-                      style: detailsStyle,
-                    )),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: Get.width * .25,
-                      child: Text("Description :", style: labelStyle),
-                    ),
-                    Expanded(
-                        child: Text(
-                      widget.description,
-                      style: detailsStyle,
-                    )),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                RoundedCustomButton(
-                  onPressed: () {
-                    _rescuerController.acceptEmergency(
-                      widget.geoPoint,
-                      widget.residentUid,
-                      widget.emergencyId,
-                    );
-                  },
-                  label: "RESPOND!",
-                  bgColor: colorSuccess,
-                  size: Size(
-                    Get.width * .8,
-                    30,
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: Get.width * .25,
+                        child: Text("Total units :", style: labelStyle),
+                      ),
+                      Expanded(
+                          child: Text(
+                        widget.totalUnits,
+                        style: detailsStyle,
+                      )),
+                    ],
                   ),
-                ),
-                RoundedCustomButton(
-                  onPressed: () {
-                    _rescuerController.declineEmergency();
-                  },
-                  label: "Decline",
-                  bgColor: gray,
-                  size: Size(
-                    Get.width * .8,
-                    30,
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: Get.width * .25,
+                        child: Text("Description :", style: labelStyle),
+                      ),
+                      Expanded(
+                          child: Text(
+                        widget.description,
+                        style: detailsStyle,
+                      )),
+                    ],
                   ),
-                )
-              ],
+                  const SizedBox(height: 10),
+                  RoundedCustomButton(
+                    onPressed: () {
+                      _rescuerController.acceptEmergency(
+                        widget.geoPoint,
+                        widget.residentUid,
+                        widget.emergencyId,
+                      );
+                    },
+                    label: "RESPOND!",
+                    bgColor: colorSuccess,
+                    size: Size(
+                      Get.width * .8,
+                      30,
+                    ),
+                  ),
+                  RoundedCustomButton(
+                    onPressed: () {
+                      _rescuerController.declineEmergency();
+                    },
+                    isLoading: _rescuerController.isLoading.value,
+                    label: "Decline",
+                    bgColor: gray,
+                    size: Size(
+                      Get.width * .8,
+                      30,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

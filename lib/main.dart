@@ -3,6 +3,7 @@ import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
+import 'package:agap_mobile_v01/global/controller/resident_controller.dart';
 import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
 import 'package:agap_mobile_v01/global/controller/storage_controller.dart';
 import 'package:agap_mobile_v01/router/route_list.dart';
@@ -30,8 +31,6 @@ void main() async {
 
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,
-    appleProvider: AppleProvider.appAttest,
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
   );
 
   runApp(const MyApp());
@@ -48,12 +47,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    Get.put(SettingsController());
     Get.put(AuthController());
+    Get.put(SettingsController());
     Get.put(LocationsController());
     Get.put(StorageController());
     Get.put(ReportController());
     Get.put(RescuerController());
+    Get.put(ResidentController());
 
     return GetMaterialApp(
       title: 'Agap',

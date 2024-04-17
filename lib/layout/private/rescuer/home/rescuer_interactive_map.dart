@@ -70,16 +70,8 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "WELCOME,",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
                           Text(
-                            _authController.userModel!.fullName(),
+                            _authController.userModel!.department ?? "",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 30,

@@ -118,7 +118,7 @@ class RescuerController extends GetxController {
       );
     } catch (error) {
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'error',
           title: 'Something went wrong',
@@ -149,7 +149,7 @@ class RescuerController extends GetxController {
       Get.back();
     } catch (error) {
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'error',
           title: 'Something went wrong',
@@ -184,7 +184,7 @@ class RescuerController extends GetxController {
       stopLocationUpdate();
     } catch (error) {
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'error',
           title: 'Something went wrong',
@@ -227,7 +227,7 @@ class RescuerController extends GetxController {
       ));
     } catch (error) {
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'error',
           title: 'Something went wrong',

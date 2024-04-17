@@ -14,7 +14,7 @@ class LocationsController extends GetxController {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         Get.dialog(
-          barrierDismissible: true,
+          barrierDismissible: false,
           const GetDialog(
             type: 'error',
             title: 'Login Failed',

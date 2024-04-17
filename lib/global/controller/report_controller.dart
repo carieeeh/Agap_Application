@@ -58,7 +58,7 @@ class ReportController extends GetxController {
       }
     } catch (error) {
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'error',
           title: 'Report Failed',
@@ -183,7 +183,7 @@ class ReportController extends GetxController {
       }
     } catch (error) {
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'error',
           title: 'Feedback Failed',

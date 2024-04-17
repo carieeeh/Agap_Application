@@ -21,7 +21,7 @@ class StorageController extends GetxController {
       return fileUrl;
     } on FirebaseException catch (error) {
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'error',
           title: 'Login Failed',

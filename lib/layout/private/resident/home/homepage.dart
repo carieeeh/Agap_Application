@@ -428,7 +428,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         _reportDescriptionController.setText('');
       } else {
         Get.dialog(
-          barrierDismissible: true,
+          barrierDismissible: false,
           const GetDialog(
             type: 'error',
             title: 'Report Failed',

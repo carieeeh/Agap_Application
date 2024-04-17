@@ -55,7 +55,7 @@ class AuthController extends GetxController {
         }
       } on PlatformException catch (error) {
         Get.dialog(
-          barrierDismissible: true,
+          barrierDismissible: false,
           GetDialog(
             type: 'error',
             title: 'Login failed.',
@@ -91,7 +91,7 @@ class AuthController extends GetxController {
       },
       verificationFailed: (error) {
         Get.dialog(
-          barrierDismissible: true,
+          barrierDismissible: false,
           GetDialog(
             type: 'error',
             title: 'Phone number verification failed',
@@ -149,7 +149,7 @@ class AuthController extends GetxController {
       isLoading.value = false;
 
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'error',
           title: 'Login Failed',
@@ -191,7 +191,7 @@ class AuthController extends GetxController {
       isLoading.value = false;
 
       await Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'success',
           title: 'Registration success',
@@ -210,7 +210,7 @@ class AuthController extends GetxController {
       isLoading.value = false;
 
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'success',
           title: 'Registration failed',
@@ -228,7 +228,7 @@ class AuthController extends GetxController {
     currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         const GetDialog(
           type: 'error',
           title: 'Login Failed',
@@ -281,7 +281,7 @@ class AuthController extends GetxController {
 
     if (emptyField != null) {
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         GetDialog(
           type: 'error',
           title: 'Registration Failed',
@@ -325,7 +325,7 @@ class AuthController extends GetxController {
       Get.offAllNamed('/login');
     } catch (error) {
       Get.dialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         const GetDialog(
           type: 'error',
           title: 'Login Failed',

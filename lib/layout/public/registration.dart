@@ -3,7 +3,6 @@ import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/underline_input.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -27,7 +26,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final List _list = [
     {"label": "Fire Department", "value": "fire"},
     {"label": "Police Department", "value": "police"},
-    {"label": "Medical Department", "value": "medic"},
+    {"label": "Health care Department", "value": "medic"},
     {"label": "Barangay Department", "value": "Barangay"},
   ];
 

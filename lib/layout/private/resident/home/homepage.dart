@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           onPressed: () {
                             _sendReport('medical');
                           },
-                          title: 'Medical',
+                          title: 'Health care',
                           imagePath: 'assets/images/medicine.gif',
                         ),
                         EmergencyButton(

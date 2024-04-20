@@ -27,7 +27,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> initFunc() async {
     await _auth.checkAuth();
     await _auth.setLocalAuth();
-    // await _settingsController.callFunction();
     _settingsController.handleForegroundMessaging();
 
     Timer(const Duration(seconds: 1), () {

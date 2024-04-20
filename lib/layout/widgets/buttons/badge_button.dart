@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/resident_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,16 +13,18 @@ class BadgeButton extends StatefulWidget {
     required this.points,
   });
 
-  final Widget badge;
+  final String badge;
   final String imageUrl;
   final String description;
-  final String points;
+  final int points;
 
   @override
   State<BadgeButton> createState() => _BadgeButtonState();
 }
 
 class _BadgeButtonState extends State<BadgeButton> {
+  final ResidentController _residentController = Get.find<ResidentController>();
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -29,19 +32,19 @@ class _BadgeButtonState extends State<BadgeButton> {
         Get.dialog(
           Dialog(
             child: SizedBox(
-              height: Get.height * .65,
+              height: Get.height * .645,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     Container(
-                      height: Get.height * .35,
+                      height: Get.height * .3,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       padding: const EdgeInsets.all(15),
                       child: Image.network(widget.imageUrl),
                     ),
-                    Text("AGAP points needed: ${widget.points}"),
+                    Text("AGAP points needed: ${widget.points.toString()}"),
                     const SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -51,7 +54,13 @@ class _BadgeButtonState extends State<BadgeButton> {
                       ),
                     ),
                     RoundedCustomButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _residentController.buyBadges(
+                          widget.badge,
+                          widget.points,
+                        );
+                      },
+                      isLoading: _residentController.isLoading.value,
                       label: "Unlock",
                       size: Size(Get.width * .7, 30),
                       bgColor: primaryRed,
@@ -92,7 +101,7 @@ class _BadgeButtonState extends State<BadgeButton> {
               right: 0,
               child: Icon(Icons.lock_outline, color: Colors.black),
             ),
-            widget.badge,
+            Image.network(widget.badge),
           ],
         ),
       ),

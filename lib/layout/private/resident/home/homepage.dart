@@ -4,6 +4,7 @@ import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
+import 'package:agap_mobile_v01/global/controller/resident_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/google_maps/google_places_view.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/emergency_button.dart';
@@ -29,6 +30,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final TextEditingController _reportDescriptionController =
       TextEditingController();
   final LocationsController _locController = Get.find<LocationsController>();
+  final ResidentController _residentController = Get.find<ResidentController>();
+
   late Position _incidentPosition;
   String currentAddress = "Use Current Location";
   String? _incidentAddress;
@@ -55,6 +58,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Future initFunction() async {
     await _locController.checkLocationPermission();
     _incidentPosition = await _locController.getUserLocation();
+    await _residentController.getUserCurrentPoints();
     currentAddress =
         await _locController.getAddressByCoordinates(_incidentPosition);
   }

@@ -71,6 +71,7 @@ class _RescuerReportIncidentsState extends State<RescuerReportIncidents> {
             ChartLegend(color: skyBlue, title: "Flood"),
           ],
         ),
+        const SizedBox(height: 20),
         const ReportChart(),
       ],
     );

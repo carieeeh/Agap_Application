@@ -34,12 +34,13 @@ class _ReportIncidentsState extends State<ReportIncidents> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ChartLegend(color: primaryRed, title: "Fire"),
-            ChartLegend(color: colorSuccess, title: "Medicine"),
+            ChartLegend(color: colorSuccess, title: "Health care"),
             ChartLegend(color: primaryBlue, title: "Police"),
             ChartLegend(color: yellow, title: "Earthquake"),
             ChartLegend(color: skyBlue, title: "Flood"),
           ],
         ),
+        const SizedBox(height: 20),
         const ReportChart(),
       ],
     );

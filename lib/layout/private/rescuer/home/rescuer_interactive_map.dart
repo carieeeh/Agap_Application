@@ -111,7 +111,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
+                          horizontal: 15, vertical: 5),
                       width: Get.width,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -151,7 +151,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
             ),
             Positioned(
               bottom: 0,
-              height: Get.height * .71,
+              height: Get.height * .70,
               width: Get.width,
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(

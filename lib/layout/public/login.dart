@@ -41,117 +41,136 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: 40, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 10),
-                Visibility(
-                  visible: _auth.hasUser.isTrue,
-                  child: Center(
-                    child: SizedBox(
-                      width: Get.width * .55,
-                      child: TextButton(
-                        onPressed: () {
-                          _auth.localAuthenticate();
-                        },
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Login with biometrics",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.fingerprint,
-                              color: Colors.black,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: _auth.hasUser.isTrue,
-                  child: const Text("or"),
-                ),
-                const SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SizedBox(
-                    width: Get.width * .8,
-                    child: const Text(
-                      'Enter your 10 digit phone number:',
-                      style: TextStyle(color: darkGray),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                PhoneNumberInput(
-                  controller: _phoneNumber,
-                  errorText: _phoneNumberError,
-                  onChanged: (_) {
-                    setState(() {
-                      _phoneNumberError = null;
-                    });
-                  },
-                  submit: () {
-                    setState(() {
-                      if (_phoneNumber.text.isEmpty) {
-                        _phoneNumberError = 'Please enter a number.';
-                      } else if (_phoneNumber.text.length < 10) {
-                        _phoneNumberError =
-                            'Please enter a at least 10 digit phone number.';
-                      } else {
-                        _auth.isRescuer.value = false;
-                        _auth.phoneNumber.value = _phoneNumber.text;
-                        _auth.requestOTP();
-                        _auth.pinCode.value.setText('');
-                        Get.toNamed('/otp-page');
-                      }
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SizedBox(
-                    width: Get.width * .8,
-                    child: const Text.rich(
-                      TextSpan(
-                        style: TextStyle(fontSize: 10),
-                        children: [
-                          TextSpan(
-                            text: "By Logging in you agree to our",
-                          ),
-                          TextSpan(
-                            text: " Terms and Condition.",
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                InkWell(
-                  onTap: () {
-                    Get.toNamed('/registration');
-                  },
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
+                Obx(
+                  () => Visibility(
+                    visible: _auth.isLoading.isFalse,
+                    child: Column(
                       children: [
-                        Text(
-                          "Want to become a Rescuer? ",
-                          style: TextStyle(fontSize: 12),
+                        Visibility(
+                          visible: _auth.hasUser.isTrue,
+                          child: Center(
+                            child: SizedBox(
+                              width: Get.width * .55,
+                              child: TextButton(
+                                onPressed: () {
+                                  _auth.localAuthenticate();
+                                },
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Login with biometrics",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Icon(
+                                      Icons.fingerprint,
+                                      color: Colors.black,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        Text(
-                          " Register here.",
-                          style: TextStyle(fontSize: 12, color: primaryRed),
+                        Visibility(
+                          visible: _auth.hasUser.isTrue,
+                          child: const Text("or"),
+                        ),
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: SizedBox(
+                            width: Get.width * .8,
+                            child: const Text(
+                              'Enter your 10 digit phone number:',
+                              style: TextStyle(color: darkGray),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        PhoneNumberInput(
+                          controller: _phoneNumber,
+                          errorText: _phoneNumberError,
+                          onChanged: (_) {
+                            setState(() {
+                              _phoneNumberError = null;
+                            });
+                          },
+                          submit: () {
+                            setState(() {
+                              if (_phoneNumber.text.isEmpty) {
+                                _phoneNumberError = 'Please enter a number.';
+                              } else if (_phoneNumber.text.length < 10) {
+                                _phoneNumberError =
+                                    'Please enter a at least 10 digit phone number.';
+                              } else {
+                                _auth.isRescuer.value = false;
+                                _auth.phoneNumber.value = _phoneNumber.text;
+                                _auth.requestOTP();
+                                _auth.pinCode.value.setText('');
+                                Get.toNamed('/otp-page');
+                              }
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: SizedBox(
+                            width: Get.width * .8,
+                            child: const Text.rich(
+                              TextSpan(
+                                style: TextStyle(fontSize: 10),
+                                children: [
+                                  TextSpan(
+                                    text: "By Logging in you agree to our",
+                                  ),
+                                  TextSpan(
+                                    text: " Terms and Condition.",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed('/registration');
+                          },
+                          child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Want to become a Rescuer? ",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  " Register here.",
+                                  style: TextStyle(
+                                      fontSize: 12, color: primaryRed),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
+                Obx(
+                  () => Visibility(
+                    visible: _auth.isLoading.isTrue,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

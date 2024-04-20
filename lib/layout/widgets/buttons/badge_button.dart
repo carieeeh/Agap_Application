@@ -2,6 +2,7 @@ import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/resident_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class BadgeButton extends StatefulWidget {
@@ -32,48 +33,58 @@ class _BadgeButtonState extends State<BadgeButton> {
         Get.dialog(
           Dialog(
             child: SizedBox(
-              height: Get.height * .645,
+              height: Get.height * .6,
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: Get.height * .3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                child: Obx(
+                  () => Column(
+                    children: [
+                      Container(
+                        height: Get.height * .3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.all(15),
+                        child: Image.network(widget.imageUrl),
                       ),
-                      padding: const EdgeInsets.all(15),
-                      child: Image.network(widget.imageUrl),
-                    ),
-                    Text("AGAP points needed: ${widget.points.toString()}"),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Text(
-                        widget.description,
-                        textAlign: TextAlign.justify,
+                      Text("AGAP points needed: ${widget.points.toString()}"),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Text(
+                          widget.description,
+                          textAlign: TextAlign.justify,
+                        ),
                       ),
-                    ),
-                    RoundedCustomButton(
-                      onPressed: () {
-                        _residentController.buyBadges(
-                          widget.badge,
-                          widget.points,
-                        );
-                      },
-                      isLoading: _residentController.isLoading.value,
-                      label: "Unlock",
-                      size: Size(Get.width * .7, 30),
-                      bgColor: primaryRed,
-                    ),
-                    RoundedCustomButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      label: "Close",
-                      size: Size(Get.width * .7, 30),
-                      bgColor: gray,
-                    ),
-                  ],
+                      RoundedCustomButton(
+                        onPressed: () {
+                          if (_residentController.userCurrentBadges
+                              .contains(widget.badge)) {
+                            _residentController.selectBadge(widget.badge);
+                          } else {
+                            _residentController.buyBadges(
+                              widget.badge,
+                              widget.points,
+                            );
+                          }
+                        },
+                        isLoading: _residentController.isLoading.value,
+                        label: _residentController.userCurrentBadges
+                                .contains(widget.badge)
+                            ? "Use badge"
+                            : "Unlock",
+                        size: Size(Get.width * .7, 30),
+                        bgColor: primaryRed,
+                      ),
+                      RoundedCustomButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        label: "Close",
+                        size: Size(Get.width * .7, 30),
+                        bgColor: gray,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -93,16 +104,22 @@ class _BadgeButtonState extends State<BadgeButton> {
             )
           ],
         ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            const Positioned(
-              top: 0,
-              right: 0,
-              child: Icon(Icons.lock_outline, color: Colors.black),
-            ),
-            Image.network(widget.badge),
-          ],
+        child: Obx(
+          () => Stack(
+            alignment: Alignment.center,
+            children: [
+              Visibility(
+                visible: !_residentController.userCurrentBadges
+                    .contains(widget.badge),
+                child: const Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Icon(Icons.lock_outline, color: Colors.black),
+                ),
+              ),
+              Image.network(widget.badge),
+            ],
+          ),
         ),
       ),
     );

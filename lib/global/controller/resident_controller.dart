@@ -5,14 +5,16 @@ import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ResidentController extends GetxController {
   final AuthController _auth = Get.find<AuthController>();
+  RxString selectedBadgeUrl = "".obs;
   RxBool isLoading = false.obs;
+  RxList userCurrentBadges = [].obs;
   RxInt userTotalPoints = 0.obs;
 
-  Future updateResidentAgapPoints(String points) async {
+  Future updateResidentAgapPoints(int points) async {
     final uid = _auth.currentUser!.uid;
 
     final collection = getCollectionReference();
@@ -57,12 +59,20 @@ class ResidentController extends GetxController {
           ),
         );
       } else {
-        final encoded = jsonEncode(querySnapShot.docs.first.data());
-        final agapData = jsonDecode(encoded);
-        List badges = agapData["badges"];
-
-        if (points >= userTotalPoints.value) {
-          badges.add(badgeUrl);
+        if (userTotalPoints.value >= points) {
+          userCurrentBadges.add(badgeUrl);
+          userTotalPoints.value -= points;
+          querySnapShot.docs.first.reference.update({
+            "agap_points": userTotalPoints.value,
+            "badges": userCurrentBadges,
+          });
+          Get.back();
+          Get.snackbar(
+            "Success buying badge!",
+            "You now have a new badge!",
+            duration: const Duration(seconds: 5),
+            backgroundColor: colorSuccess,
+          );
         } else {
           Get.dialog(
             barrierDismissible: false,
@@ -77,8 +87,6 @@ class ResidentController extends GetxController {
             ),
           );
         }
-
-        querySnapShot.docs.first.reference.update({"badges": badges});
       }
     } catch (error) {
       Get.dialog(
@@ -99,6 +107,11 @@ class ResidentController extends GetxController {
   }
 
   Future<void> getUserCurrentPoints() async {
+    final SharedPreferences localStorage =
+        await SharedPreferences.getInstance();
+
+    String? badgeUrl = localStorage.getString("userBadge");
+
     final uid = _auth.currentUser!.uid;
     final collection = getCollectionReference();
 
@@ -108,7 +121,8 @@ class ResidentController extends GetxController {
     if (querySnapShot.docs.isNotEmpty) {
       final encoded = jsonEncode(querySnapShot.docs.first.data());
       final agapData = jsonDecode(encoded);
-      userTotalPoints.value = int.parse(agapData["agap_points"]);
+      userTotalPoints.value = agapData["agap_points"];
+      userCurrentBadges.value = agapData["badges"];
     } else {
       await collection.add({
         "uid": uid,
@@ -116,6 +130,26 @@ class ResidentController extends GetxController {
         "badges": [""],
       });
     }
+
+    if (badgeUrl != null) {
+      selectedBadgeUrl.value = badgeUrl;
+    } else if (userCurrentBadges[0] != "") {
+      selectedBadgeUrl.value = userCurrentBadges[0];
+      localStorage.setString("userBadge", userCurrentBadges[0]);
+    } else {
+      selectedBadgeUrl.value = "";
+    }
+  }
+
+  void selectBadge(String badgeUrl) {
+    selectedBadgeUrl.value = badgeUrl;
+    Get.back();
+    Get.snackbar(
+      "Success",
+      "You selected a badge to display!",
+      duration: const Duration(seconds: 5),
+      backgroundColor: colorSuccess,
+    );
   }
 
   CollectionReference<Map<String, dynamic>> getCollectionReference() {

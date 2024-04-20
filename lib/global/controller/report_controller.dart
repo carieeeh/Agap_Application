@@ -154,8 +154,12 @@ class ReportController extends GetxController {
           .collection('emergency_feedbacks')
           .add(data);
 
-      Get.snackbar("Feedback submitted",
-          "Thank you for writing a feedback,\n you earn 1 AGAP Points");
+      Get.snackbar(
+        "Feedback submitted",
+        "Thank you for writing a feedback,\n you earn 1 AGAP Points",
+        duration: const Duration(seconds: 5),
+        backgroundColor: colorSuccess,
+      );
 
       final uid = _auth.currentUser!.uid;
 

@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/resident_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/badge_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,8 @@ class AGAPPoints extends StatefulWidget {
 }
 
 class _AGAPPointsState extends State<AGAPPoints> {
+  final ResidentController _residentController = Get.find<ResidentController>();
+
   final List agapBadges = [
     {
       "points": 3,
@@ -71,97 +74,99 @@ class _AGAPPointsState extends State<AGAPPoints> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 20),
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            decoration: BoxDecoration(
-              color: lightGray,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5), // Color of the shadow
-                  spreadRadius: 2, // Spread radius
-                  blurRadius: 2, // Blur radius
-                  offset: const Offset(4, 4), // Offset (x, y)
-                )
-              ],
-            ),
-            child: const Column(
-              children: [
-                Text(
-                  "AGAP Points",
-                  style: TextStyle(fontSize: 24),
-                ),
-                Text(
-                  "35 points",
-                  style: TextStyle(fontSize: 18),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            decoration: BoxDecoration(
-              color: lightGray,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5), // Color of the shadow
-                  spreadRadius: 2, // Spread radius
-                  blurRadius: 2, // Blur radius
-                  offset: const Offset(4, 4), // Offset (x, y)
-                )
-              ],
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "What is AGAP Points?",
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "AGAP points are use to buy badges listed below. You will earn 1 AGAP point for each emergency you report is completed.",
-                  textAlign: TextAlign.justify,
-                ),
-              ],
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 30.0),
-            child: Text(
-              "Unlock AGAP Badges using points:",
-              style: TextStyle(fontSize: 16),
-            ),
-          ),
-          SizedBox(
-            height: Get.height * .41,
-            child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                crossAxisCount: 3,
+      child: Obx(
+        () => Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              decoration: BoxDecoration(
+                color: lightGray,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5), // Color of the shadow
+                    spreadRadius: 2, // Spread radius
+                    blurRadius: 2, // Blur radius
+                    offset: const Offset(4, 4), // Offset (x, y)
+                  )
+                ],
               ),
-              itemCount: agapBadges.length,
-              itemBuilder: (context, index) {
-                Map<String, dynamic> badge = agapBadges[index];
-
-                return BadgeButton(
-                  points: badge["points"],
-                  description: badge["description"],
-                  imageUrl: badge["badgeImage"],
-                  badge: badge["badgeIcon"],
-                );
-              },
+              child: Column(
+                children: [
+                  const Text(
+                    "AGAP Points",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  Text(
+                    "${_residentController.userTotalPoints.toString()} points",
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              decoration: BoxDecoration(
+                color: lightGray,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5), // Color of the shadow
+                    spreadRadius: 2, // Spread radius
+                    blurRadius: 2, // Blur radius
+                    offset: const Offset(4, 4), // Offset (x, y)
+                  )
+                ],
+              ),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "What is AGAP Points?",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "AGAP points are use to buy badges listed below. You will earn 1 AGAP point for each emergency you report is completed.",
+                    textAlign: TextAlign.justify,
+                  ),
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 30.0),
+              child: Text(
+                "Unlock AGAP Badges using points:",
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            SizedBox(
+              height: Get.height * .41,
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  crossAxisCount: 3,
+                ),
+                itemCount: agapBadges.length,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> badge = agapBadges[index];
+
+                  return BadgeButton(
+                    points: badge["points"],
+                    description: badge["description"],
+                    imageUrl: badge["badgeImage"],
+                    badge: badge["badgeIcon"],
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

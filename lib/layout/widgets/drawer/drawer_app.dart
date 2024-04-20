@@ -1,9 +1,9 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
+import 'package:agap_mobile_v01/global/controller/resident_controller.dart';
 import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class DrawerApp extends StatelessWidget {
@@ -11,6 +11,7 @@ class DrawerApp extends StatelessWidget {
 
   final AuthController _auth = Get.find<AuthController>();
   final SettingsController _settings = Get.find<SettingsController>();
+  final ResidentController _residentController = Get.find<ResidentController>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +51,8 @@ class DrawerApp extends StatelessWidget {
                                 shape: BoxShape.circle,
                                 color: Colors.white,
                               ),
-                              child: const Icon(
-                                Icons.health_and_safety_rounded,
-                                color: Colors.black,
+                              child: Image.network(
+                                _residentController.selectedBadgeUrl.value,
                               ),
                             ),
                           ),

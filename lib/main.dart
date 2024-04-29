@@ -1,6 +1,7 @@
 import 'package:agap_mobile_v01/firebase_options.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
+import 'package:agap_mobile_v01/global/controller/profile_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/global/controller/resident_controller.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
     Get.put(ReportController());
     Get.put(RescuerController());
     Get.put(ResidentController());
+    Get.put(ProfileController());
 
     return GetMaterialApp(
       title: 'Agap',

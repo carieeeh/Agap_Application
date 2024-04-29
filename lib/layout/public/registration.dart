@@ -19,16 +19,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
       _lastName = TextEditingController(),
       _contactNumber = TextEditingController(),
       _emeContactNumber = TextEditingController(),
+      _stationCode = TextEditingController(),
       _email = TextEditingController();
 
   String? _department;
-
-  final List _list = [
-    {"label": "Fire Department", "value": "fire"},
-    {"label": "Police Department", "value": "police"},
-    {"label": "Health care Department", "value": "medic"},
-    {"label": "Barangay Department", "value": "Barangay"},
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +55,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   child: Column(
                     children: [
+                      UnderlineInput(
+                        label: 'Station code',
+                        isPassword: false,
+                        textController: _stationCode,
+                      ),
                       UnderlineInput(
                         label: 'First Name',
                         isPassword: false,
@@ -100,45 +99,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         textController: _email,
                       ),
                       const SizedBox(height: 10),
-                      DropdownMenu<dynamic>(
-                        width: Get.width * .8,
-                        hintText: "Select your department",
-                        textStyle: const TextStyle(
-                          color: Colors.black,
-                        ),
-                        inputDecorationTheme: const InputDecorationTheme(
-                          hintStyle:
-                              TextStyle(color: Colors.black, fontSize: 13),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                        ),
-                        onSelected: (item) {
-                          _department = item;
-                          setState(() {});
-                        },
-                        menuStyle: const MenuStyle(
-                          surfaceTintColor:
-                              MaterialStatePropertyAll(Colors.white),
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.white),
-                        ),
-                        dropdownMenuEntries:
-                            _list.map<DropdownMenuEntry>((dynamic item) {
-                          return DropdownMenuEntry(
-                            value: item["value"],
-                            label: item["label"],
-                            labelWidget: Text(
-                              item["label"],
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                            style: const ButtonStyle(
-                              foregroundColor:
-                                  MaterialStatePropertyAll(Colors.black),
-                            ),
-                          );
-                        }).toList(),
-                      ),
                     ],
                   ),
                 ),
@@ -146,6 +106,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   () => RoundedCustomButton(
                     onPressed: () {
                       _auth.rescuerRegister(
+                        stationCode: _stationCode.text,
                         firstName: _firstName.text,
                         middleName: _middleName.text,
                         lastName: _lastName.text,
@@ -167,7 +128,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       style: TextStyle(fontSize: 10),
                       children: [
                         TextSpan(
-                          text: "By Sining up you agree to our",
+                          text: "By signing up you agree to our",
                         ),
                         TextSpan(
                           text: " Terms and Condition.",

@@ -25,3 +25,46 @@ const Color lightRed = Color.fromARGB(255, 251, 95, 95);
 const String googleApiKey = 'AIzaSyDqLokxh3yyUWma5i0obuZgEuhgbeTx-i8';
 const String fireStoreDoc = 'staging';
 // const String fireStoreDoc = 'production';
+
+const List mapStyleNoLandmarks = [
+  {
+    "featureType": "administrative",
+    "elementType": "geometry",
+    "stylers": [
+      {"visibility": "off"}
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "labels",
+    "stylers": [
+      {"visibility": "off"}
+    ]
+  },
+  {
+    "featureType": "poi",
+    "stylers": [
+      {"visibility": "off"}
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {"visibility": "off"}
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "labels",
+    "stylers": [
+      {"visibility": "off"}
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {"visibility": "off"}
+    ]
+  }
+];

@@ -244,6 +244,7 @@ class AuthController extends GetxController {
   }
 
   String? findEmptyField({
+    required String stationCode,
     required String firstName,
     String? middleName,
     required String lastName,
@@ -252,6 +253,7 @@ class AuthController extends GetxController {
     required String email,
     required String department,
   }) {
+    if (stationCode.isEmpty) return 'Station Code';
     if (firstName.isEmpty) return 'First Name';
     if (lastName.isEmpty) return 'Last Name';
     if (contactNumber.isEmpty) return 'Contact Number';
@@ -262,6 +264,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> rescuerRegister({
+    required String stationCode,
     required String firstName,
     String? middleName,
     required String lastName,
@@ -271,6 +274,7 @@ class AuthController extends GetxController {
     required String department,
   }) async {
     String? emptyField = findEmptyField(
+      stationCode: stationCode,
       firstName: firstName,
       lastName: lastName,
       contactNumber: contactNumber,
@@ -306,7 +310,7 @@ class AuthController extends GetxController {
       emeContactNumber: emeContactNumber,
       status: 'pending',
       email: email,
-      department: department,
+      department: stationCode,
     );
 
     phoneNumber.value = contactNumber;

@@ -3,6 +3,7 @@ import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -13,6 +14,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final AuthController _authController = Get.find<AuthController>();
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -123,5 +125,20 @@ class _ProfileState extends State<Profile> {
         ),
       ),
     );
+  }
+
+  Future<void> takeImage() async {
+    final photo = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
+    if (photo != null) {
+      // photoList.add(photo);
+    } else {
+      Get.snackbar(
+        "Warning: No image taken",
+        "You did not take any image with your camera!",
+        backgroundColor: yellow,
+      );
+    }
   }
 }

@@ -59,96 +59,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
         height: Get.height,
         child: Stack(
           children: [
-            Container(
-              height: Get.height * .25,
-              color: primaryRed,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _authController.userModel!.department ?? "",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.white,
-                        child: Image.asset(
-                          'assets/images/person.png',
-                          fit: BoxFit.cover,
-                          height: 45,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  InkWell(
-                    onTap: () async {
-                      _locController.isLoading.value = true;
-                      var googleResult = await Get.to(() => GooglePlacesView());
-
-                      if (googleResult != null) {
-                        _incidentAddress = googleResult['description'];
-                        lat = googleResult['lat'] as double;
-                        lng = googleResult['lng'] as double;
-                      } else {
-                        _incidentAddress = currentAddress;
-                        lat = _userPosition.latitude;
-                        lng = _userPosition.longitude;
-                      }
-                      _locController.isLoading.value = false;
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 5),
-                      width: Get.width,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Obx(
-                        () => Row(
-                          children: [
-                            const Icon(Icons.my_location_outlined),
-                            const SizedBox(width: 10),
-                            Visibility(
-                              visible: _locController.isLoading.isFalse,
-                              child: SizedBox(
-                                width: Get.width * .75,
-                                child: Text(
-                                  _incidentAddress ?? currentAddress,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: _locController.isLoading.isTrue,
-                              child: SizedBox(
-                                width: Get.width * .75,
-                                child: const LinearProgressIndicator(
-                                  color: bgPrimaryBlue,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
+            header(),
             Positioned(
               bottom: 0,
               height: Get.height * .70,
@@ -166,6 +77,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                         Visibility(
                           visible: _rescuerController.isLoading.isFalse,
                           child: GoogleMap(
+                            style: "826b2ef94ff65b0d",
                             mapType: MapType.normal,
                             myLocationButtonEnabled: true,
                             myLocationEnabled: true,
@@ -238,6 +150,94 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget header() {
+    return Container(
+      height: Get.height * .25,
+      color: primaryRed,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Text(
+                "Station name",
+                // _authController.userModel!.department ?? "",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.white,
+                child: Image.asset(
+                  'assets/images/person.png',
+                  fit: BoxFit.cover,
+                  height: 45,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          InkWell(
+            onTap: () async {
+              _locController.isLoading.value = true;
+              var googleResult = await Get.to(() => GooglePlacesView());
+
+              if (googleResult != null) {
+                _incidentAddress = googleResult['description'];
+                lat = googleResult['lat'] as double;
+                lng = googleResult['lng'] as double;
+              } else {
+                _incidentAddress = currentAddress;
+                lat = _userPosition.latitude;
+                lng = _userPosition.longitude;
+              }
+              _locController.isLoading.value = false;
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              width: Get.width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Obx(
+                () => Row(
+                  children: [
+                    const Icon(Icons.my_location_outlined),
+                    const SizedBox(width: 10),
+                    Visibility(
+                      visible: _locController.isLoading.isFalse,
+                      child: SizedBox(
+                        width: Get.width * .75,
+                        child: Text(
+                          _incidentAddress ?? currentAddress,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: _locController.isLoading.isTrue,
+                      child: SizedBox(
+                        width: Get.width * .75,
+                        child: const LinearProgressIndicator(
+                          color: bgPrimaryBlue,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

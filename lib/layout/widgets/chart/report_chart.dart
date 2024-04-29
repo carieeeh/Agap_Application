@@ -1,7 +1,6 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ReportChart extends StatefulWidget {
   const ReportChart({super.key});

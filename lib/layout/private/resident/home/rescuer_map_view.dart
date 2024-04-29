@@ -161,7 +161,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                         () => Visibility(
                           visible: _reportController.isLoading.isFalse,
                           child: GoogleMap(
-                            style: "826b2ef94ff65b0d",
+                            style: mapStyleNoLandmarks.toString(),
                             mapType: MapType.normal,
                             myLocationButtonEnabled: true,
                             myLocationEnabled: true,

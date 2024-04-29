@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:agap_mobile_v01/global/constant.dart';
-import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
@@ -25,7 +24,6 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
 
   final LocationsController _locController = Get.find<LocationsController>();
   final RescuerController _rescuerController = Get.find<RescuerController>();
-  final AuthController _authController = Get.find<AuthController>();
 
   CameraPosition? _kGooglePlex;
   late Position _userPosition;
@@ -77,7 +75,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                         Visibility(
                           visible: _rescuerController.isLoading.isFalse,
                           child: GoogleMap(
-                            style: "826b2ef94ff65b0d",
+                            style: mapStyleNoLandmarks.toString(),
                             mapType: MapType.normal,
                             myLocationButtonEnabled: true,
                             myLocationEnabled: true,

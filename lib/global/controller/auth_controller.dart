@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:pinput/pinput.dart';
 
@@ -324,8 +325,8 @@ class AuthController extends GetxController {
       isRescuer.value = false;
       isAuth.value = false;
       isLoading.value = false;
-      // hasUser.value = false;
-      // await FirebaseAuth.instance.signOut();
+      hasUser.value = false;
+      await FirebaseAuth.instance.signOut();
       Get.offAllNamed('/login');
     } catch (error) {
       Get.dialog(
@@ -368,5 +369,23 @@ class AuthController extends GetxController {
         .where('uid', isEqualTo: uid)
         .get();
     querySnapShot.docs.first.reference.update({"fcm_token": fcmToken});
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

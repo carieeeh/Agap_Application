@@ -1,5 +1,6 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
+import 'package:agap_mobile_v01/global/controller/profile_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,8 +14,30 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  bool isReadOnly = true;
+
   final AuthController _authController = Get.find<AuthController>();
+  final ProfileController _profileController = Get.find<ProfileController>();
   final ImagePicker _imagePicker = ImagePicker();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _bdayController = TextEditingController();
+  final TextEditingController _allergiesController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _contactNumber = TextEditingController();
+  final TextEditingController _emergencyContactNumber = TextEditingController();
+  final TextEditingController _bloodType = TextEditingController();
+  final TextEditingController _emergencyContactName = TextEditingController();
+
+  @override
+  void initState() {
+    setInputValues();
+    super.initState();
+  }
+
+  void setInputValues() {
+    _nameController.text = _authController.userModel!.fullName();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +46,28 @@ class _ProfileState extends State<Profile> {
       actionButton: Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.edit, color: Colors.white),
+          onPressed: () {
+            setState(() {
+              isReadOnly = !isReadOnly;
+            });
+            if (isReadOnly) {
+              _profileController.updateUserProfile({
+                "full_name": _nameController.text,
+                "email": _email.text,
+                "birthday": _bdayController.text,
+                "address": _addressController.text,
+                "contact_number": _contactNumber.text,
+                "emergency_contact_number": _emergencyContactNumber.text,
+                "emergency_contact_name": _emergencyContactName.text,
+                "allergies": _allergiesController.text,
+                "blood_type": _bloodType.text,
+              });
+            }
+          },
+          icon: Icon(
+            isReadOnly ? Icons.edit : Icons.save,
+            color: Colors.white,
+          ),
         ),
       ),
       body: SizedBox(
@@ -51,11 +94,23 @@ class _ProfileState extends State<Profile> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
-                    child: Text(
-                  _authController.userModel!.fullName(),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    child: TextField(
+                  readOnly: isReadOnly,
+                  controller: _nameController,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsetsDirectional.symmetric(
+                      vertical: 5,
+                      horizontal: 10,
+                    ),
+                    labelText: "",
+                    focusColor: colorSuccess,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
                   ),
                 )),
               ),
@@ -76,48 +131,25 @@ class _ProfileState extends State<Profile> {
             Positioned(
               top: Get.height * .3,
               width: Get.width,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: const Text(
-                        "About Me",
-                        style: TextStyle(fontWeight: FontWeight.w600),
+              child: SizedBox(
+                height: Get.height * .53,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      profileTile(_email, "Email"),
+                      profileTile(_bdayController, "Birthday"),
+                      profileTile(_addressController, "Address"),
+                      profileTile(_contactNumber, "Contact Number"),
+                      profileTile(
+                        _emergencyContactName,
+                        "Emergency Contact Person Name",
                       ),
-                      subtitle: const Padding(
-                        padding: EdgeInsets.fromLTRB(10, 15, 0, 0),
-                        child: Text(
-                            "Lorem ipsum dolor sit amet. Aut velit dolorem et magni suscipit est accusamus"),
-                      ),
-                      onTap: () {},
-                    ),
-                    const Divider(),
-                    ListTile(
-                      title: const Text(
-                        "Allergies",
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: const Padding(
-                        padding: EdgeInsets.fromLTRB(10, 15, 0, 0),
-                        child: Text(
-                            "Lorem ipsum dolor sit amet. Aut velit dolorem et magni suscipit est accusamus"),
-                      ),
-                      onTap: () {},
-                    ),
-                    const Divider(),
-                    ListTile(
-                      title: const Text(
-                        "Blood type",
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: const Padding(
-                        padding: EdgeInsets.fromLTRB(10, 15, 0, 0),
-                        child: Text(
-                            "Lorem ipsum dolor sit amet. Aut velit dolorem et magni suscipit est accusamus"),
-                      ),
-                      onTap: () {},
-                    ),
-                  ],
+                      profileTile(
+                          _emergencyContactNumber, "Emergency Contact Number"),
+                      profileTile(_allergiesController, "Allergies"),
+                      profileTile(_bloodType, "Blood type"),
+                    ],
+                  ),
                 ),
               ),
             )
@@ -140,5 +172,29 @@ class _ProfileState extends State<Profile> {
         backgroundColor: yellow,
       );
     }
+  }
+
+  Widget profileTile(TextEditingController controller, String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      child: TextFormField(
+        controller: controller,
+        readOnly: isReadOnly,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsetsDirectional.symmetric(
+            vertical: 5,
+            horizontal: 10,
+          ),
+          labelText: label,
+          focusColor: colorSuccess,
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: gray),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: colorSuccess),
+          ),
+        ),
+      ),
+    );
   }
 }

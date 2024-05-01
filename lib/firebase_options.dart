@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDaDxXbWEoJWXqyjqOFtAjDbSJ9bLZgzxc',
-    appId: '1:1060919755818:android:03fd9e4926aae636516f53',
+    appId: '1:1060919755818:android:318e6dfc74ced9c3516f53',
     messagingSenderId: '1060919755818',
     projectId: 'agap-f4c32',
     databaseURL: 'https://agap-f4c32-default-rtdb.asia-southeast1.firebasedatabase.app',

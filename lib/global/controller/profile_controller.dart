@@ -1,10 +1,10 @@
+import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class ProfileController extends GetxController {
   RxBool isLoading = false.obs;
-
-  Future updateUserPersonalInfo() async {}
 
   Future updateUserPhoneNumber(String currentPhoneNumber) async {
     FirebaseAuth.instance.verifyPhoneNumber(
@@ -24,5 +24,19 @@ class ProfileController extends GetxController {
       },
       codeAutoRetrievalTimeout: (verificationId) {},
     );
+  }
+
+  Future<void> updateUserProfile(Map<String, dynamic> data) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+
+    final QuerySnapshot querySnapShot = await firestoreDb
+        .collection("agap_collection")
+        .doc(fireStoreDoc)
+        .collection('users')
+        .where('uid', isEqualTo: currentUser!.uid)
+        .get();
+    querySnapShot.docs.first.reference.update(data);
   }
 }

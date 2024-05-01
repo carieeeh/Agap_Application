@@ -46,38 +46,6 @@ class _LoginPageState extends State<LoginPage> {
                     visible: _auth.isLoading.isFalse,
                     child: Column(
                       children: [
-                        // Visibility(
-                        //   visible: _auth.hasUser.isTrue,
-                        //   child: Center(
-                        //     child: SizedBox(
-                        //       width: Get.width * .55,
-                        //       child: TextButton(
-                        //         onPressed: () {
-                        //           _auth.localAuthenticate();
-                        //         },
-                        //         child: const Row(
-                        //           mainAxisAlignment: MainAxisAlignment.center,
-                        //           children: [
-                        //             Text(
-                        //               "Login with biometrics",
-                        //               style: TextStyle(color: Colors.black),
-                        //             ),
-                        //             SizedBox(width: 10),
-                        //             Icon(
-                        //               Icons.fingerprint,
-                        //               color: Colors.black,
-                        //             )
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        // Visibility(
-                        //   visible: _auth.hasUser.isTrue,
-                        //   child: const Text("or"),
-                        // ),
-                        // const SizedBox(height: 10),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: SizedBox(

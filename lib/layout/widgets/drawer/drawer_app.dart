@@ -42,20 +42,20 @@ class DrawerApp extends StatelessWidget {
                               height: 45,
                             ),
                           ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(3),
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                              ),
-                              child: Image.network(
-                                _residentController.selectedBadgeUrl.value,
-                              ),
-                            ),
-                          ),
+                          // Positioned(
+                          //   bottom: 0,
+                          //   right: 0,
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(3),
+                          //     decoration: const BoxDecoration(
+                          //       shape: BoxShape.circle,
+                          //       color: Colors.white,
+                          //     ),
+                          //     child: Image.network(
+                          //       _residentController.selectedBadgeUrl.value,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                       const SizedBox(height: 10),

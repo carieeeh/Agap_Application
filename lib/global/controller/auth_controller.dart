@@ -252,7 +252,6 @@ class AuthController extends GetxController {
     required String contactNumber,
     required String emeContactNumber,
     required String email,
-    required String department,
   }) {
     if (stationCode.isEmpty) return 'Station Code';
     if (firstName.isEmpty) return 'First Name';
@@ -260,7 +259,6 @@ class AuthController extends GetxController {
     if (contactNumber.isEmpty) return 'Contact Number';
     if (emeContactNumber.isEmpty) return 'Emergency Contact Number';
     if (email.isEmpty) return 'Email';
-    if (department.isEmpty) return 'Department';
     return null; // Return null if all required fields are non-empty
   }
 
@@ -272,7 +270,6 @@ class AuthController extends GetxController {
     required String contactNumber,
     required String emeContactNumber,
     required String email,
-    required String department,
   }) async {
     String? emptyField = findEmptyField(
       stationCode: stationCode,
@@ -281,7 +278,6 @@ class AuthController extends GetxController {
       contactNumber: contactNumber,
       emeContactNumber: emeContactNumber,
       email: email,
-      department: department,
     );
 
     if (emptyField != null) {

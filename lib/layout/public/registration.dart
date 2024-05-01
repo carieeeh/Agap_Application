@@ -22,8 +22,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
       _stationCode = TextEditingController(),
       _email = TextEditingController();
 
-  String? _department;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,7 +111,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         contactNumber: _contactNumber.text,
                         emeContactNumber: _emeContactNumber.text,
                         email: _email.text,
-                        department: _department ?? "",
                       );
                     },
                     isLoading: _auth.isLoading.isTrue,

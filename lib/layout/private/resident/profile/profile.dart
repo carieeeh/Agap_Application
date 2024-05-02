@@ -45,29 +45,34 @@ class _ProfileState extends State<Profile> {
       title: "Profile",
       actionButton: Padding(
         padding: const EdgeInsets.only(right: 8.0),
-        child: IconButton(
-          onPressed: () {
-            setState(() {
-              isReadOnly = !isReadOnly;
-            });
-            if (isReadOnly) {
-              _profileController.updateUserProfile({
-                "full_name": _nameController.text,
-                "email": _email.text,
-                "birthday": _bdayController.text,
-                "address": _addressController.text,
-                "contact_number": _contactNumber.text,
-                "emergency_contact_number": _emergencyContactNumber.text,
-                "emergency_contact_name": _emergencyContactName.text,
-                "allergies": _allergiesController.text,
-                "blood_type": _bloodType.text,
-              });
-            }
-          },
-          icon: Icon(
-            isReadOnly ? Icons.edit : Icons.save,
-            color: Colors.white,
-          ),
+        child: Obx(
+          () => _profileController.isLoading.isTrue
+              ? const CircularProgressIndicator()
+              : IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isReadOnly = !isReadOnly;
+                    });
+                    if (isReadOnly) {
+                      _profileController.updateUserProfile({
+                        "full_name": _nameController.text,
+                        "email": _email.text,
+                        "birthday": _bdayController.text,
+                        "address": _addressController.text,
+                        "contact_number": _contactNumber.text,
+                        "emergency_contact_number":
+                            _emergencyContactNumber.text,
+                        "emergency_contact_name": _emergencyContactName.text,
+                        "allergies": _allergiesController.text,
+                        "blood_type": _bloodType.text,
+                      });
+                    }
+                  },
+                  icon: Icon(
+                    isReadOnly ? Icons.edit : Icons.save,
+                    color: Colors.white,
+                  ),
+                ),
         ),
       ),
       body: SizedBox(
@@ -94,25 +99,26 @@ class _ProfileState extends State<Profile> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
-                    child: TextField(
-                  readOnly: isReadOnly,
-                  controller: _nameController,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsetsDirectional.symmetric(
-                      vertical: 5,
-                      horizontal: 10,
-                    ),
-                    labelText: "",
-                    focusColor: colorSuccess,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                  child: TextField(
+                    readOnly: isReadOnly,
+                    controller: _nameController,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsetsDirectional.symmetric(
+                        vertical: 5,
+                        horizontal: 10,
+                      ),
+                      labelText: "",
+                      focusColor: colorSuccess,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
                     ),
                   ),
-                )),
+                ),
               ),
             ),
             Positioned(

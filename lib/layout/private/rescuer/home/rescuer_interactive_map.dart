@@ -5,7 +5,6 @@ import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
-import 'package:agap_mobile_v01/layout/widgets/google_maps/google_places_view.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -28,7 +27,6 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
   CameraPosition? _kGooglePlex;
   late Position _userPosition;
   String currentAddress = "Use Current Location";
-  String? _incidentAddress;
   double? lat, lng;
 
   @override
@@ -182,59 +180,24 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
             ],
           ),
           const SizedBox(height: 10),
-          InkWell(
-            onTap: () async {
-              _locController.isLoading.value = true;
-              var googleResult = await Get.to(() => GooglePlacesView());
-
-              if (googleResult != null) {
-                _incidentAddress = googleResult['description'];
-                lat = googleResult['lat'] as double;
-                lng = googleResult['lng'] as double;
-              } else {
-                _incidentAddress = currentAddress;
-                lat = _userPosition.latitude;
-                lng = _userPosition.longitude;
-              }
-              _locController.isLoading.value = false;
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              width: Get.width,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Obx(
-                () => Row(
-                  children: [
-                    const Icon(Icons.my_location_outlined),
-                    const SizedBox(width: 10),
-                    Visibility(
-                      visible: _locController.isLoading.isFalse,
-                      child: SizedBox(
-                        width: Get.width * .75,
-                        child: Text(
-                          _incidentAddress ?? currentAddress,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: _locController.isLoading.isTrue,
-                      child: SizedBox(
-                        width: Get.width * .75,
-                        child: const LinearProgressIndicator(
-                          color: bgPrimaryBlue,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+          Visibility(
+            visible: false,
+            child: RoundedCustomButton(
+              onPressed: () {},
+              label: "Go online",
+              bgColor: colorSuccess,
+              size: Size(Get.width * .8, 30),
             ),
-          )
+          ),
+          Visibility(
+            visible: false,
+            child: RoundedCustomButton(
+              onPressed: () {},
+              label: "Go offline",
+              bgColor: colorError,
+              size: Size(Get.width * .8, 30),
+            ),
+          ),
         ],
       ),
     );

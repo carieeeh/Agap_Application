@@ -66,35 +66,30 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                 ),
                 child: Container(
                   color: Colors.white,
-                  child: Obx(
-                    () => Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Visibility(
-                          visible: _rescuerController.isLoading.isFalse,
-                          child: GoogleMap(
-                            style: mapStyleNoLandmarks.toString(),
-                            mapType: MapType.normal,
-                            myLocationButtonEnabled: true,
-                            myLocationEnabled: true,
-                            zoomControlsEnabled: false,
-                            markers: _rescuerController.markers,
-                            initialCameraPosition: _kGooglePlex ??
-                                const CameraPosition(
-                                  target: LatLng(14.5871, 120.9845),
-                                  zoom: 15,
-                                ),
-                            onMapCreated: (GoogleMapController controller) {
-                              _controller.complete(controller);
-                            },
-                          ),
-                        ),
-                        Visibility(
-                          visible: _rescuerController.isLoading.isTrue,
-                          child: const CircularProgressIndicator(),
-                        )
-                      ],
-                    ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      GoogleMap(
+                        style: mapStyleNoLandmarks.toString(),
+                        mapType: MapType.normal,
+                        myLocationButtonEnabled: true,
+                        myLocationEnabled: true,
+                        zoomControlsEnabled: false,
+                        markers: _rescuerController.markers,
+                        initialCameraPosition: _kGooglePlex ??
+                            const CameraPosition(
+                              target: LatLng(14.5871, 120.9845),
+                              zoom: 15,
+                            ),
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                      ),
+                      // Visibility(
+                      //   visible: _rescuerController.isLoading.isTrue,
+                      //   child: const CircularProgressIndicator(),
+                      // )
+                    ],
                   ),
                 ),
               ),
@@ -154,51 +149,64 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
     return Container(
       height: Get.height * .25,
       color: primaryRed,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text(
-                "Station name",
-                // _authController.userModel!.department ?? "",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
+      child: Obx(
+        () => Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: Get.width * .6,
+                  child: const Text(
+                    "Brgy. 123, Police Substation",
+                    // _authController.userModel!.department ?? "",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-              ),
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.white,
-                child: Image.asset(
-                  'assets/images/person.png',
-                  fit: BoxFit.cover,
-                  height: 45,
+                CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Colors.white,
+                  child: Image.asset(
+                    'assets/images/person.png',
+                    fit: BoxFit.cover,
+                    height: 45,
+                  ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Visibility(
+              visible: _rescuerController.isOnline.isFalse,
+              child: RoundedCustomButton(
+                onPressed: () async {
+                  await _rescuerController.updateRescuerStatus("online");
+                  _rescuerController.isOnline.value = true;
+                },
+                isLoading: _rescuerController.isLoading.value,
+                label: "Go online",
+                bgColor: colorSuccess,
+                size: Size(Get.width * .85, 30),
               ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Visibility(
-            visible: false,
-            child: RoundedCustomButton(
-              onPressed: () {},
-              label: "Go online",
-              bgColor: colorSuccess,
-              size: Size(Get.width * .8, 30),
             ),
-          ),
-          Visibility(
-            visible: false,
-            child: RoundedCustomButton(
-              onPressed: () {},
-              label: "Go offline",
-              bgColor: colorError,
-              size: Size(Get.width * .8, 30),
+            Visibility(
+              visible: _rescuerController.isOnline.isTrue,
+              child: RoundedCustomButton(
+                onPressed: () async {
+                  await _rescuerController.updateRescuerStatus("offline");
+                  _rescuerController.isOnline.value = false;
+                },
+                isLoading: _rescuerController.isLoading.value,
+                label: "Go offline",
+                bgColor: colorError,
+                size: Size(Get.width * .85, 30),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

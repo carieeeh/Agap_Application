@@ -23,7 +23,10 @@ class RescuerController extends GetxController {
   Set<Marker> markers = {};
   Timer? _timer;
   bool _isRunning = false;
-  RxBool isLoading = false.obs, hasEmergency = false.obs, hasArrive = false.obs;
+  RxBool isLoading = false.obs,
+      hasEmergency = false.obs,
+      hasArrive = false.obs,
+      isOnline = false.obs;
   String _residentUid = "", _emergencyDocId = "";
 
   Future<void> updateRescuerLocation() async {
@@ -52,16 +55,34 @@ class RescuerController extends GetxController {
   }
 
   Future<void> updateRescuerStatus(String status) async {
-    FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
-    final uid = _auth.currentUser!.uid;
+    isLoading.value = true;
+    try {
+      FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+      final uid = _auth.currentUser!.uid;
 
-    final collection = await firestoreDb
-        .collection("agap_collection")
-        .doc(fireStoreDoc)
-        .collection('rescuer_locations');
-    final QuerySnapshot querySnapShot =
-        await collection.where('uid', isEqualTo: uid).get();
-    querySnapShot.docs.first.reference.update({"status": status});
+      final collection = await firestoreDb
+          .collection("agap_collection")
+          .doc(fireStoreDoc)
+          .collection('rescuer_locations');
+      final QuerySnapshot querySnapShot =
+          await collection.where('uid', isEqualTo: uid).get();
+      querySnapShot.docs.first.reference.update({"status": status});
+    } catch (error) {
+      Get.dialog(
+        barrierDismissible: false,
+        GetDialog(
+          type: 'error',
+          title: 'Something went wrong',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message: 'Error: $error',
+        ),
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void startLocationUpdate() {
@@ -219,6 +240,7 @@ class RescuerController extends GetxController {
       await _report.updateEmergency(_emergencyDocId, {"status": "finish"});
       await _settings.callFunction(jsonInfo["fcm_token"], data);
       hasArrive.value = true;
+      hasEmergency.value = false;
       stopLocationUpdate();
       Get.to(ReportFeedback(
         emergencyDocId: _emergencyDocId,

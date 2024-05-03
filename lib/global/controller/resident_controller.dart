@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ResidentController extends GetxController {
   final AuthController _auth = Get.find<AuthController>();
   RxString selectedBadgeUrl = "".obs;
-  RxBool isLoading = false.obs;
+  RxBool isLoading = false.obs, hasReport = false.obs;
   RxList userCurrentBadges = [].obs;
   RxInt userTotalPoints = 0.obs;
   Rx<UserModel> resident = UserModel().obs;

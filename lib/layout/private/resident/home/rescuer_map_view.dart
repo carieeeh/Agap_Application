@@ -83,11 +83,11 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                     children: [
                       SizedBox(
                         width: Get.width * .35,
-                        child: Text("Rescuer name :", style: labelStyle),
+                        child: Text("Station name :", style: labelStyle),
                       ),
                       Expanded(
                         child: Text(
-                          _reportController.rescuerData.value.userFullName(),
+                          _reportController.stationData.value.name ?? "",
                           style: detailsStyle,
                         ),
                       ),
@@ -99,12 +99,11 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                     children: [
                       SizedBox(
                         width: Get.width * .35,
-                        child: Text("Contact no. :", style: labelStyle),
+                        child: Text("Contact :", style: labelStyle),
                       ),
                       Expanded(
                         child: Text(
-                          _reportController.rescuerData.value.contactNumber ??
-                              "",
+                          _reportController.stationData.value.contact ?? "",
                           style: detailsStyle,
                         ),
                       ),
@@ -116,7 +115,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                     children: [
                       SizedBox(
                         width: Get.width * .35,
-                        child: Text("Department :", style: labelStyle),
+                        child: Text("Arrival time :", style: labelStyle),
                       ),
                       Expanded(
                         child: Text(

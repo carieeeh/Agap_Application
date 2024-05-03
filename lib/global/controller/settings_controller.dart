@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:math' show atan2, cos, pow, sin, sqrt;
 
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
@@ -13,7 +14,7 @@ import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
   RxInt countdown = 120.obs; // 5 minutes in seconds
-  RxBool isTimerFinish = false.obs, hasReport = false.obs;
+  RxBool isTimerFinish = false.obs, hasReport = true.obs;
   RxString rescuerUid = "".obs, emergencyDocId = "".obs;
   final AuthController _auth = Get.find<AuthController>();
 
@@ -126,5 +127,26 @@ class SettingsController extends GetxController {
     } on FirebaseFunctionsException catch (error) {
       print(error.message);
     }
+  }
+
+  // Assuming you have latitude and longitude for start and finish points
+  double calculateDistance(
+      double startLat, double startLng, double endLat, double endLng) {
+    const int earthRadius = 6371; // Radius of the earth in km
+    final double latDistance = (endLat - startLat) * (3.141592653589793 / 180);
+    final double lonDistance = (endLng - startLng) * (3.141592653589793 / 180);
+    final double a = pow(sin(latDistance / 2), 2) +
+        pow(sin(lonDistance / 2), 2) *
+            cos(startLat * (3.141592653589793 / 180)) *
+            cos(endLat * (3.141592653589793 / 180));
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    return earthRadius * c; // Distance in km
+  }
+
+// Assuming you have a speed in km/h
+  DateTime calculateETA(double distanceInKm, double speed) {
+    final double hours = distanceInKm / speed;
+    final int minutes = (hours * 60).floor();
+    return DateTime.now().add(Duration(minutes: minutes));
   }
 }

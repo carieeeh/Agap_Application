@@ -34,7 +34,7 @@ class RescuerController extends GetxController {
     Position position = await _locations.getUserLocation();
     final uid = _auth.currentUser!.uid;
 
-    final collection = await firestoreDb
+    final collection = firestoreDb
         .collection("agap_collection")
         .doc(fireStoreDoc)
         .collection('rescuer_locations');
@@ -60,7 +60,7 @@ class RescuerController extends GetxController {
       FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
       final uid = _auth.currentUser!.uid;
 
-      final collection = await firestoreDb
+      final collection = firestoreDb
           .collection("agap_collection")
           .doc(fireStoreDoc)
           .collection('rescuer_locations');
@@ -264,4 +264,33 @@ class RescuerController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  // void rescuerHandleMessaging() {
+  //   if(_auth.isRescuer.isTrue) {
+  //     if (message.data.containsKey("purpose") &&
+  //           message.data["purpose"] == "rescuer" &&
+  //           _auth.isRescuer.isTrue) {
+  //         final emergency = jsonDecode(message.data["emergency"]);
+
+  //         List<String> fileUrls = emergency["file_urls"].cast<String>();
+
+  //         Get.dialog(
+  //           barrierDismissible: false,
+  //           RescuerDialog(
+  //             imageUrls: fileUrls,
+  //             type: emergency["type"],
+  //             location: emergency["address"],
+  //             totalUnits: emergency["total_units"].toString(),
+  //             description: emergency["description"],
+  //             residentUid: emergency["resident_uid"],
+  //             geoPoint: GeoPoint(
+  //               emergency["geopoint"]["latitude"],
+  //               emergency["geopoint"]["longitude"],
+  //             ),
+  //             emergencyId: emergency["docId"],
+  //           ),
+  //         );
+  //       }
+  //   }
+  // }
 }

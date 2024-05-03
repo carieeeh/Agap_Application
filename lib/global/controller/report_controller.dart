@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
+import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
 import 'package:agap_mobile_v01/global/controller/storage_controller.dart';
 import 'package:agap_mobile_v01/global/model/emergency.dart';
+import 'package:agap_mobile_v01/global/model/station.dart';
 import 'package:agap_mobile_v01/global/model/user_model.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,9 +14,11 @@ import 'package:image_picker/image_picker.dart';
 
 class ReportController extends GetxController {
   final AuthController _auth = Get.find<AuthController>();
+  final SettingsController _settings = Get.find<SettingsController>();
   final StorageController _storageController = Get.find<StorageController>();
   RxBool isLoading = false.obs;
   Rx<UserModel> rescuerData = UserModel().obs;
+  Rx<Station> stationData = Station().obs;
 
   Future<DocumentSnapshot?> sendEmergencyReport({
     required List<XFile> files,
@@ -105,13 +109,33 @@ class ReportController extends GetxController {
   }
 
   Future<void> getRescuerInfo(String uid) async {
+    // uid = "vHtpu0MBreXEmStOCwihxtpDpOv1";
     final data = jsonEncode(await _auth.findUserInfo(uid));
     rescuerData.value = UserModel.fromJson(jsonDecode(data));
 
-    print(rescuerData.value);
+    stationData.value = await getStationInfo(rescuerData.value.department);
+  }
+
+  Future getStationInfo(String? stationCode) async {
+    FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+
+    QuerySnapshot querySnapShot = await firestoreDb
+        .collection("agap_collection")
+        .doc(fireStoreDoc)
+        .collection('stations')
+        .where('station_code', isEqualTo: stationCode)
+        .get();
+
+    return Station.fromJson(
+      jsonDecode(
+        jsonEncode(querySnapShot.docs.first.data()),
+      ),
+    );
   }
 
   Stream<DocumentSnapshot> getRescuerLoc(String uid) {
+    // uid = "vHtpu0MBreXEmStOCwihxtpDpOv1";
+
     FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
     CollectionReference<Map<String, dynamic>> rescuerLocations = firestoreDb
         .collection("agap_collection")
@@ -156,34 +180,40 @@ class ReportController extends GetxController {
 
       Get.snackbar(
         "Feedback submitted",
-        "Thank you for writing a feedback,\n you earn 1 AGAP Points",
+        _auth.isRescuer.isTrue
+            ? "Thank you for writing a feedback"
+            : "Thank you for writing a feedback,\n you earn 1 AGAP Points",
         duration: const Duration(seconds: 5),
         backgroundColor: colorSuccess,
       );
 
-      final uid = _auth.currentUser!.uid;
+      if (_auth.isRescuer.isTrue) {
+        final uid = _auth.currentUser!.uid;
 
-      final collection = await firestoreDb
-          .collection("agap_collection")
-          .doc(fireStoreDoc)
-          .collection('user_badges');
+        final collection = firestoreDb
+            .collection("agap_collection")
+            .doc(fireStoreDoc)
+            .collection('user_badges');
 
-      final QuerySnapshot querySnapShot =
-          await collection.where('uid', isEqualTo: uid).get();
-      if (querySnapShot.docs.isEmpty) {
-        await collection.add({
-          "uid": uid,
-          "badges": [],
-          "agap_points": 1,
-        });
-      } else {
-        final agapData = querySnapShot.docs.first.data();
-        final dataToJson = jsonEncode(agapData);
-        final jsonInfo = jsonDecode(dataToJson);
-        final totalPoints = jsonInfo["agap_points"] ?? 1;
+        final QuerySnapshot querySnapShot =
+            await collection.where('uid', isEqualTo: uid).get();
+        if (querySnapShot.docs.isEmpty) {
+          await collection.add({
+            "uid": uid,
+            "badges": [],
+            "agap_points": 1,
+          });
+        } else {
+          final agapData = querySnapShot.docs.first.data();
+          final dataToJson = jsonEncode(agapData);
+          final jsonInfo = jsonDecode(dataToJson);
+          final totalPoints = jsonInfo["agap_points"] ?? 1;
 
-        querySnapShot.docs.first.reference
-            .update({"agap_points": totalPoints + 1});
+          querySnapShot.docs.first.reference
+              .update({"agap_points": totalPoints + 1});
+        }
+        _settings.hasReport.value = false;
+        Get.off("/home");
       }
     } catch (error) {
       Get.dialog(

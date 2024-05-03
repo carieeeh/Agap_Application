@@ -231,9 +231,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.white,
-                child: Image.network(
-                  _authController.userModel!.profile!,
-                ),
+                backgroundImage:
+                    NetworkImage(_authController.userModel!.profile!),
               ),
             ],
           ),

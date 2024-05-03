@@ -89,7 +89,6 @@ class RescuerController extends GetxController {
     if (!_isRunning) {
       _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
         updateRescuerLocation();
-        print("update driver location");
       });
       _isRunning = true;
     }

@@ -28,7 +28,7 @@ class _ReportDetailsState extends State<ReportDetails> {
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
-                  "Label Assitance",
+                  "Label Assistance",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),

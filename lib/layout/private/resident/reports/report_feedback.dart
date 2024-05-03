@@ -4,7 +4,6 @@ import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ReportFeedback extends StatefulWidget {
@@ -48,7 +47,7 @@ class _ReportFeedbackState extends State<ReportFeedback> {
               widget.role == "rescuer"
                   ? "Thank you for responding!"
                   : "Thank you for reporting the incident!",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const Padding(
               padding: EdgeInsets.symmetric(
@@ -56,7 +55,7 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                 horizontal: 30,
               ),
               child: Text(
-                "Let us know your feedback/ suggestions for the emergency.",
+                "Let us know your feedback / suggestions for the emergency.",
                 textAlign: TextAlign.center,
               ),
             ),

@@ -7,6 +7,7 @@ import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -60,7 +61,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
             header(),
             Positioned(
               bottom: 0,
-              height: Get.height * .70,
+              height: Get.height * .69,
               width: Get.width,
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(
@@ -68,30 +69,35 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                 ),
                 child: Container(
                   color: Colors.white,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      GoogleMap(
-                        style: mapStyleNoLandmarks.toString(),
-                        mapType: MapType.normal,
-                        myLocationButtonEnabled: true,
-                        myLocationEnabled: true,
-                        zoomControlsEnabled: false,
-                        markers: _rescuerController.markers,
-                        initialCameraPosition: _kGooglePlex ??
-                            const CameraPosition(
-                              target: LatLng(14.5871, 120.9845),
-                              zoom: 15,
-                            ),
-                        onMapCreated: (GoogleMapController controller) {
-                          _controller.complete(controller);
-                        },
-                      ),
-                      // Visibility(
-                      //   visible: _rescuerController.isLoading.isTrue,
-                      //   child: const CircularProgressIndicator(),
-                      // )
-                    ],
+                  child: Obx(
+                    () => Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Visibility(
+                          visible: _rescuerController.isLoading.isFalse,
+                          child: GoogleMap(
+                            style: mapStyleNoLandmarks.toString(),
+                            mapType: MapType.normal,
+                            myLocationButtonEnabled: true,
+                            myLocationEnabled: true,
+                            zoomControlsEnabled: false,
+                            markers: _rescuerController.markers,
+                            initialCameraPosition: _kGooglePlex ??
+                                const CameraPosition(
+                                  target: LatLng(14.5871, 120.9845),
+                                  zoom: 15,
+                                ),
+                            onMapCreated: (GoogleMapController controller) {
+                              _controller.complete(controller);
+                            },
+                          ),
+                        ),
+                        Visibility(
+                          visible: _rescuerController.isLoading.isTrue,
+                          child: const CircularProgressIndicator(),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -132,7 +132,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
           Positioned(
             bottom: 0,
             left: 0,
-            height: Get.height * .75,
+            height: Get.height * .70,
             width: Get.width,
             child: ClipRRect(
               borderRadius: const BorderRadius.vertical(

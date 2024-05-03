@@ -187,7 +187,7 @@ class ReportController extends GetxController {
         backgroundColor: colorSuccess,
       );
 
-      if (_auth.isRescuer.isTrue) {
+      if (_auth.isRescuer.isFalse) {
         final uid = _auth.currentUser!.uid;
 
         final collection = firestoreDb
@@ -213,7 +213,7 @@ class ReportController extends GetxController {
               .update({"agap_points": totalPoints + 1});
         }
         _settings.hasReport.value = false;
-        Get.off("/home");
+        Get.offNamed("/home");
       }
     } catch (error) {
       Get.dialog(

@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
   RxInt countdown = 120.obs; // 5 minutes in seconds
-  RxBool isTimerFinish = false.obs, hasReport = true.obs;
+  RxBool isTimerFinish = false.obs, hasReport = false.obs;
   RxString rescuerUid = "".obs, emergencyDocId = "".obs;
   final AuthController _auth = Get.find<AuthController>();
 

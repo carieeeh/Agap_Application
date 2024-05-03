@@ -177,7 +177,6 @@ class _RescuerDialogState extends State<RescuerDialog>
                     onPressed: () {
                       _rescuerController.declineEmergency();
                     },
-                    isLoading: _rescuerController.isLoading.value,
                     label: "Decline",
                     bgColor: gray,
                     size: Size(

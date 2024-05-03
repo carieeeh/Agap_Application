@@ -7,6 +7,7 @@ import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/date_input.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/dropdown_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -198,12 +199,13 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               profileTile(_addressController, "Address"),
-              profileTile(_contactNumber, "Contact Number"),
+              contactNumberField(_contactNumber, "Contact Number", isReadOnly),
               profileTile(
                 _emergencyContactName,
                 "Emergency Contact Person Name",
               ),
-              profileTile(_emergencyContactNumber, "Emergency Contact Number"),
+              contactNumberField(_emergencyContactNumber,
+                  "Emergency Contact Number", isReadOnly),
               profileTile(_allergiesController, "Allergies"),
               Padding(
                 padding:
@@ -249,6 +251,34 @@ class _ProfileState extends State<Profile> {
         controller: controller,
         readOnly: isReadOnly,
         decoration: InputDecoration(
+          contentPadding: const EdgeInsetsDirectional.symmetric(
+            vertical: 5,
+            horizontal: 10,
+          ),
+          labelText: label,
+          focusColor: colorSuccess,
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: gray),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: colorSuccess),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget contactNumberField(
+      TextEditingController controller, String label, bool isReadOnly) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      child: TextFormField(
+        controller: controller,
+        readOnly: isReadOnly,
+        keyboardType: TextInputType.number,
+        inputFormatters: [LengthLimitingTextInputFormatter(10)],
+        decoration: InputDecoration(
+          prefixText: "+63 ",
           contentPadding: const EdgeInsetsDirectional.symmetric(
             vertical: 5,
             horizontal: 10,

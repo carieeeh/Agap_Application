@@ -7,6 +7,7 @@ import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/date_input.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/dropdown_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -157,7 +158,7 @@ class _RescuerProfileState extends State<RescuerProfile> {
               profileTile(_department, "Station Name", true),
               profileTile(_category, "Station Type", true),
               profileTile(_email, "Email", isReadOnly),
-              profileTile(_contactNumber, "Contact Number", isReadOnly),
+              contactNumberField(_contactNumber, "Contact Number", isReadOnly),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
@@ -217,6 +218,34 @@ class _RescuerProfileState extends State<RescuerProfile> {
         controller: controller,
         readOnly: isReadOnly,
         decoration: InputDecoration(
+          contentPadding: const EdgeInsetsDirectional.symmetric(
+            vertical: 5,
+            horizontal: 10,
+          ),
+          labelText: label,
+          focusColor: colorSuccess,
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: gray),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: colorSuccess),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget contactNumberField(
+      TextEditingController controller, String label, bool isReadOnly) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      child: TextFormField(
+        controller: controller,
+        readOnly: isReadOnly,
+        keyboardType: TextInputType.number,
+        inputFormatters: [LengthLimitingTextInputFormatter(10)],
+        decoration: InputDecoration(
+          prefixText: "+63 ",
           contentPadding: const EdgeInsetsDirectional.symmetric(
             vertical: 5,
             horizontal: 10,

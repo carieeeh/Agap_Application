@@ -16,6 +16,7 @@ class RescuerDialog extends StatefulWidget {
     required this.residentUid,
     required this.geoPoint,
     required this.emergencyId,
+    this.readOnly = false,
   });
 
   final List<String> imageUrls;
@@ -26,6 +27,7 @@ class RescuerDialog extends StatefulWidget {
   final String residentUid;
   final String emergencyId;
   final GeoPoint geoPoint;
+  final bool readOnly;
 
   @override
   State<RescuerDialog> createState() => _RescuerDialogState();
@@ -60,105 +62,104 @@ class _RescuerDialogState extends State<RescuerDialog>
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: !widget.readOnly,
       child: Dialog(
         child: Container(
-          height: Get.height * .75,
+          height: Get.height * .65,
           width: Get.width,
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
           child: SingleChildScrollView(
-            child: Obx(
-              () => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Center(
-                    child: Text(
-                      "EMERGENCY!",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(
+                  child: Text(
+                    "EMERGENCY!",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  height: Get.height * .3,
+                  width: Get.width,
+                  child: Stack(
+                    children: [
+                      PageView.builder(
+                        controller: _pageViewController,
+                        itemCount: widget.imageUrls.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Image.network(
+                              widget.imageUrls[index],
+                              height: 280,
+                              width: 280,
+                              fit: BoxFit.fitWidth,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: Get.width * .25,
+                      child: Text("Type :", style: labelStyle),
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  SizedBox(
-                    height: Get.height * .3,
-                    width: Get.width,
-                    child: Stack(
-                      children: [
-                        PageView.builder(
-                          controller: _pageViewController,
-                          itemCount: widget.imageUrls.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
-                              child: Image.network(
-                                widget.imageUrls[index],
-                                height: 280,
-                                width: 280,
-                                fit: BoxFit.fitWidth,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                    Expanded(child: Text(widget.type, style: detailsStyle)),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: Get.width * .25,
+                      child: Text("Location :", style: labelStyle),
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: Get.width * .25,
-                        child: Text("Type :", style: labelStyle),
-                      ),
-                      Expanded(child: Text(widget.type, style: detailsStyle)),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: Get.width * .25,
-                        child: Text("Location :", style: labelStyle),
-                      ),
-                      Expanded(
-                        child: Text(widget.location, style: detailsStyle),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: Get.width * .25,
-                        child: Text("Total units :", style: labelStyle),
-                      ),
-                      Expanded(
-                          child: Text(
-                        widget.totalUnits,
-                        style: detailsStyle,
-                      )),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: Get.width * .25,
-                        child: Text("Description :", style: labelStyle),
-                      ),
-                      Expanded(
-                          child: Text(
-                        widget.description,
-                        style: detailsStyle,
-                      )),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  RoundedCustomButton(
+                    Expanded(
+                      child: Text(widget.location, style: detailsStyle),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: Get.width * .25,
+                      child: Text("Total units :", style: labelStyle),
+                    ),
+                    Expanded(
+                        child: Text(
+                      widget.totalUnits,
+                      style: detailsStyle,
+                    )),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: Get.width * .25,
+                      child: Text("Description :", style: labelStyle),
+                    ),
+                    Expanded(
+                        child: Text(
+                      widget.description,
+                      style: detailsStyle,
+                    )),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Visibility(
+                  visible: !widget.readOnly,
+                  child: RoundedCustomButton(
                     onPressed: () {
                       _rescuerController.acceptEmergency(
                         widget.geoPoint,
@@ -173,7 +174,10 @@ class _RescuerDialogState extends State<RescuerDialog>
                       30,
                     ),
                   ),
-                  RoundedCustomButton(
+                ),
+                Visibility(
+                  visible: !widget.readOnly,
+                  child: RoundedCustomButton(
                     onPressed: () {
                       _rescuerController.declineEmergency();
                     },
@@ -184,8 +188,22 @@ class _RescuerDialogState extends State<RescuerDialog>
                       30,
                     ),
                   ),
-                ],
-              ),
+                ),
+                Visibility(
+                  visible: widget.readOnly,
+                  child: RoundedCustomButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    label: "Close",
+                    bgColor: gray,
+                    size: Size(
+                      Get.width * .8,
+                      30,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

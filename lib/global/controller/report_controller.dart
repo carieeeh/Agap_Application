@@ -16,6 +16,8 @@ class ReportController extends GetxController {
   final AuthController _auth = Get.find<AuthController>();
   final SettingsController _settings = Get.find<SettingsController>();
   final StorageController _storageController = Get.find<StorageController>();
+  RxList emergencies = [].obs;
+
   RxBool isLoading = false.obs;
   Rx<UserModel> rescuerData = UserModel().obs;
   Rx<Station> stationData = Station().obs;
@@ -80,21 +82,33 @@ class ReportController extends GetxController {
   }
 
   Future<void> getUserReports() async {
-    FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
-    CollectionReference<Map<String, dynamic>> emergenciesCollection =
-        firestoreDb
-            .collection("agap_collection")
-            .doc('staging')
-            .collection('emergencies');
+    try {
+      isLoading.value = true;
 
-    emergenciesCollection
-        .where('resident_uid', isEqualTo: _auth.currentUser!.uid)
-        .get()
-        .then((value) {
-      for (var doc in value.docs) {
-        print('${doc.id} => ${doc.data()}');
-      }
-    });
+      FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+      final result = await firestoreDb
+          .collection("agap_collection")
+          .doc('staging')
+          .collection('emergencies')
+          .get();
+
+      emergencies.value = result.docs;
+    } catch (error) {
+      Get.dialog(
+        barrierDismissible: false,
+        GetDialog(
+          type: 'error',
+          title: 'Failed reading emergencies',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message: 'Error code: $error',
+        ),
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> updateEmergency(String docId, Map<String, dynamic> data) async {
@@ -109,7 +123,6 @@ class ReportController extends GetxController {
   }
 
   Future<void> getRescuerInfo(String uid) async {
-    // uid = "vHtpu0MBreXEmStOCwihxtpDpOv1";
     final data = jsonEncode(await _auth.findUserInfo(uid));
     rescuerData.value = UserModel.fromJson(jsonDecode(data));
 

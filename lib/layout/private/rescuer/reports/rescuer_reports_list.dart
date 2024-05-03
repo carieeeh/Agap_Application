@@ -1,8 +1,11 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/report_controller.dart';
+import 'package:agap_mobile_v01/global/model/emergency.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
-import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
+import 'package:agap_mobile_v01/layout/widgets/dialog/rescuer_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class RescuerReportsList extends StatefulWidget {
   const RescuerReportsList({super.key});
@@ -12,6 +15,8 @@ class RescuerReportsList extends StatefulWidget {
 }
 
 class _RescuerReportsListState extends State<RescuerReportsList> {
+  final ReportController _report = Get.find<ReportController>();
+
   @override
   Widget build(BuildContext context) {
     return MainContainer(
@@ -24,13 +29,10 @@ class _RescuerReportsListState extends State<RescuerReportsList> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text("Date", style: TextStyle(fontWeight: FontWeight.w600)),
-                Text("Location", style: TextStyle(fontWeight: FontWeight.w600)),
-                SizedBox(
-                  width: 80,
-                  child: Text(
-                    "Supporting Document",
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
+                // Text("Location", style: TextStyle(fontWeight: FontWeight.w600)),
+                Text(
+                  "Supporting Document",
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 Text("Status", style: TextStyle(fontWeight: FontWeight.w600)),
               ],
@@ -40,33 +42,31 @@ class _RescuerReportsListState extends State<RescuerReportsList> {
           SizedBox(
             height: Get.height * .75,
             child: ListView.builder(
-              itemCount: 5,
+              itemCount: _report.emergencies.length,
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
+                final emergency =
+                    Emergency.fromJson(_report.emergencies[index].data());
+                String formattedDate = DateFormat('MM/dd/yyyy')
+                    .format(emergency.createdAt.toDate());
+
+                final String emergencyId = _report.emergencies[index].id;
+
                 return Column(
                   children: [
                     TextButton(
                       onPressed: () {
-                        // Get.toNamed('/rescuer_reports/rescuer_feedback');
-                        Get.defaultDialog(
-                          title: "Supporting Document",
-                          content: Container(
-                            height: Get.height * .3,
-                            color: Colors.amber,
-                            child: const Center(
-                              child: Text(
-                                "Supporting Document File Goes Here!",
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                          confirm: RoundedCustomButton(
-                            onPressed: () {
-                              Get.back();
-                            },
-                            label: "Close",
-                            size: Size(Get.width * .5, 40),
-                            bgColor: primaryRed,
+                        Get.dialog(
+                          RescuerDialog(
+                            imageUrls: emergency.fileUrls ?? [],
+                            type: emergency.type ?? "",
+                            location: emergency.address ?? "",
+                            totalUnits: emergency.totalUnits.toString(),
+                            description: emergency.description ?? "",
+                            residentUid: emergency.residentUid!,
+                            geoPoint: emergency.geopoint!,
+                            emergencyId: emergencyId,
+                            readOnly: true,
                           ),
                         );
                       },
@@ -76,25 +76,21 @@ class _RescuerReportsListState extends State<RescuerReportsList> {
                           borderRadius: BorderRadius.circular(0),
                         ),
                       ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      child: Row(
                         children: [
-                          Text(
-                            "12/10/2024",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            "ABC St.",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
-                          ),
+                          const SizedBox(width: 30),
                           SizedBox(
-                            width: 80,
+                            width: 85,
+                            child: Text(
+                              formattedDate,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 150,
                             child: Text(
                               "View",
                               textAlign: TextAlign.center,
@@ -104,11 +100,16 @@ class _RescuerReportsListState extends State<RescuerReportsList> {
                               ),
                             ),
                           ),
+                          const SizedBox(width: 30),
                           Text(
-                            "In Progress",
+                            "${emergency.status}",
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: Colors.black,
+                              color: emergency.status == "finish"
+                                  ? colorSuccess
+                                  : emergency.status == "rejected"
+                                      ? colorError
+                                      : yellow,
                             ),
                           ),
                         ],

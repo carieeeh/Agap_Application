@@ -4,6 +4,7 @@ import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ReportFeedback extends StatefulWidget {
@@ -12,12 +13,13 @@ class ReportFeedback extends StatefulWidget {
     required this.emergencyDocId,
     required this.userUid,
     required this.role,
+    this.readOnly = false,
   });
 
   final String emergencyDocId;
   final String userUid;
   final String role;
-
+  final bool readOnly;
   @override
   State<ReportFeedback> createState() => _ReportFeedbackState();
 }
@@ -30,7 +32,7 @@ class _ReportFeedbackState extends State<ReportFeedback> {
   Widget build(BuildContext context) {
     return MainContainer(
       isLeadingBackBtn: true,
-      title: "Feedback",
+      title: widget.readOnly ? "Feedback Preview" : "Feedback",
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -49,14 +51,17 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                   : "Thank you for reporting the incident!",
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(
+            Padding(
+              padding: const EdgeInsets.symmetric(
                 vertical: 15.0,
                 horizontal: 30,
               ),
-              child: Text(
-                "Let us know your feedback / suggestions for the emergency.",
-                textAlign: TextAlign.center,
+              child: Visibility(
+                visible: !widget.readOnly,
+                child: const Text(
+                  "Let us know your feedback / suggestions for the emergency.",
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             Visibility(
@@ -84,7 +89,7 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                     customEmptyIcon: Icons.star_border,
                     animationDuration: const Duration(milliseconds: 300),
                     animationCurve: Curves.easeInOut,
-                    readOnly: false,
+                    readOnly: widget.readOnly,
                   ),
                 ],
               ),
@@ -94,6 +99,7 @@ class _ReportFeedbackState extends State<ReportFeedback> {
               child: TextFormField(
                 controller: _comments,
                 maxLines: 5,
+                readOnly: widget.readOnly,
                 decoration: InputDecoration(
                   hintText: "Suggestions/ Comments",
                   hintStyle: const TextStyle(color: gray),
@@ -104,20 +110,23 @@ class _ReportFeedbackState extends State<ReportFeedback> {
               ),
             ),
             Obx(
-              () => RoundedCustomButton(
-                onPressed: () {
-                  _reportController.sendEmergencyFeedback(
-                    emergencyRating,
-                    widget.emergencyDocId,
-                    _comments.text,
-                    widget.role,
-                  );
-                },
-                isLoading: _reportController.isLoading.isTrue,
-                label: "Submit",
-                size: Size(Get.width * .75, 40),
-                bgColor: primaryRed,
-                radius: 10,
+              () => Visibility(
+                visible: !widget.readOnly,
+                child: RoundedCustomButton(
+                  onPressed: () {
+                    _reportController.sendEmergencyFeedback(
+                      emergencyRating,
+                      widget.emergencyDocId,
+                      _comments.text,
+                      widget.role,
+                    );
+                  },
+                  isLoading: _reportController.isLoading.isTrue,
+                  label: "Submit",
+                  size: Size(Get.width * .75, 40),
+                  bgColor: primaryRed,
+                  radius: 10,
+                ),
               ),
             ),
           ],

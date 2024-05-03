@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
+import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
@@ -26,6 +27,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
   final AuthController _auth = Get.find<AuthController>();
   final LocationsController _locController = Get.find<LocationsController>();
   final RescuerController _rescuerController = Get.find<RescuerController>();
+  final ReportController _reportController = Get.find<ReportController>();
 
   CameraPosition? _kGooglePlex;
   late Position _userPosition;
@@ -40,6 +42,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
 
   Future initFunction() async {
     await _locController.checkLocationPermission();
+    _reportController.getUserReports();
     _userPosition = await _locController.getUserLocation();
     _kGooglePlex = CameraPosition(
       target: LatLng(_userPosition.latitude, _userPosition.longitude),

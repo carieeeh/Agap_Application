@@ -59,6 +59,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     await _locController.checkLocationPermission();
     _incidentPosition = await _locController.getUserLocation();
     await _residentController.getUserCurrentPoints();
+    _reportController.getUserReports();
     currentAddress =
         await _locController.getAddressByCoordinates(_incidentPosition);
   }

@@ -44,6 +44,8 @@ class DrawerApp extends StatelessWidget {
                             bottom: 0,
                             right: 0,
                             child: Container(
+                              height: 30,
+                              width: 30,
                               padding: const EdgeInsets.all(3),
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,

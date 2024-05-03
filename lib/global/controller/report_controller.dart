@@ -31,7 +31,7 @@ class ReportController extends GetxController {
       List<String> imageUrls = [];
 
       for (var file in files) {
-        imageUrls.add(await _storageController.uploadFile(file));
+        imageUrls.add(await _storageController.uploadFile(file, "reports"));
       }
 
       if (imageUrls.isNotEmpty) {

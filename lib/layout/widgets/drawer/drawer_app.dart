@@ -36,10 +36,8 @@ class DrawerApp extends StatelessWidget {
                           CircleAvatar(
                             radius: 40,
                             backgroundColor: Colors.white,
-                            child: Image.asset(
-                              'assets/images/person.png',
-                              fit: BoxFit.cover,
-                              height: 45,
+                            backgroundImage: NetworkImage(
+                              _auth.userModel!.profile!,
                             ),
                           ),
                           // Positioned(
@@ -60,7 +58,7 @@ class DrawerApp extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        _auth.userModel!.fullName(),
+                        _auth.userModel!.userFullName(),
                         style: const TextStyle(color: Colors.white),
                       ),
                     ],

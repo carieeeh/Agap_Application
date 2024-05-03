@@ -1,11 +1,32 @@
+import 'dart:convert';
+
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
+import 'package:agap_mobile_v01/global/controller/storage_controller.dart';
+import 'package:agap_mobile_v01/global/model/user_model.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileController extends GetxController {
   RxBool isLoading = false.obs;
+  final AuthController _auth = Get.find<AuthController>();
+  final StorageController _storageController = Get.find<StorageController>();
+
+  List<String> bloodTypes = [
+    "AB positive",
+    "AB negative",
+    "A positive",
+    "A negative",
+    "B positive",
+    "B negative",
+    "O positive",
+    "O negative",
+  ];
+
+  List<String> gender = ["Male", "Female"];
 
   Future updateUserPhoneNumber(String currentPhoneNumber) async {
     FirebaseAuth.instance.verifyPhoneNumber(
@@ -27,10 +48,14 @@ class ProfileController extends GetxController {
     );
   }
 
-  Future<void> updateUserProfile(Map<String, dynamic> data) async {
+  Future<void> updateUserProfile(Map<String, dynamic> data,
+      {XFile? image}) async {
     final currentUser = FirebaseAuth.instance.currentUser;
     isLoading.value = true;
     FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+    if (image != null) {
+      data["profile"] = await _storageController.uploadFile(image, "reports");
+    }
     try {
       final QuerySnapshot querySnapShot = await firestoreDb
           .collection("agap_collection")
@@ -39,6 +64,7 @@ class ProfileController extends GetxController {
           .where('uid', isEqualTo: currentUser!.uid)
           .get();
       querySnapShot.docs.first.reference.update(data);
+      updateUserModel();
     } catch (error) {
       Get.dialog(
         barrierDismissible: false,
@@ -55,5 +81,10 @@ class ProfileController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future updateUserModel() async {
+    var res = jsonEncode(await _auth.findUserInfo(_auth.currentUser!.uid));
+    _auth.userModel = UserModel.fromJson(jsonDecode(res));
   }
 }

@@ -219,7 +219,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ),
                   Text(
-                    _authController.userModel!.fullName(),
+                    _authController.userModel!.userFullName(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -231,10 +231,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.white,
-                child: Image.asset(
-                  'assets/images/person.png',
-                  fit: BoxFit.cover,
-                  height: 45,
+                child: Image.network(
+                  _authController.userModel!.profile!,
                 ),
               ),
             ],

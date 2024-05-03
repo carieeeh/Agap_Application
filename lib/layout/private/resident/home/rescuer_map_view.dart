@@ -87,7 +87,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                       ),
                       Expanded(
                         child: Text(
-                          _reportController.rescuerData.value.fullName(),
+                          _reportController.rescuerData.value.userFullName(),
                           style: detailsStyle,
                         ),
                       ),

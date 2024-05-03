@@ -82,14 +82,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         textController: _contactNumber,
                       ),
                       UnderlineInput(
-                        label: 'Emergency Contact No.',
-                        hintText: '9928372321',
-                        keyboardType: TextInputType.number,
-                        maxLength: 10,
-                        isPassword: false,
-                        textController: _emeContactNumber,
-                      ),
-                      UnderlineInput(
                         label: 'Email',
                         hintText: 'example@email.com',
                         keyboardType: TextInputType.emailAddress,

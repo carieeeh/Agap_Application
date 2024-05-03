@@ -8,11 +8,11 @@ import 'package:image_picker/image_picker.dart';
 class StorageController extends GetxController {
   RxBool isLoading = false.obs;
 
-  Future<String> uploadFile(XFile file) async {
+  Future<String> uploadFile(XFile file, String folder) async {
     isLoading.value = true;
     try {
       final Reference storageRef =
-          FirebaseStorage.instance.ref().child('reports/${file.name}');
+          FirebaseStorage.instance.ref().child('$folder/${file.name}');
       UploadTask uploadTask = storageRef.putFile(File(file.path));
 
       TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
@@ -21,6 +22,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
+  final AuthController _auth = Get.find<AuthController>();
   final LocationsController _locController = Get.find<LocationsController>();
   final RescuerController _rescuerController = Get.find<RescuerController>();
 
@@ -170,11 +172,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                 CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.white,
-                  child: Image.asset(
-                    'assets/images/person.png',
-                    fit: BoxFit.cover,
-                    height: 45,
-                  ),
+                  backgroundImage: NetworkImage(_auth.userModel!.profile!),
                 ),
               ],
             ),

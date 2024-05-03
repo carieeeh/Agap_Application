@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
+import 'package:agap_mobile_v01/global/model/user_model.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,7 @@ class ResidentController extends GetxController {
   RxBool isLoading = false.obs;
   RxList userCurrentBadges = [].obs;
   RxInt userTotalPoints = 0.obs;
+  Rx<UserModel> resident = UserModel().obs;
 
   Future updateResidentAgapPoints(int points) async {
     final uid = _auth.currentUser!.uid;

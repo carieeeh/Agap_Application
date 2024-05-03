@@ -82,6 +82,7 @@ class AuthController extends GetxController {
 
   // request otp for phone number ex. 9487123123
   Future<void> requestOTP() async {
+    isRescuer.value = false;
     isLoading.value = true;
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: "+63${phoneNumber.value}",
@@ -135,14 +136,17 @@ class AuthController extends GetxController {
             userModel!.uid = currentUser!.uid;
             signUp(userModel!);
           } else {
-            signUp(UserModel(
-              uid: currentUser!.uid,
-              firstName: 'Guest',
-              lastName: DateTime.now().second.toString(),
-              role: 'resident',
-              status: 'accepted',
-              contactNumber: currentUser!.phoneNumber,
-            ));
+            signUp(
+              UserModel(
+                  uid: currentUser!.uid,
+                  firstName: 'Guest',
+                  lastName: DateTime.now().second.toString(),
+                  role: 'resident',
+                  status: 'accepted',
+                  contactNumber: currentUser!.phoneNumber,
+                  profile:
+                      "https://firebasestorage.googleapis.com/v0/b/agap-f4c32.appspot.com/o/profile%2Fperson.png?alt=media&token=947f5244-0157-43ab-8c3e-349ae9699415"),
+            );
           }
         }
       });
@@ -205,8 +209,7 @@ class AuthController extends GetxController {
               : 'An email will be sent when your account is ready to use.',
         ),
       );
-
-      isRescuer.isFalse ? Get.offAllNamed("/home") : Get.offAllNamed('/login');
+      isRescuer.isFalse ? signIn(value) : Get.offAllNamed('/login');
     }).catchError((error) {
       isLoading.value = false;
 
@@ -250,14 +253,12 @@ class AuthController extends GetxController {
     String? middleName,
     required String lastName,
     required String contactNumber,
-    required String emeContactNumber,
     required String email,
   }) {
     if (stationCode.isEmpty) return 'Station Code';
     if (firstName.isEmpty) return 'First Name';
     if (lastName.isEmpty) return 'Last Name';
     if (contactNumber.isEmpty) return 'Contact Number';
-    if (emeContactNumber.isEmpty) return 'Emergency Contact Number';
     if (email.isEmpty) return 'Email';
     return null; // Return null if all required fields are non-empty
   }
@@ -268,7 +269,7 @@ class AuthController extends GetxController {
     String? middleName,
     required String lastName,
     required String contactNumber,
-    required String emeContactNumber,
+    String? emeContactNumber,
     required String email,
   }) async {
     String? emptyField = findEmptyField(
@@ -276,7 +277,6 @@ class AuthController extends GetxController {
       firstName: firstName,
       lastName: lastName,
       contactNumber: contactNumber,
-      emeContactNumber: emeContactNumber,
       email: email,
     );
 
@@ -305,6 +305,8 @@ class AuthController extends GetxController {
       lastName: lastName,
       contactNumber: contactNumber,
       emeContactNumber: emeContactNumber,
+      profile:
+          "https://firebasestorage.googleapis.com/v0/b/agap-f4c32.appspot.com/o/profile%2Fperson.png?alt=media&token=947f5244-0157-43ab-8c3e-349ae9699415",
       status: 'pending',
       email: email,
       department: stationCode,

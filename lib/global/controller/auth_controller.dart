@@ -174,13 +174,44 @@ class AuthController extends GetxController {
 
     isAuth.value = true;
     isLoading.value = false;
-
-    if (userModel?.role == 'rescuer') {
-      isRescuer.value = true;
-      Get.offAllNamed('/interactive_map');
+    if (userModel?.status == "blocked") {
+      Get.dialog(
+        barrierDismissible: false,
+        const GetDialog(
+          type: 'success',
+          title: 'Your account is blocked',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message: 'Please contact our team in case of a problem.',
+        ),
+      );
+      Get.offAllNamed('/login');
     } else {
-      isRescuer.value = false;
-      Get.offAllNamed("/home");
+      if (userModel?.role == 'rescuer') {
+        if (userModel?.status == "accepted") {
+          Get.dialog(
+            barrierDismissible: false,
+            const GetDialog(
+              type: 'success',
+              title: 'Registration in progress',
+              hasMessage: true,
+              buttonNumber: 0,
+              hasCustomWidget: false,
+              withCloseButton: true,
+              message: 'Your account is still in review...',
+            ),
+          );
+          Get.offAllNamed('/login');
+        } else {
+          isRescuer.value = true;
+          Get.offAllNamed('/interactive_map');
+        }
+      } else {
+        isRescuer.value = false;
+        Get.offAllNamed("/home");
+      }
     }
   }
 
@@ -194,6 +225,8 @@ class AuthController extends GetxController {
         .add(model.toJson())
         .then((value) async {
       isLoading.value = false;
+
+      isRescuer.isFalse ? signIn(value) : Get.offAllNamed('/login');
 
       await Get.dialog(
         barrierDismissible: false,
@@ -209,7 +242,6 @@ class AuthController extends GetxController {
               : 'An email will be sent when your account is ready to use.',
         ),
       );
-      isRescuer.isFalse ? signIn(value) : Get.offAllNamed('/login');
     }).catchError((error) {
       isLoading.value = false;
 

@@ -1,7 +1,9 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
 import 'package:agap_mobile_v01/layout/widgets/chart/chart_legend.dart';
 import 'package:agap_mobile_v01/layout/widgets/chart/report_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class RescuerReportIncidents extends StatefulWidget {
   const RescuerReportIncidents({super.key});
@@ -11,6 +13,8 @@ class RescuerReportIncidents extends StatefulWidget {
 }
 
 class _RescuerReportIncidentsState extends State<RescuerReportIncidents> {
+  final SettingsController _settingsController = Get.find<SettingsController>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -45,17 +49,23 @@ class _RescuerReportIncidentsState extends State<RescuerReportIncidents> {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              decoration: BoxDecoration(
-                color: lightGray,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.download),
-                  Text("Download"),
-                ],
+            InkWell(
+              onTap: () {
+                _settingsController.callFunction("", {});
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                decoration: BoxDecoration(
+                  color: lightGray,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.download),
+                    Text("Download"),
+                  ],
+                ),
               ),
             ),
           ],

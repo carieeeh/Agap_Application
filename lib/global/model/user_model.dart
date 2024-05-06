@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
   String? uid;
-  String? firstName;
-  String? middleName;
-  String? lastName;
+  // String? firstName;
+  // String? middleName;
+  // String? lastName;
   String? fullName;
   String? birthday;
   String? address;
   String? role;
-  String? profile;
+  String profile;
   String? contactNumber;
   String? emeContactNumber;
   String? emeContactName;
@@ -27,9 +27,9 @@ class UserModel {
   UserModel({
     this.uid,
     this.role,
-    this.firstName,
-    this.middleName,
-    this.lastName,
+    // this.firstName,
+    // this.middleName,
+    // this.lastName,
     this.age,
     this.email,
     this.additionalInformation,
@@ -45,15 +45,18 @@ class UserModel {
     this.birthday,
     this.bloodType,
     this.fullName,
-    this.profile,
+    this.profile =
+        "https://firebasestorage.googleapis.com/v0/b/agap-f4c32.appspot.com/o/profile%2Fperson.png?alt=media&token=947f5244-0157-43ab-8c3e-349ae9699415",
     this.gender,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       uid: json['uid'] as String?,
-      firstName: json['first_name'] as String?,
-      profile: json['profile'] as String?,
+      // firstName: json['first_name'] as String?,
+      // middleName: json['middle_name'] as String?,
+      // lastName: json['last_name'] as String?,
+      profile: json['profile'] as String,
       fullName: json['full_name'] as String?,
       bloodType: json['blood_type'] as String?,
       gender: json['gender'] as String?,
@@ -61,8 +64,6 @@ class UserModel {
       allergies: json['allergies'] as String?,
       address: json['address'] as String?,
       age: json['age'] as int?,
-      middleName: json['middle_name'] as String?,
-      lastName: json['last_name'] as String?,
       role: json['role'] as String?,
       email: json['email'] as String?,
       contactNumber: json['contact_number'] as String?,
@@ -79,9 +80,9 @@ class UserModel {
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
-      'first_name': firstName,
-      'middle_name': middleName,
-      'last_name': lastName,
+      // 'first_name': firstName,
+      // 'middle_name': middleName,
+      // 'last_name': lastName,
       'email': email,
       'role': role,
       'age': age,
@@ -101,9 +102,5 @@ class UserModel {
       "gender": gender,
       "profile": profile,
     };
-  }
-
-  String userFullName() {
-    return "$firstName $lastName";
   }
 }

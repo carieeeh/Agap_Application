@@ -139,8 +139,9 @@ class AuthController extends GetxController {
             signUp(
               UserModel(
                   uid: currentUser!.uid,
-                  firstName: 'Guest',
-                  lastName: DateTime.now().second.toString(),
+                  // firstName: 'Guest',
+                  // lastName: DateTime.now().second.toString(),
+                  fullName: "Guest ${DateTime.now().second.toString()}",
                   role: 'resident',
                   status: 'accepted',
                   contactNumber: currentUser!.phoneNumber,
@@ -175,6 +176,7 @@ class AuthController extends GetxController {
     isAuth.value = true;
     isLoading.value = false;
     if (userModel?.status == "blocked") {
+      Get.offAllNamed('/login');
       Get.dialog(
         barrierDismissible: false,
         const GetDialog(
@@ -187,10 +189,13 @@ class AuthController extends GetxController {
           message: 'Please contact our team in case of a problem.',
         ),
       );
-      Get.offAllNamed('/login');
     } else {
       if (userModel?.role == 'rescuer') {
         if (userModel?.status == "accepted") {
+          isRescuer.value = true;
+          Get.offAllNamed('/interactive_map');
+        } else {
+          Get.offAllNamed('/login');
           Get.dialog(
             barrierDismissible: false,
             const GetDialog(
@@ -203,10 +208,6 @@ class AuthController extends GetxController {
               message: 'Your account is still in review...',
             ),
           );
-          Get.offAllNamed('/login');
-        } else {
-          isRescuer.value = true;
-          Get.offAllNamed('/interactive_map');
         }
       } else {
         isRescuer.value = false;
@@ -332,9 +333,10 @@ class AuthController extends GetxController {
 
     userModel = UserModel(
       role: 'rescuer',
-      firstName: firstName,
-      middleName: middleName,
-      lastName: lastName,
+      // firstName: firstName,
+      // middleName: middleName,
+      // lastName: lastName,
+      fullName: "$firstName $middleName $lastName",
       contactNumber: contactNumber,
       emeContactNumber: emeContactNumber,
       profile:

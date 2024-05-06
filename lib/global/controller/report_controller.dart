@@ -129,7 +129,7 @@ class ReportController extends GetxController {
     stationData.value = await getStationInfo(rescuerData.value.department);
   }
 
-  Future getStationInfo(String? stationCode) async {
+  Future<Station> getStationInfo(String? stationCode) async {
     FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
 
     QuerySnapshot querySnapShot = await firestoreDb

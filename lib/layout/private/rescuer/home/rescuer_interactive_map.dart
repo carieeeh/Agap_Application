@@ -8,7 +8,6 @@ import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -48,6 +47,8 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
       target: LatLng(_userPosition.latitude, _userPosition.longitude),
       zoom: 15,
     );
+    _rescuerController.userStation.value = await _reportController
+        .getStationInfo(_auth.userModel?.department ?? "");
     currentAddress =
         await _locController.getAddressByCoordinates(_userPosition);
     await _rescuerController.updateRescuerLocation();
@@ -181,7 +182,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                 CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(_auth.userModel!.profile!),
+                  backgroundImage: NetworkImage(_auth.userModel!.profile),
                 ),
               ],
             ),

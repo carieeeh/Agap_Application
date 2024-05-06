@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ),
                   Text(
-                    _authController.userModel!.userFullName(),
+                    _authController.userModel!.fullName ?? "",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 30,

@@ -60,7 +60,7 @@ class DrawerApp extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        _auth.userModel!.userFullName(),
+                        _auth.userModel!.fullName ?? "",
                         style: const TextStyle(color: Colors.white),
                       ),
                     ],

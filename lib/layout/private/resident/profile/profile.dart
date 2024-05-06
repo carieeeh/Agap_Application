@@ -43,7 +43,7 @@ class _ProfileState extends State<Profile> {
   }
 
   void setInputValues() {
-    _nameController.text = _authController.userModel!.userFullName();
+    _nameController.text = _authController.userModel!.fullName ?? "";
     _email.text = _authController.userModel!.email ?? "";
     _bdayController.text = _authController.userModel!.birthday ?? "";
     _addressController.text = _authController.userModel!.address ?? "";

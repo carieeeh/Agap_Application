@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/profile_controller.dart';
+import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/date_input.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/dropdown_input.dart';
@@ -24,10 +25,12 @@ class _RescuerProfileState extends State<RescuerProfile> {
   final ImagePicker _imagePicker = ImagePicker();
 
   final AuthController _auth = Get.find<AuthController>();
+  final RescuerController _rescuerController = Get.find<RescuerController>();
+
   final ProfileController _profileController = Get.find<ProfileController>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _department = TextEditingController();
-  final TextEditingController _category = TextEditingController();
+  // final TextEditingController _category = TextEditingController();
   final TextEditingController _birthday = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _gender = TextEditingController();
@@ -40,7 +43,8 @@ class _RescuerProfileState extends State<RescuerProfile> {
   }
 
   void setInputValues() {
-    _nameController.text = _auth.userModel!.userFullName();
+    _department.text = _rescuerController.userStation.value.name ?? "";
+    _nameController.text = _auth.userModel!.fullName ?? "";
     _birthday.text = _auth.userModel?.birthday ?? "";
     _email.text = _auth.userModel?.email ?? "";
     _contactNumber.text = _auth.userModel?.contactNumber ?? "";
@@ -147,7 +151,7 @@ class _RescuerProfileState extends State<RescuerProfile> {
                                 radius: 40,
                                 backgroundColor: Colors.white,
                                 backgroundImage: NetworkImage(
-                                  _auth.userModel!.profile!,
+                                  _auth.userModel!.profile,
                                 ),
                               ),
                       ),
@@ -156,7 +160,7 @@ class _RescuerProfileState extends State<RescuerProfile> {
                 ),
               ),
               profileTile(_department, "Station Name", true),
-              profileTile(_category, "Station Type", true),
+              // profileTile(_category, "Station Type", true),
               profileTile(_email, "Email", isReadOnly),
               contactNumberField(_contactNumber, "Contact Number", isReadOnly),
               Padding(

@@ -6,6 +6,7 @@ import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
+import 'package:agap_mobile_v01/global/model/station.dart';
 import 'package:agap_mobile_v01/layout/private/resident/reports/report_feedback.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,6 +29,7 @@ class RescuerController extends GetxController {
       hasArrive = false.obs,
       isOnline = false.obs;
   String _residentUid = "", _emergencyDocId = "";
+  Rx<Station> userStation = Station().obs;
 
   Future<void> updateRescuerLocation() async {
     FirebaseFirestore firestoreDb = FirebaseFirestore.instance;

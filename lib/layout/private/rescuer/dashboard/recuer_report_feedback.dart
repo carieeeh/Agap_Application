@@ -1,4 +1,6 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/report_controller.dart';
+import 'package:agap_mobile_v01/global/date_time_utils.dart';
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,9 @@ class RescuerReportFeedback extends StatefulWidget {
 }
 
 class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
+  final ReportController _reportController = Get.find<ReportController>();
+  final DateTimeUtils _dateUtils = DateTimeUtils();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -27,7 +32,7 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
                 style: TextStyle(fontSize: 16),
               ),
               AnimatedRatingStars(
-                initialRating: 5.0,
+                initialRating: _reportController.averageRating.value,
                 minRating: 0.0,
                 maxRating: 5.0,
                 onChanged: (double rating) {
@@ -93,11 +98,14 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
           ),
           const Divider(),
           SizedBox(
-            height: Get.height * .75,
+            height: Get.height * .5,
             child: ListView.builder(
-              itemCount: 5,
-              padding: EdgeInsets.zero,
+              itemCount: _reportController.emergenciesFeedback.length,
+              padding: const EdgeInsets.only(bottom: 50),
               itemBuilder: (context, index) {
+                final Map<String, dynamic> feedback =
+                    _reportController.emergenciesFeedback[index].data();
+
                 return Column(
                   children: [
                     TextButton(
@@ -108,19 +116,21 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
                           borderRadius: BorderRadius.circular(0),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            "12/10/2024",
-                            style: TextStyle(
+                            _dateUtils.formatDate(
+                                dateTime:
+                                    DateTime.parse(feedback["created_at"])),
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.black,
                             ),
                           ),
                           Text(
-                            "4.5",
-                            style: TextStyle(
+                            feedback["rating"].toString(),
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.black,
                             ),
@@ -128,8 +138,8 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
                           SizedBox(
                             width: 120,
                             child: Text(
-                              "Thank you! Did a Great Job!",
-                              style: TextStyle(
+                              feedback["comment"],
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black,
                               ),

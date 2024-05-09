@@ -21,7 +21,7 @@ class _RescuerSettingsPageState extends State<RescuerSettingsPage> {
             leading: const Icon(Icons.person_2_outlined),
             title: const Text("Account"),
             onTap: () {
-              Get.toNamed('/profile');
+              Get.toNamed('/rescuer_profile');
             },
           ),
           const Divider(),

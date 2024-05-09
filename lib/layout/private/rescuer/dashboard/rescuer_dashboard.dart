@@ -1,4 +1,5 @@
 import 'package:agap_mobile_v01/global/constant.dart';
+import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/private/rescuer/dashboard/recuer_report_feedback.dart';
 import 'package:agap_mobile_v01/layout/private/rescuer/dashboard/report_incidents.dart';
@@ -15,6 +16,7 @@ class RescuerDashboard extends StatefulWidget {
 class _RescuerDashboardState extends State<RescuerDashboard>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final ReportController _reportController = Get.find<ReportController>();
   final List<Widget> _tabs = [
     const Tab(
       child: Text(
@@ -34,6 +36,7 @@ class _RescuerDashboardState extends State<RescuerDashboard>
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
+    _reportController.fetchEmergencyFeedbacks();
   }
 
   @override

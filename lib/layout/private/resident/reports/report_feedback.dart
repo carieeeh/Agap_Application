@@ -4,7 +4,6 @@ import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ReportFeedback extends StatefulWidget {
@@ -80,7 +79,9 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                     onChanged: (double rating) {
                       // Handle the rating change here
                       // print('Rating: $rating');
-                      emergencyRating = rating;
+                      setState(() {
+                        emergencyRating = rating;
+                      });
                     },
                     displayRatingValue: true,
                     interactiveTooltips: true,
@@ -119,6 +120,7 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                       widget.emergencyDocId,
                       _comments.text,
                       widget.role,
+                      widget.userUid,
                     );
                   },
                   isLoading: _reportController.isLoading.isTrue,

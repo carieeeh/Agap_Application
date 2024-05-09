@@ -11,13 +11,16 @@ import 'package:agap_mobile_v01/global/model/user_model.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ReportController extends GetxController {
   final AuthController _auth = Get.find<AuthController>();
   final SettingsController _settings = Get.find<SettingsController>();
   final StorageController _storageController = Get.find<StorageController>();
-  RxList emergencies = [].obs;
+  RxList emergencies = [].obs, emergenciesFeedback = [].obs;
+  RxDouble averageRating = 0.0.obs;
 
   RxBool isLoading = false.obs;
   Rx<UserModel> rescuerData = UserModel().obs;
@@ -173,6 +176,7 @@ class ReportController extends GetxController {
     String emergencyId,
     String comment,
     String role,
+    String userUid,
   ) async {
     try {
       isLoading.value = true;
@@ -183,7 +187,9 @@ class ReportController extends GetxController {
         "emergency_id": emergencyId,
         "comment": comment,
         "role": role,
+        "uid": userUid,
         "rating": rating,
+        "created_at": DateTime.now(),
       };
 
       await firestoreDb
@@ -245,6 +251,48 @@ class ReportController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> fetchEmergencyFeedbacks() async {
+    try {
+      isLoading.value = true;
+      print(DateTime.now()); //2024-05-09 22:33:48.231211
+      FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+      final result = await firestoreDb
+          .collection("agap_collection")
+          .doc('staging')
+          .collection('emergency_feedbacks')
+          .get();
+
+      emergenciesFeedback.value = result.docs;
+      print(emergenciesFeedback);
+      solveAverageRating();
+    } catch (error) {
+      Get.dialog(
+        barrierDismissible: false,
+        GetDialog(
+          type: 'error',
+          title: 'Failed reading feedbacks',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message: 'Error code: $error',
+        ),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void solveAverageRating() {
+    averageRating.value = 0;
+    emergenciesFeedback.forEach((feedback) {
+      averageRating.value += feedback["rating"].toDouble();
+    });
+    averageRating.value =
+        averageRating.value / emergenciesFeedback.length.toDouble();
+    averageRating.value = averageRating.value.round().toDouble();
   }
 
   List<Map<String, dynamic>> getTotalEmergenciesByTypeAndMonth(

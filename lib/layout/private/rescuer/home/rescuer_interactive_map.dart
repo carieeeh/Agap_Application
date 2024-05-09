@@ -41,7 +41,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
 
   Future initFunction() async {
     await _locController.checkLocationPermission();
-    _reportController.getUserReports();
+    _reportController.getAllReports();
     _userPosition = await _locController.getUserLocation();
     _kGooglePlex = CameraPosition(
       target: LatLng(_userPosition.latitude, _userPosition.longitude),
@@ -169,12 +169,13 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
               children: [
                 SizedBox(
                   width: Get.width * .6,
-                  child: const Text(
-                    "Brgy. 123, Police Substation",
-                    // _authController.userModel!.department ?? "",
-                    style: TextStyle(
+                  child: Text(
+                    _rescuerController.userStation.value.name ?? "",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 30,
+                      fontSize: 25,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

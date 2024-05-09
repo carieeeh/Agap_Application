@@ -101,15 +101,22 @@ class _RescuerReportsListState extends State<RescuerReportsList> {
                             ),
                           ),
                           const SizedBox(width: 30),
-                          Text(
-                            "${emergency.status}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: emergency.status == "finish"
-                                  ? colorSuccess
-                                  : emergency.status == "rejected"
-                                      ? colorError
-                                      : yellow,
+                          Container(
+                            color: emergency.status == "finish"
+                                ? colorSuccess
+                                : emergency.status == "rejected"
+                                    ? colorError
+                                    : emergency.status == "pending"
+                                        ? orange
+                                        : emergency.status == "accepted"
+                                            ? yellow
+                                            : brown,
+                            child: Text(
+                              "${emergency.status}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],

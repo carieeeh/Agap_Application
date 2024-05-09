@@ -41,7 +41,9 @@ class _ReportIncidentsState extends State<ReportIncidents> {
           ],
         ),
         const SizedBox(height: 20),
-        const ReportChart(),
+        const ReportChart(
+          result: [],
+        ),
       ],
     );
   }

@@ -3,8 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ReportChart extends StatefulWidget {
-  const ReportChart({super.key});
-
+  const ReportChart({super.key, required this.result});
+  final List result;
   @override
   State<ReportChart> createState() => _ReportChartState();
 }
@@ -72,10 +72,61 @@ class _ReportChartState extends State<ReportChart> {
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: Text(
-        '${value}',
+        '${value.toInt()}',
         style: style,
       ),
     );
+  }
+
+  List<LineChartBarData> graphValue() {
+    return [
+      LineChartBarData(
+        spots: widget.result
+            .map(
+              (e) => FlSpot(e['month']?.toDouble(), e['fire']?.toDouble()),
+            )
+            .toList(),
+        color: primaryRed,
+      ),
+      LineChartBarData(
+        spots: widget.result
+            .map(
+              (e) => FlSpot(e['month']?.toDouble(), e['police']?.toDouble()),
+            )
+            .toList(),
+        color: primaryBlue,
+      ),
+      LineChartBarData(
+        spots: widget.result
+            .map(
+              (e) => FlSpot(e['month']?.toDouble(), e['medical']?.toDouble()),
+            )
+            .toList(),
+        color: colorSuccess,
+      ),
+      LineChartBarData(
+        spots: widget.result
+            .map(
+              (e) =>
+                  FlSpot(e['month']?.toDouble(), e['earthquake']?.toDouble()),
+            )
+            .toList(),
+        color: yellow,
+      ),
+      LineChartBarData(
+        spots: widget.result
+            .map(
+              (e) => FlSpot(e['month']?.toDouble(), e['flood']?.toDouble()),
+            )
+            .toList(),
+        color: skyBlue,
+      ),
+    ];
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -92,42 +143,7 @@ class _ReportChartState extends State<ReportChart> {
         child: LineChart(
           LineChartData(
             lineTouchData: const LineTouchData(enabled: false),
-            lineBarsData: [
-              LineChartBarData(
-                spots: const [
-                  FlSpot(0, 1),
-                  FlSpot(1, 2),
-                  FlSpot(2, 3),
-                  FlSpot(3, 4),
-                  FlSpot(4, 5),
-                  // FlSpot(5, 6),
-                  // FlSpot(6, 6.5),
-                  // FlSpot(7, 6),
-                  // FlSpot(8, 4),
-                  // FlSpot(9, 6),
-                  // FlSpot(10, 6),
-                  // FlSpot(11, 7),
-                ],
-                color: primaryRed,
-              ),
-              LineChartBarData(
-                spots: const [
-                  FlSpot(0, 2),
-                  FlSpot(1, 3),
-                  FlSpot(2, 4),
-                  FlSpot(3, 2),
-                  FlSpot(4, 10),
-                  // FlSpot(5, 4),
-                  // FlSpot(6, 5),
-                  // FlSpot(7, 5),
-                  // FlSpot(8, 6),
-                  // FlSpot(9, 8),
-                  // FlSpot(10, 1),
-                  // FlSpot(11, 3),
-                ],
-                color: primaryBlue,
-              ),
-            ],
+            lineBarsData: graphValue(),
             // betweenBarsData: [
             //   BetweenBarsData(
             //     fromIndex: 0,

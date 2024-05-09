@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
@@ -81,7 +82,7 @@ class ReportController extends GetxController {
     return null;
   }
 
-  Future<void> getUserReports() async {
+  Future<void> getAllReports() async {
     try {
       isLoading.value = true;
 
@@ -244,5 +245,48 @@ class ReportController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  List<Map<String, dynamic>> getTotalEmergenciesByTypeAndMonth(
+      List<Emergency> emergencies, int year) {
+    // Initialize result list
+    List<Map<String, dynamic>> result = [];
+
+    // List of all emergency types
+    List<String> allEmergencyTypes = [
+      'flood',
+      'fire',
+      'police',
+      'medical',
+      'earthquake'
+    ];
+
+    // Loop through each month in the year
+    for (int month = 0; month <= 11; month++) {
+      // Initialize count for each type to zero
+      Map<String, int> emergenciesByType = {
+        for (var type in allEmergencyTypes) type: 0
+      };
+
+      // Filter emergencies for the current month and year
+      List<Emergency> filteredEmergencies = emergencies.where((emergency) {
+        return emergency.createdAt.toDate().year == year &&
+            emergency.createdAt.toDate().month == month;
+      }).toList();
+
+      // Update counts based on occurrences found
+      for (var emergency in filteredEmergencies) {
+        emergenciesByType[emergency.type!] =
+            (emergenciesByType[emergency.type] ?? 0) + 1;
+      }
+
+      // Add the result to the result list
+      result.add({
+        'month': month,
+        ...emergenciesByType,
+      });
+    }
+    print(result);
+    return result;
   }
 }

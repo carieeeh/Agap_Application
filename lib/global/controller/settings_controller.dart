@@ -120,13 +120,7 @@ class SettingsController extends GetxController {
     try {
       final result = await callable.call({
         "token": token,
-        "data": [
-          {
-            "name": "Shadab Shaikh",
-            "email": "shadab@gmail.com",
-            "mobile": "1234567890"
-          }
-        ],
+        "data": data,
       });
 
       return result.data; // Return the response data if needed

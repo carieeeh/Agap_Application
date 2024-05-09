@@ -17,6 +17,7 @@ const Color colorQuestion = Color(0xFF3066BE);
 const Color colorError = Color(0xFFCB1212);
 const Color colorSuccess = Color.fromARGB(255, 86, 162, 107);
 const Color colorNoRecord = Color(0xFFC2C2C2);
+const Color brown = Color(0xFFA52A2A);
 
 const Color yellow = Color(0xFFFFC700);
 const Color primaryRed = Color(0xFFFF1F1E);

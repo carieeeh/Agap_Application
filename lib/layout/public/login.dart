@@ -1,5 +1,6 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
+import 'package:agap_mobile_v01/layout/widgets/bottom_sheet/terms_and_condition.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/phone_number_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -87,21 +88,30 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.centerLeft,
                           child: SizedBox(
                             width: Get.width * .8,
-                            child: const Text.rich(
-                              TextSpan(
-                                style: TextStyle(fontSize: 10),
-                                children: [
-                                  TextSpan(
-                                    text: "By Logging in you agree to our",
-                                  ),
-                                  TextSpan(
-                                    text: " Terms and Condition.",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w600),
-                                  ),
-                                ],
+                            child: InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) =>
+                                      const TermsAndCondition(),
+                                );
+                              },
+                              child: const Text.rich(
+                                TextSpan(
+                                  style: TextStyle(fontSize: 10),
+                                  children: [
+                                    TextSpan(
+                                      text: "By Logging in you agree to our",
+                                    ),
+                                    TextSpan(
+                                      text: " Terms and Condition.",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.left,
                               ),
-                              textAlign: TextAlign.left,
                             ),
                           ),
                         ),

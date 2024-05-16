@@ -1,5 +1,6 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
+import 'package:agap_mobile_v01/layout/widgets/bottom_sheet/terms_and_condition.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
 import 'package:agap_mobile_v01/layout/widgets/inputs/underline_input.dart';
 import 'package:flutter/material.dart';
@@ -111,21 +112,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     bgColor: primaryRed,
                   ),
                 ),
-                const Center(
-                  child: Text.rich(
-                    TextSpan(
-                      style: TextStyle(fontSize: 10),
-                      children: [
-                        TextSpan(
-                          text: "By signing up you agree to our",
-                        ),
-                        TextSpan(
-                          text: " Terms and Condition.",
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ],
+                Center(
+                  child: InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => const TermsAndCondition(),
+                      );
+                    },
+                    child: const Text.rich(
+                      TextSpan(
+                        style: TextStyle(fontSize: 10),
+                        children: [
+                          TextSpan(
+                            text: "By signing up you agree to our",
+                          ),
+                          TextSpan(
+                            text: " Terms and Condition.",
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.start,
                     ),
-                    textAlign: TextAlign.start,
                   ),
                 ),
               ],

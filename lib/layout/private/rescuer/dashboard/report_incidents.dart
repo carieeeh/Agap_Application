@@ -115,7 +115,8 @@ class _RescuerReportIncidentsState extends State<RescuerReportIncidents> {
   void downloadExcel() {
     List toExcel = result.map((e) {
       return {
-        "month": "${indexToMonth(e["month"])} ${_selectedDate?.year ?? "2024"}",
+        "month":
+            "${indexToMonth(e["month"])} ${_selectedDate?.year ?? " 2024"}",
         "fire": e["fire"],
         "police": e["police"],
         "medical": e["medical"],

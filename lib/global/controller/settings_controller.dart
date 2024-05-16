@@ -7,6 +7,7 @@ import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
 import 'package:agap_mobile_v01/layout/private/resident/reports/report_feedback.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/rescuer_dialog.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -71,7 +72,17 @@ class SettingsController extends GetxController {
         final emergency = jsonDecode(message.data["emergency"]);
 
         List<String> fileUrls = emergency["file_urls"].cast<String>();
-
+        AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: 1,
+            channelKey: "rescuer_channel",
+            title: message.data["title"],
+            body: message.data["message"],
+            customSound: "resource://raw/res_agap",
+            criticalAlert: true,
+            playState: NotificationPlayState.playing,
+          ),
+        );
         Get.dialog(
           barrierDismissible: false,
           RescuerDialog(

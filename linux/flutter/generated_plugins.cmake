@@ -4,6 +4,8 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   animated_rating_stars
+  awesome_notifications
+  awesome_notifications_core
   file_selector_linux
   smart_auth
   url_launcher_linux

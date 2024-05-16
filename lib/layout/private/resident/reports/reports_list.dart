@@ -105,15 +105,19 @@ class _ReportsListState extends State<ReportsList> {
                                 ),
                                 const SizedBox(width: 40),
                                 Container(
-                                  color: emergency.status == "finish"
-                                      ? colorSuccess
-                                      : emergency.status == "rejected"
-                                          ? colorError
-                                          : emergency.status == "pending"
-                                              ? orange
-                                              : emergency.status == "accepted"
-                                                  ? yellow
-                                                  : brown,
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: emergency.status == "finish"
+                                        ? colorSuccess
+                                        : emergency.status == "rejected"
+                                            ? colorError
+                                            : emergency.status == "pending"
+                                                ? orange
+                                                : emergency.status == "accepted"
+                                                    ? yellow
+                                                    : brown,
+                                  ),
                                   child: Text(
                                     "${emergency.status}",
                                     style: const TextStyle(

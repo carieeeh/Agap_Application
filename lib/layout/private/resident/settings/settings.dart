@@ -1,4 +1,7 @@
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
+import 'package:agap_mobile_v01/layout/widgets/bottom_sheet/about_us.dart';
+import 'package:agap_mobile_v01/layout/widgets/bottom_sheet/terms_and_condition.dart';
+import 'package:agap_mobile_v01/layout/widgets/contact_us.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,13 +37,31 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             leading: const Icon(Icons.phone_outlined),
             title: const Text("Contact"),
-            onTap: () {},
+            onTap: () {
+              Get.to(() => const ContactUs());
+            },
           ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.question_mark_outlined),
             title: const Text("About us"),
-            onTap: () {},
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => const AboutUs(),
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.format_line_spacing_rounded),
+            title: const Text("Terms and Condition"),
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => const TermsAndCondition(),
+              );
+            },
           ),
           const Divider(),
         ],

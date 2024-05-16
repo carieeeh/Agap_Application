@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     _settingsController.handleForegroundMessaging();
 
-    Timer(const Duration(seconds: 1), () async {
+    Timer(const Duration(seconds: 2), () async {
       if (_auth.hasUser.isTrue) {
         await _auth
             .findUserInfo(_auth.currentUser!.uid)

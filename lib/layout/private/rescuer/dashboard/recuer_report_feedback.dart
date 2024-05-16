@@ -22,7 +22,7 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
       child: Column(
         children: [
           const SizedBox(height: 20),
-          const Text("Feebacks", style: TextStyle(fontSize: 24)),
+          const Text("Feedbacks", style: TextStyle(fontSize: 24)),
           const SizedBox(height: 25),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -51,24 +51,24 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
             ],
           ),
           const SizedBox(height: 20),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              margin: const EdgeInsets.only(left: 15),
-              width: 100,
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-              decoration: BoxDecoration(
-                color: lightGray,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.filter_alt),
-                  Text("Filter"),
-                ],
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.centerLeft,
+          //   child: Container(
+          //     margin: const EdgeInsets.only(left: 15),
+          //     width: 100,
+          //     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+          //     decoration: BoxDecoration(
+          //       color: lightGray,
+          //       borderRadius: BorderRadius.circular(10),
+          //     ),
+          //     child: const Row(
+          //       children: [
+          //         Icon(Icons.filter_alt),
+          //         Text("Filter"),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           const Divider(),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),

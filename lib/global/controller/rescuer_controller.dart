@@ -115,12 +115,6 @@ class RescuerController extends GetxController {
 
       startLocationUpdate();
 
-      markers.clear();
-      markers.add(Marker(
-        markerId: const MarkerId('emergency'),
-        position: LatLng(geoPoint.latitude, geoPoint.longitude),
-      ));
-
       final data = {
         "purpose": "accepted",
         "title": "Emergency report is accepted.",
@@ -132,6 +126,13 @@ class RescuerController extends GetxController {
       await _settings.callFunction(jsonInfo["fcm_token"], data);
       hasEmergency.value = true;
       Get.back();
+
+      markers.clear();
+      markers.add(Marker(
+        markerId: const MarkerId('emergency'),
+        position: LatLng(geoPoint.latitude, geoPoint.longitude),
+      ));
+
       Get.snackbar(
         "Emergency accepted!",
         "You can navigate to your location by clicking \nthe navigation button on the map's lower right.",

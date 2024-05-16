@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
@@ -11,8 +10,6 @@ import 'package:agap_mobile_v01/global/model/user_model.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ReportController extends GetxController {
@@ -233,7 +230,7 @@ class ReportController extends GetxController {
               .update({"agap_points": totalPoints + 1});
         }
         _settings.hasReport.value = false;
-        Get.offNamed("/home");
+        Get.offNamed(_auth.isRescuer.isTrue ? "/interactive_map" : "/home");
       }
     } catch (error) {
       Get.dialog(

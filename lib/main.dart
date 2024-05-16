@@ -30,8 +30,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       channelKey: "rescuer_channel",
       title: message.data["title"],
       body: message.data["message"],
-      customSound: "resource://raw/res_agap",
-      criticalAlert: true,
     ),
   );
 }
@@ -51,7 +49,7 @@ void main() async {
       enableVibration: true,
       criticalAlerts: true,
       defaultRingtoneType: DefaultRingtoneType.Alarm,
-      soundSource: "resource://raw/res_agap",
+      soundSource: "resource://raw/res_agap_sound",
     )
   ], channelGroups: [
     NotificationChannelGroup(

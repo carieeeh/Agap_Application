@@ -99,6 +99,7 @@ class ReportController extends GetxController {
           .get();
 
       emergencies.value = result.docs;
+      emergencies.sort((a, b) => b['created_at'].compareTo(a['created_at']));
     } catch (error) {
       Get.dialog(
         barrierDismissible: false,
@@ -130,6 +131,7 @@ class ReportController extends GetxController {
           .get();
 
       emergencies.value = result.docs;
+      emergencies.sort((a, b) => b['created_at'].compareTo(a['created_at']));
     } catch (error) {
       Get.dialog(
         barrierDismissible: false,
@@ -289,7 +291,6 @@ class ReportController extends GetxController {
   Future<void> fetchEmergencyFeedbacks() async {
     try {
       isLoading.value = true;
-      print(DateTime.now()); //2024-05-09 22:33:48.231211
       FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
       final result = await firestoreDb
           .collection("agap_collection")
@@ -298,7 +299,8 @@ class ReportController extends GetxController {
           .get();
 
       emergenciesFeedback.value = result.docs;
-      print(emergenciesFeedback);
+      emergenciesFeedback
+          .sort((a, b) => b['created_at'].compareTo(a['created_at']));
       solveAverageRating();
     } catch (error) {
       Get.dialog(

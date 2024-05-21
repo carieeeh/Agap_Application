@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
-import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
 import 'package:agap_mobile_v01/global/model/emergency.dart';
 import 'package:agap_mobile_v01/global/web_view.dart';
 import 'package:agap_mobile_v01/layout/widgets/chart/chart_legend.dart';
@@ -19,7 +18,6 @@ class ReportIncidents extends StatefulWidget {
 
 class _ReportIncidentsState extends State<ReportIncidents> {
   DateTime? _selectedDate;
-  final SettingsController _settingsController = Get.find<SettingsController>();
   final ReportController _reportController = Get.find<ReportController>();
   List<Emergency> emergencyList = [];
   List<Map<String, dynamic>> result = [];
@@ -115,7 +113,8 @@ class _ReportIncidentsState extends State<ReportIncidents> {
   void downloadExcel() {
     List toExcel = result.map((e) {
       return {
-        "month": "${indexToMonth(e["month"])} ${_selectedDate?.year ?? "2024"}",
+        "month":
+            "${indexToMonth(e["moanth"])} ${_selectedDate?.year ?? "2024"}",
         "fire": e["fire"],
         "police": e["police"],
         "medical": e["medical"],

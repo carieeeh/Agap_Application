@@ -32,11 +32,17 @@ class _RescuerDashboardState extends State<RescuerDashboard>
     ),
   ];
 
+  void initFunc() {
+    Future.delayed(const Duration(seconds: 2), () {
+      _reportController.fetchEmergencyFeedbacks();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
-    _reportController.fetchEmergencyFeedbacks();
+    initFunc();
   }
 
   @override

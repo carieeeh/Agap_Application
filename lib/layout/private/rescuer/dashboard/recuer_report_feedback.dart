@@ -16,6 +16,36 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
   final ReportController _reportController = Get.find<ReportController>();
   final DateTimeUtils _dateUtils = DateTimeUtils();
 
+  List filteredEmergencies = [];
+  DateTime? _startDate, _endDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTimeRange? picked = await showDateRangePicker(
+        context: context,
+        firstDate: DateTime(2022),
+        lastDate: DateTime(DateTime.now().year + 1),
+        initialDateRange:
+            DateTimeRange(start: DateTime.now(), end: DateTime.now()));
+    if (picked != null) {
+      setState(() {
+        _startDate = picked.start;
+        _endDate = picked.end;
+        filteredEmergencies =
+            _reportController.emergenciesFeedback.where((emergency) {
+          final item = emergency.data();
+          final date = DateTime.parse(item['created_at']);
+          return date.isAfter(_startDate!) && date.isBefore(_endDate!);
+        }).toList();
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    filteredEmergencies = _reportController.emergenciesFeedback;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -23,6 +53,31 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
         children: [
           const SizedBox(height: 20),
           const Text("Feedbacks", style: TextStyle(fontSize: 24)),
+          const SizedBox(height: 20),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: InkWell(
+              onTap: () {
+                _selectDate(context);
+              },
+              child: Container(
+                width: 100,
+                margin: const EdgeInsets.only(left: 30),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                decoration: BoxDecoration(
+                  color: lightGray,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.filter_alt),
+                    Text("Filter"),
+                  ],
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 25),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -100,11 +155,11 @@ class _RescuerReportFeedbackState extends State<RescuerReportFeedback> {
           SizedBox(
             height: Get.height * .5,
             child: ListView.builder(
-              itemCount: _reportController.emergenciesFeedback.length,
+              itemCount: filteredEmergencies.length,
               padding: const EdgeInsets.only(bottom: 50),
               itemBuilder: (context, index) {
                 final Map<String, dynamic> feedback =
-                    _reportController.emergenciesFeedback[index].data();
+                    filteredEmergencies[index].data();
 
                 return Column(
                   children: [

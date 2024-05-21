@@ -82,6 +82,38 @@ class ReportController extends GetxController {
     return null;
   }
 
+  Future getUserReports() async {
+    try {
+      isLoading.value = true;
+
+      FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
+      final result = await firestoreDb
+          .collection("agap_collection")
+          .doc('staging')
+          .collection('emergencies')
+          .where('resident_uid', isEqualTo: _auth.currentUser?.uid)
+          // .orderBy("created_at", descending: true)
+          .get();
+
+      emergencies.value = result.docs;
+    } catch (error) {
+      Get.dialog(
+        barrierDismissible: false,
+        GetDialog(
+          type: 'error',
+          title: 'Failed reading emergencies',
+          hasMessage: true,
+          buttonNumber: 0,
+          hasCustomWidget: false,
+          withCloseButton: true,
+          message: 'Error code: $error',
+        ),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> getAllReports() async {
     try {
       isLoading.value = true;

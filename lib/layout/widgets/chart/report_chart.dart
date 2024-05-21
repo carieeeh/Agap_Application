@@ -1,6 +1,7 @@
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ReportChart extends StatefulWidget {
   const ReportChart({super.key, required this.result});
@@ -131,59 +132,57 @@ class _ReportChartState extends State<ReportChart> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 2,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 10,
-          right: 18,
-          top: 10,
-          bottom: 4,
-        ),
-        child: LineChart(
-          LineChartData(
-            lineTouchData: const LineTouchData(enabled: false),
-            lineBarsData: graphValue(),
-            // betweenBarsData: [
-            //   BetweenBarsData(
-            //     fromIndex: 0,
-            //     toIndex: 1,
-            //     color: gray,
-            //   )
-            // ],
-            minY: 0,
-            titlesData: FlTitlesData(
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  interval: 1,
-                  getTitlesWidget: bottomTitleWidgets,
-                ),
-              ),
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: leftTitleWidgets,
-                  interval: 1,
-                  reservedSize: 36,
-                ),
-              ),
-              topTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              rightTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
+    return Container(
+      height: Get.height * 0.5,
+      padding: const EdgeInsets.only(
+        left: 10,
+        right: 18,
+        top: 10,
+        bottom: 4,
+      ),
+      child: LineChart(
+        LineChartData(
+          lineTouchData: const LineTouchData(enabled: false),
+          lineBarsData: graphValue(),
+          // betweenBarsData: [
+          //   BetweenBarsData(
+          //     fromIndex: 0,
+          //     toIndex: 1,
+          //     color: gray,
+          //   )
+          // ],
+          minY: 0,
+          titlesData: FlTitlesData(
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: 1,
+                getTitlesWidget: bottomTitleWidgets,
               ),
             ),
-            gridData: const FlGridData(
-              show: true,
-              drawVerticalLine: true,
-              horizontalInterval: 1,
-              verticalInterval: 1,
-              // checkToShowHorizontalLine: (double value) {
-              //   return value == 1 || value == 6 || value == 4 || value == 5;
-              // },
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: leftTitleWidgets,
+                interval: 1,
+                reservedSize: 36,
+              ),
             ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          ),
+          gridData: const FlGridData(
+            show: true,
+            drawVerticalLine: true,
+            horizontalInterval: 1,
+            verticalInterval: 1,
+            // checkToShowHorizontalLine: (double value) {
+            //   return value == 1 || value == 6 || value == 4 || value == 5;
+            // },
           ),
         ),
       ),

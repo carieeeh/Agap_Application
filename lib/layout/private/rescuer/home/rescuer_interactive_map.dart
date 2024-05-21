@@ -7,9 +7,7 @@ import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -106,12 +104,36 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                           alignment: Alignment.topCenter,
                           child: Obx(
                             () => Visibility(
-                              visible: _rescuerController.hasEmergency.isTrue,
+                              visible: _rescuerController.hasEmergency.isTrue &&
+                                  _rescuerController.isRequested.isFalse,
                               child: RoundedCustomButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _reportController
+                                      .sendEmergencyReport(
+                                    status: "additional",
+                                    type: "additional",
+                                    description:
+                                        "Request for additional units.",
+                                    address: _rescuerController.emergencyDocId,
+                                    lat: _rescuerController
+                                        .emergencyLoc!.latitude,
+                                    lng: _rescuerController
+                                        .emergencyLoc!.longitude,
+                                  )
+                                      .then((value) {
+                                    Get.snackbar(
+                                      "Success!",
+                                      "You requested for more units!",
+                                      duration: const Duration(seconds: 5),
+                                      backgroundColor: colorSuccess,
+                                    );
+                                    _rescuerController.isRequested.value = true;
+                                  });
+                                },
+                                isLoading: _reportController.isLoading.value,
                                 bgColor: primaryRed,
                                 label: "Request additional units",
-                                size: Size(Get.width * .6, 40),
+                                size: Size(Get.width * .7, 40),
                               ),
                             ),
                           ),

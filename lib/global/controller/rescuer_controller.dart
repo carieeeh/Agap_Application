@@ -27,8 +27,9 @@ class RescuerController extends GetxController {
   RxBool isLoading = false.obs,
       hasEmergency = false.obs,
       hasArrive = false.obs,
+      isRequested = false.obs,
       isOnline = false.obs;
-  String _residentUid = "", _emergencyDocId = "";
+  String _residentUid = "", emergencyDocId = "";
   Rx<Station> userStation = Station().obs;
 
   Future<void> updateRescuerLocation(String status) async {
@@ -109,7 +110,7 @@ class RescuerController extends GetxController {
     try {
       isLoading.value = true;
       _residentUid = residentUid;
-      _emergencyDocId = emergencyId;
+      emergencyDocId = emergencyId;
       markers.clear();
       markers.add(Marker(
         markerId: const MarkerId('emergency'),
@@ -203,7 +204,7 @@ class RescuerController extends GetxController {
         "rescuer_uid": _auth.currentUser?.uid,
       };
 
-      await _report.updateEmergency(_emergencyDocId, {"status": "ongoing"});
+      await _report.updateEmergency(emergencyDocId, {"status": "ongoing"});
       await _settings.callFunction(jsonInfo["fcm_token"], data);
       hasArrive.value = true;
       stopLocationUpdate();
@@ -238,17 +239,17 @@ class RescuerController extends GetxController {
         "purpose": "finish",
         "title": "Emergency finish.",
         "message": "Rescuer marks your emergency as finish.",
-        "emergency_id": _emergencyDocId,
+        "emergency_id": emergencyDocId,
         "rescuer_uid": _auth.currentUser?.uid,
       };
 
-      await _report.updateEmergency(_emergencyDocId, {"status": "finished"});
+      await _report.updateEmergency(emergencyDocId, {"status": "finished"});
       await _settings.callFunction(jsonInfo["fcm_token"], data);
       hasArrive.value = true;
       hasEmergency.value = false;
       stopLocationUpdate();
       Get.to(ReportFeedback(
-        emergencyDocId: _emergencyDocId,
+        emergencyDocId: emergencyDocId,
         userUid: _residentUid,
         role: "rescuer",
       ));

@@ -24,7 +24,8 @@ class ReportController extends GetxController {
   Rx<Station> stationData = Station().obs;
 
   Future<DocumentSnapshot?> sendEmergencyReport({
-    required List<XFile> files,
+    List<XFile>? files,
+    String status = "pending",
     required String type,
     required String description,
     required String address,
@@ -37,32 +38,34 @@ class ReportController extends GetxController {
       FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
       List<String> imageUrls = [];
 
-      for (var file in files) {
-        imageUrls.add(await _storageController.uploadFile(file, "reports"));
+      if (files != null) {
+        for (var file in files) {
+          imageUrls.add(await _storageController.uploadFile(file, "reports"));
+        }
       }
 
-      if (imageUrls.isNotEmpty) {
-        Emergency emergency = Emergency(
-          residentUid: _auth.currentUser!.uid,
-          description: description,
-          geopoint: GeoPoint(lat, lng),
-          type: type,
-          address: address,
-          totalUnits: 1,
-          status: 'pending',
-          fileUrls: imageUrls,
-          createdAt: Timestamp.now(),
-          updatedAt: Timestamp.now(),
-        );
+      Emergency emergency = Emergency(
+        residentUid: _auth.currentUser!.uid,
+        description: description,
+        geopoint: GeoPoint(lat, lng),
+        type: type,
+        address: address,
+        totalUnits: 1,
+        status: status,
+        fileUrls: imageUrls,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      );
 
-        DocumentReference docRef = await firestoreDb
-            .collection("agap_collection")
-            .doc(fireStoreDoc)
-            .collection('emergencies')
-            .add(emergency.toJson());
-        DocumentSnapshot doc = await docRef.get();
-        return doc;
-      }
+      DocumentReference docRef = await firestoreDb
+          .collection("agap_collection")
+          .doc(fireStoreDoc)
+          .collection('emergencies')
+          .add(emergency.toJson());
+      DocumentSnapshot doc = await docRef.get();
+      print(doc);
+
+      return doc;
     } catch (error) {
       Get.dialog(
         barrierDismissible: false,

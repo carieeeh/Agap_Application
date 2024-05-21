@@ -91,6 +91,7 @@ class ReportController extends GetxController {
           .collection("agap_collection")
           .doc('staging')
           .collection('emergencies')
+          .orderBy("created_at", descending: true)
           .get();
 
       emergencies.value = result.docs;
@@ -186,8 +187,9 @@ class ReportController extends GetxController {
         "role": role,
         "uid": userUid,
         "rating": rating,
-        "created_at": DateTime.now(),
+        "created_at": DateTime.now().toString(),
       };
+      print(data);
 
       await firestoreDb
           .collection("agap_collection")
@@ -230,8 +232,8 @@ class ReportController extends GetxController {
               .update({"agap_points": totalPoints + 1});
         }
         _settings.hasReport.value = false;
-        Get.offNamed(_auth.isRescuer.isTrue ? "/interactive_map" : "/home");
       }
+      Get.offNamed(_auth.isRescuer.isTrue ? "/interactive_map" : "/home");
     } catch (error) {
       Get.dialog(
         barrierDismissible: false,

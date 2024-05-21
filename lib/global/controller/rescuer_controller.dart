@@ -31,7 +31,7 @@ class RescuerController extends GetxController {
   String _residentUid = "", _emergencyDocId = "";
   Rx<Station> userStation = Station().obs;
 
-  Future<void> updateRescuerLocation() async {
+  Future<void> updateRescuerLocation(String status) async {
     FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
     Position position = await _locations.getUserLocation();
     final uid = _auth.currentUser!.uid;
@@ -47,12 +47,15 @@ class RescuerController extends GetxController {
       await collection.add({
         "uid": uid,
         "geopoint": GeoPoint(position.latitude, position.longitude),
-        "status": "free",
+        "status": status,
         "department": _auth.userModel?.department,
       });
     } else {
-      querySnapShot.docs.first.reference.update(
-          {"geopoint": GeoPoint(position.latitude, position.longitude)});
+      querySnapShot.docs.first.reference.update({
+        "geopoint": GeoPoint(position.latitude, position.longitude),
+        "department": _auth.userModel?.department,
+        "status": status,
+      });
     }
   }
 
@@ -90,7 +93,7 @@ class RescuerController extends GetxController {
   void startLocationUpdate() {
     if (!_isRunning) {
       _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-        updateRescuerLocation();
+        updateRescuerLocation("occupied");
       });
       _isRunning = true;
     }
@@ -107,6 +110,11 @@ class RescuerController extends GetxController {
       isLoading.value = true;
       _residentUid = residentUid;
       _emergencyDocId = emergencyId;
+      markers.clear();
+      markers.add(Marker(
+        markerId: const MarkerId('emergency'),
+        position: LatLng(geoPoint.latitude, geoPoint.longitude),
+      ));
       await updateRescuerStatus("occupied");
       final residentInfo = jsonEncode(await _auth.findUserInfo(residentUid));
       final jsonInfo = jsonDecode(residentInfo);
@@ -126,12 +134,6 @@ class RescuerController extends GetxController {
       await _settings.callFunction(jsonInfo["fcm_token"], data);
       hasEmergency.value = true;
       Get.back();
-
-      markers.clear();
-      markers.add(Marker(
-        markerId: const MarkerId('emergency'),
-        position: LatLng(geoPoint.latitude, geoPoint.longitude),
-      ));
 
       Get.snackbar(
         "Emergency accepted!",
@@ -227,7 +229,8 @@ class RescuerController extends GetxController {
     try {
       isLoading.value = true;
 
-      await updateRescuerStatus("free");
+      await updateRescuerStatus("online");
+      markers.clear();
       final residentInfo = jsonEncode(await _auth.findUserInfo(_residentUid));
       final jsonInfo = jsonDecode(residentInfo);
 
@@ -239,7 +242,7 @@ class RescuerController extends GetxController {
         "rescuer_uid": _auth.currentUser?.uid,
       };
 
-      await _report.updateEmergency(_emergencyDocId, {"status": "finish"});
+      await _report.updateEmergency(_emergencyDocId, {"status": "finished"});
       await _settings.callFunction(jsonInfo["fcm_token"], data);
       hasArrive.value = true;
       hasEmergency.value = false;

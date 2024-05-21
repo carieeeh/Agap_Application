@@ -105,7 +105,7 @@ class _RescuerReportsListState extends State<RescuerReportsList> {
                             padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              color: emergency.status == "finish"
+                              color: emergency.status == "finished"
                                   ? colorSuccess
                                   : emergency.status == "rejected"
                                       ? colorError

@@ -167,6 +167,7 @@ class _RescuerDialogState extends State<RescuerDialog>
                         widget.emergencyId,
                       );
                     },
+                    isLoading: _rescuerController.isLoading.isTrue,
                     label: "RESPOND!",
                     bgColor: colorSuccess,
                     size: Size(

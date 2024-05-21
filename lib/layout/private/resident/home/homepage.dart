@@ -239,8 +239,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           const SizedBox(height: 10),
           InkWell(
-            onTap: () {
-              openSearchLocation();
+            onTap: () async {
+              Map<String, dynamic> location = await openSearchLocation();
+              lat = location["lat"];
+              lng = location["lng"];
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -364,7 +366,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 onPressed: () {
                   onReportConfirm(type);
                 },
-                label: "Yes",
+                label: "Confirm",
                 size: const Size(100, 50),
                 bgColor: primaryRed,
               ),
@@ -382,7 +384,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     _reportDescriptionController.text = '';
                   });
                 },
-                label: "No",
+                label: "Cancel",
                 size: const Size(100, 50),
                 bgColor: gray,
               ),
@@ -450,7 +452,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  Future<void> openSearchLocation() async {
+  Future<Map<String, dynamic>> openSearchLocation() async {
     _locController.isLoading.value = true;
     var googleResult = await Get.to(() => GooglePlacesView());
 
@@ -463,5 +465,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       lat = _incidentPosition.latitude;
       lng = _incidentPosition.longitude;
     }
+    return {"lat": lat, "lng": lng};
   }
 }

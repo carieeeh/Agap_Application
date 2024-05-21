@@ -59,13 +59,6 @@ class SettingsController extends GetxController {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log('Message data: ${message.data.toString()}');
 
-      Get.snackbar(
-        message.data["title"],
-        message.data["message"],
-        duration: const Duration(seconds: 5),
-        backgroundColor: colorSuccess,
-      );
-
       if (message.data.containsKey("purpose") &&
           message.data["purpose"] == "rescuer" &&
           _auth.isRescuer.isTrue) {
@@ -77,7 +70,7 @@ class SettingsController extends GetxController {
             id: 1,
             channelKey: "rescuer_channel",
             title: message.data["title"],
-            body: message.data["message"],
+            body: message.data["emergency"],
           ),
         );
         Get.dialog(
@@ -98,6 +91,12 @@ class SettingsController extends GetxController {
         );
       } else if (message.data.containsKey("purpose") &&
           _auth.isRescuer.isFalse) {
+        Get.snackbar(
+          message.data["title"],
+          message.data["message"],
+          duration: const Duration(seconds: 5),
+          backgroundColor: colorSuccess,
+        );
         if (message.data["purpose"] == "accepted") {
           rescuerUid.value = message.data["rescuer_uid"];
           hasReport.value = true;

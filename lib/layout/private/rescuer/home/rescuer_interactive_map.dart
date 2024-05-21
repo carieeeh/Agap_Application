@@ -7,7 +7,9 @@ import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/global/controller/rescuer_controller.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:agap_mobile_v01/layout/widgets/buttons/rounded_custom_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -51,7 +53,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
         .getStationInfo(_auth.userModel?.department ?? "");
     currentAddress =
         await _locController.getAddressByCoordinates(_userPosition);
-    await _rescuerController.updateRescuerLocation();
+    await _rescuerController.updateRescuerLocation("offline");
   }
 
   @override
@@ -99,7 +101,21 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                         Visibility(
                           visible: _rescuerController.isLoading.isTrue,
                           child: const CircularProgressIndicator(),
-                        )
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Obx(
+                            () => Visibility(
+                              visible: _rescuerController.hasEmergency.isTrue,
+                              child: RoundedCustomButton(
+                                onPressed: () {},
+                                bgColor: primaryRed,
+                                label: "Request additional units",
+                                size: Size(Get.width * .6, 40),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -107,19 +123,18 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
               ),
             ),
             Positioned(
-              bottom: 20,
+              bottom: 60,
               right: 20,
               child: Obx(
                 () => Visibility(
                   visible: _rescuerController.hasEmergency.isTrue,
-                  child: IconButton(
+                  child: FloatingActionButton(
                     onPressed: () async {
                       _rescuerController.navigateToEmergency();
                     },
-                    style: IconButton.styleFrom(
-                      backgroundColor: colorSuccess,
-                    ),
-                    icon: const Icon(
+                    backgroundColor: colorSuccess,
+                    shape: CircleBorder(),
+                    child: const Icon(
                       Icons.navigation_rounded,
                       size: 30,
                       color: Colors.white,

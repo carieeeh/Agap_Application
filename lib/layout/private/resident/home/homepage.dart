@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/auth_controller.dart';
@@ -240,9 +241,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           const SizedBox(height: 10),
           InkWell(
             onTap: () async {
-              Map<String, dynamic> location = await openSearchLocation();
-              lat = location["lat"];
-              lng = location["lng"];
+              openSearchLocation();
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -367,7 +366,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   onReportConfirm(type);
                 },
                 label: "Confirm",
-                size: const Size(100, 50),
+                size: const Size(110, 50),
                 bgColor: primaryRed,
               ),
               const SizedBox(width: 10),
@@ -385,7 +384,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   });
                 },
                 label: "Cancel",
-                size: const Size(100, 50),
+                size: const Size(110, 50),
                 bgColor: gray,
               ),
             ],
@@ -452,19 +451,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  Future<Map<String, dynamic>> openSearchLocation() async {
+  Future<void> openSearchLocation() async {
     _locController.isLoading.value = true;
     var googleResult = await Get.to(() => GooglePlacesView());
-
     if (googleResult != null) {
       _incidentAddress = googleResult['description'];
-      lat = googleResult['lat'] as double;
-      lng = googleResult['lng'] as double;
+      lat = double.parse(googleResult['lat']);
+      lng = double.parse(googleResult['lng']);
     } else {
       _incidentAddress = currentAddress;
       lat = _incidentPosition.latitude;
       lng = _incidentPosition.longitude;
     }
-    return {"lat": lat, "lng": lng};
   }
 }

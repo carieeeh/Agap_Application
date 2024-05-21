@@ -133,7 +133,7 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                       _rescuerController.navigateToEmergency();
                     },
                     backgroundColor: colorSuccess,
-                    shape: CircleBorder(),
+                    shape: const CircleBorder(),
                     child: const Icon(
                       Icons.navigation_rounded,
                       size: 30,

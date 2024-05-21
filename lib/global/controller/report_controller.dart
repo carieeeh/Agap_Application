@@ -189,7 +189,6 @@ class ReportController extends GetxController {
         "rating": rating,
         "created_at": DateTime.now().toString(),
       };
-      print(data);
 
       await firestoreDb
           .collection("agap_collection")

@@ -78,10 +78,10 @@ class _ReportFeedbackState extends State<ReportFeedback> {
                     maxRating: 5.0,
                     onChanged: (double rating) {
                       // Handle the rating change here
-                      print('Rating: $rating');
                       setState(() {
                         emergencyRating = rating;
                       });
+                      print('Rating: $emergencyRating');
                     },
                     displayRatingValue: true,
                     interactiveTooltips: true,

@@ -380,7 +380,7 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<Map<String, dynamic>> findUserInfo(String uid) async {
+  Future<Map<String, dynamic>?> findUserInfo(String uid) async {
     FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
 
     QuerySnapshot querySnapShot = await firestoreDb
@@ -389,15 +389,13 @@ class AuthController extends GetxController {
         .collection('users')
         .where('uid', isEqualTo: uid)
         .get();
+    if (querySnapShot.docs.isNotEmpty) {
+      final residentInfo =
+          querySnapShot.docs.first.data() as Map<String, dynamic>?;
+      return residentInfo!;
+    }
 
-    final residentInfo =
-        querySnapShot.docs.first.data() as Map<String, dynamic>?;
-    // if (residentInfo != null) {
-    //   residentInfo['created_at'] =
-    //       (residentInfo['created_at'] as Timestamp).toDate().toIso8601String();
-    // }
-
-    return residentInfo!;
+    return null;
   }
 
   Future<void> updateFCMToken(String uid) async {

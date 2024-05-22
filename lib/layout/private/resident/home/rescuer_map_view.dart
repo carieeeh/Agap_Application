@@ -4,9 +4,11 @@ import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/controller/locations_controller.dart';
 import 'package:agap_mobile_v01/global/controller/report_controller.dart';
 import 'package:agap_mobile_v01/global/controller/settings_controller.dart';
+import 'package:agap_mobile_v01/global/date_time_utils.dart';
 import 'package:agap_mobile_v01/layout/private/main_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -25,6 +27,7 @@ class _RescuerMapViewState extends State<RescuerMapView> {
   final LocationsController _locController = Get.find<LocationsController>();
   final ReportController _reportController = Get.find<ReportController>();
   final SettingsController _settingsController = Get.find<SettingsController>();
+  final DateTimeUtils _dateTimeUtils = DateTimeUtils();
 
   late Position _userPosition;
   CameraPosition? _kGooglePlex;
@@ -103,28 +106,42 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                       ),
                       Expanded(
                         child: Text(
-                          _reportController.stationData.value.contact ?? "",
+                          _reportController.stationData.value.contact == ''
+                              ? "No contact available"
+                              : _reportController.stationData.value.contact ??
+                                  '',
                           style: detailsStyle,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: Get.width * .35,
-                        child: Text("Arrival time :", style: labelStyle),
-                      ),
-                      Expanded(
-                        child: Text(
-                          _reportController.rescuerData.value.department ?? "",
-                          style: detailsStyle,
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     SizedBox(
+                  //       width: Get.width * .35,
+                  //       child: Text("Arrival time :", style: labelStyle),
+                  //     ),
+                  //     Expanded(
+                  //       child: Text(
+                  //         _dateTimeUtils.formatTime(
+                  //           dateTime: _settingsController.calculateETA(
+                  //             _settingsController.calculateDistance(
+                  //                 _userPosition.latitude,
+                  //                 _userPosition.longitude,
+                  //                 _reportController.,
+                  //                 endLng),
+                  //             10,
+                  //           ),
+                  //         ),
+
+                  //         // _reportController.rescuerData.value.department ?? "",
+                  //         style: detailsStyle,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
@@ -157,31 +174,57 @@ class _RescuerMapViewState extends State<RescuerMapView> {
                       final GeoPoint geoPoint = document["geopoint"];
 
                       return Obx(
-                        () => Visibility(
-                          visible: _reportController.isLoading.isFalse,
-                          child: GoogleMap(
-                            style: mapStyleNoLandmarks.toString(),
-                            mapType: MapType.normal,
-                            myLocationButtonEnabled: true,
-                            myLocationEnabled: true,
-                            zoomControlsEnabled: false,
-                            initialCameraPosition: _kGooglePlex ??
-                                const CameraPosition(
-                                  target: LatLng(14.5871, 120.9845),
-                                  zoom: 15,
+                        () => Stack(
+                          children: [
+                            Visibility(
+                              visible: _reportController.isLoading.isFalse,
+                              child: GoogleMap(
+                                style: mapStyleNoLandmarks.toString(),
+                                mapType: MapType.normal,
+                                myLocationButtonEnabled: true,
+                                myLocationEnabled: true,
+                                zoomControlsEnabled: false,
+                                initialCameraPosition: _kGooglePlex ??
+                                    const CameraPosition(
+                                      target: LatLng(14.5871, 120.9845),
+                                      zoom: 15,
+                                    ),
+                                markers: {
+                                  Marker(
+                                    markerId: const MarkerId('rescuer'),
+                                    icon: rescuerIcon,
+                                    position: LatLng(
+                                        geoPoint.latitude, geoPoint.longitude),
+                                  )
+                                },
+                                onMapCreated: (GoogleMapController controller) {
+                                  _controller.complete(controller);
+                                },
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                margin: const EdgeInsets.only(bottom: 25),
+                                decoration: BoxDecoration(
+                                  color: primaryRed,
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                            markers: {
-                              Marker(
-                                markerId: const MarkerId('rescuer'),
-                                icon: rescuerIcon,
-                                position: LatLng(
-                                    geoPoint.latitude, geoPoint.longitude),
-                              )
-                            },
-                            onMapCreated: (GoogleMapController controller) {
-                              _controller.complete(controller);
-                            },
-                          ),
+                                child: Text(
+                                  "Estimated arrival time (min/s): ${_settingsController.calculateETA(
+                                    _settingsController.calculateDistance(
+                                        _userPosition.latitude,
+                                        _userPosition.longitude,
+                                        geoPoint.latitude,
+                                        geoPoint.longitude),
+                                    10,
+                                  )}",
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     }

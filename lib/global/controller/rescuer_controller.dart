@@ -117,8 +117,9 @@ class RescuerController extends GetxController {
         position: LatLng(geoPoint.latitude, geoPoint.longitude),
       ));
       await updateRescuerStatus("occupied");
-      final residentInfo = jsonEncode(await _auth.findUserInfo(residentUid));
-      final jsonInfo = jsonDecode(residentInfo);
+      final residentInfo = await _auth.findUserInfo(residentUid);
+      final encoded = jsonEncode(residentInfo);
+      final jsonInfo = jsonDecode(encoded);
 
       emergencyLoc = geoPoint;
 

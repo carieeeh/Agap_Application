@@ -151,9 +151,9 @@ class SettingsController extends GetxController {
   }
 
 // Assuming you have a speed in km/h
-  DateTime calculateETA(double distanceInKm, double speed) {
+  int calculateETA(double distanceInKm, double speed) {
     final double hours = distanceInKm / speed;
     final int minutes = (hours * 60).floor();
-    return DateTime.now().add(Duration(minutes: minutes));
+    return minutes;
   }
 }

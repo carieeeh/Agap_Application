@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:agap_mobile_v01/global/constant.dart';
 import 'package:agap_mobile_v01/global/model/user_model.dart';
 import 'package:agap_mobile_v01/layout/widgets/dialog/get_dialog.dart';
@@ -74,6 +76,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> checkAuth() async {
+    hasUser.value = false;
     if (FirebaseAuth.instance.currentUser != null) {
       currentUser = FirebaseAuth.instance.currentUser;
       hasUser.value = true;
@@ -82,7 +85,6 @@ class AuthController extends GetxController {
 
   // request otp for phone number ex. 9487123123
   Future<void> requestOTP() async {
-    isRescuer.value = false;
     isLoading.value = true;
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: "+63${phoneNumber.value}",
@@ -227,8 +229,6 @@ class AuthController extends GetxController {
         .then((value) async {
       isLoading.value = false;
 
-      isRescuer.isFalse ? signIn(value) : Get.offAllNamed('/login');
-
       await Get.dialog(
         barrierDismissible: false,
         GetDialog(
@@ -243,13 +243,15 @@ class AuthController extends GetxController {
               : 'An email will be sent when your account is ready to use.',
         ),
       );
+      var data = await value.get();
+      isRescuer.isFalse ? signIn(data.data()) : Get.offAllNamed('/login');
     }).catchError((error) {
       isLoading.value = false;
 
       Get.dialog(
         barrierDismissible: false,
         GetDialog(
-          type: 'success',
+          type: 'error',
           title: 'Registration failed',
           hasMessage: true,
           buttonNumber: 0,
@@ -347,6 +349,7 @@ class AuthController extends GetxController {
     );
 
     phoneNumber.value = contactNumber;
+    isRescuer.value = true;
     requestOTP();
     Get.toNamed('/otp-page');
   }
@@ -377,7 +380,7 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<Object?> findUserInfo(String uid) async {
+  Future<Map<String, dynamic>> findUserInfo(String uid) async {
     FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
 
     QuerySnapshot querySnapShot = await firestoreDb
@@ -387,7 +390,14 @@ class AuthController extends GetxController {
         .where('uid', isEqualTo: uid)
         .get();
 
-    return querySnapShot.docs.isNotEmpty ? querySnapShot.docs[0].data() : null;
+    final residentInfo =
+        querySnapShot.docs.first.data() as Map<String, dynamic>?;
+    // if (residentInfo != null) {
+    //   residentInfo['created_at'] =
+    //       (residentInfo['created_at'] as Timestamp).toDate().toIso8601String();
+    // }
+
+    return residentInfo!;
   }
 
   Future<void> updateFCMToken(String uid) async {

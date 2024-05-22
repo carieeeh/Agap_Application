@@ -22,6 +22,7 @@ class UserModel {
   String? status;
   String? fcmToken;
   Timestamp? emailVerifyAt;
+  Timestamp createdAt = Timestamp.now();
   List? additionalInformation;
 
   UserModel({
@@ -79,7 +80,7 @@ class UserModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'uid': uid,
+      // 'uid': uid,
       // 'first_name': firstName,
       // 'middle_name': middleName,
       // 'last_name': lastName,

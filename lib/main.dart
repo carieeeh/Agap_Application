@@ -21,9 +21,6 @@ import 'package:google_fonts/google_fonts.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  print("Handling a background message: ${message.messageId}");
-  print("Message: ${message.data.toString()}");
-
   AwesomeNotifications().createNotification(
     content: NotificationContent(
       id: 2,

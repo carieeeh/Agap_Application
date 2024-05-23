@@ -25,19 +25,21 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> initFunc() async {
-    await _auth.checkAuth();
+    final userUid = _auth.checkAuth();
     // await _auth.setLocalAuth();
 
     _settingsController.handleForegroundMessaging();
 
     Timer(const Duration(seconds: 2), () async {
-      if (_auth.hasUser.isTrue) {
-        await _auth
-            .findUserInfo(_auth.currentUser!.uid)
-            .then((Object? value) async {
+      if (userUid != null) {
+        await _auth.findUserInfo(userUid).then((value) async {
           if (value != null) {
             _auth.signIn(value);
+          } else {
+            Get.offAllNamed('/login');
           }
+        }).catchError((error) {
+          print("SplashError: $error");
         });
       } else {
         Get.offAllNamed('/login');

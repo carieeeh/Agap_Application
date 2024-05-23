@@ -220,7 +220,8 @@ class _RescuerInteractiveMapState extends State<RescuerInteractiveMap> {
                 CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(_auth.userModel!.profile),
+                  backgroundImage: NetworkImage(_auth.userModel!.profile ??
+                      'https://firebasestorage.googleapis.com/v0/b/agap-f4c32.appspot.com/o/profile%2Fperson.png?alt=media&token=947f5244-0157-43ab-8c3e-349ae9699415'),
                 ),
               ],
             ),

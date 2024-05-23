@@ -38,53 +38,17 @@ class AuthController extends GetxController {
     isBioEnabled.value = availableBiometrics.isNotEmpty && isSupported.isTrue;
   }
 
-  Future<void> localAuthenticate() async {
-    final LocalAuthentication auth = LocalAuthentication();
-    isLoading.value = true;
-    if (isBioEnabled.isTrue) {
-      try {
-        bool localAuthenticated = await auth.authenticate(
-            localizedReason: "Authenticate to Login in the system.",
-            options: const AuthenticationOptions(
-              stickyAuth: true,
-            ));
-        if (localAuthenticated) {
-          isAuth.value = localAuthenticated;
-          await findUserInfo(currentUser!.uid).then((Object? value) async {
-            if (value != null) {
-              signIn(value);
-            }
-          });
-        }
-      } on PlatformException catch (error) {
-        Get.dialog(
-          barrierDismissible: false,
-          GetDialog(
-            type: 'error',
-            title: 'Login failed.',
-            hasMessage: true,
-            buttonNumber: 0,
-            hasCustomWidget: false,
-            withCloseButton: true,
-            message: 'Please use the other option. \nError: $error',
-          ),
-        );
-      } finally {
-        isLoading.value = false;
-      }
-    }
-  }
-
-  Future<void> checkAuth() async {
-    hasUser.value = false;
-    if (FirebaseAuth.instance.currentUser != null) {
-      currentUser = FirebaseAuth.instance.currentUser;
+  String? checkAuth() {
+    currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
       hasUser.value = true;
     }
+    return currentUser?.uid;
   }
 
   // request otp for phone number ex. 9487123123
   Future<void> requestOTP() async {
+    // isRescuer.value = false;
     isLoading.value = true;
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: "+63${phoneNumber.value}",
@@ -140,22 +104,21 @@ class AuthController extends GetxController {
           } else {
             signUp(
               UserModel(
-                  uid: currentUser!.uid,
-                  // firstName: 'Guest',
-                  // lastName: DateTime.now().second.toString(),
-                  fullName: "Guest ${DateTime.now().second.toString()}",
-                  role: 'resident',
-                  status: 'accepted',
-                  contactNumber: currentUser!.phoneNumber,
-                  profile:
-                      "https://firebasestorage.googleapis.com/v0/b/agap-f4c32.appspot.com/o/profile%2Fperson.png?alt=media&token=947f5244-0157-43ab-8c3e-349ae9699415"),
+                uid: currentUser!.uid,
+                // firstName: 'Guest',
+                // lastName: DateTime.now().second.toString(),
+                fullName: "Guest ${DateTime.now().second.toString()}",
+                role: 'resident',
+                status: 'accepted',
+                contactNumber: currentUser!.phoneNumber,
+                profile:
+                    "https://firebasestorage.googleapis.com/v0/b/agap-f4c32.appspot.com/o/profile%2Fperson.png?alt=media&token=947f5244-0157-43ab-8c3e-349ae9699415",
+              ),
             );
           }
         }
       });
     }).catchError((error) {
-      isLoading.value = false;
-
       Get.dialog(
         barrierDismissible: false,
         GetDialog(
@@ -168,12 +131,15 @@ class AuthController extends GetxController {
           message: 'Error code: $error',
         ),
       );
+    }).whenComplete(() {
+      isLoading.value = false;
     });
   }
 
   Future signIn(value) async {
-    userModel = UserModel.fromJson(value);
-    await updateFCMToken(currentUser!.uid);
+    var loginData = jsonDecode(jsonEncode(value));
+    userModel = UserModel.fromJson(loginData);
+    await updateFCMToken(userModel!.uid!);
 
     isAuth.value = true;
     isLoading.value = false;
@@ -219,6 +185,7 @@ class AuthController extends GetxController {
   }
 
   Future signUp(UserModel model) async {
+    isLoading.value = true;
     FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
 
     await firestoreDb
@@ -228,6 +195,10 @@ class AuthController extends GetxController {
         .add(model.toJson())
         .then((value) async {
       isLoading.value = false;
+      var userData = await value.get();
+      await value.update({'uid': currentUser!.uid});
+      final res = userData.data();
+      res!['uid'] = currentUser!.uid;
 
       await Get.dialog(
         barrierDismissible: false,
@@ -243,15 +214,13 @@ class AuthController extends GetxController {
               : 'An email will be sent when your account is ready to use.',
         ),
       );
-      var data = await value.get();
-      isRescuer.isFalse ? signIn(data.data()) : Get.offAllNamed('/login');
-    }).catchError((error) {
-      isLoading.value = false;
 
+      isRescuer.isFalse ? signIn(res) : Get.offAllNamed('/login');
+    }).catchError((error) {
       Get.dialog(
         barrierDismissible: false,
         GetDialog(
-          type: 'error',
+          type: 'success',
           title: 'Registration failed',
           hasMessage: true,
           buttonNumber: 0,
@@ -260,6 +229,8 @@ class AuthController extends GetxController {
           message: 'Something went wrong. \n Error: $error',
         ),
       );
+    }).whenComplete(() {
+      isLoading.value = false;
     });
   }
 
@@ -349,7 +320,6 @@ class AuthController extends GetxController {
     );
 
     phoneNumber.value = contactNumber;
-    isRescuer.value = true;
     requestOTP();
     Get.toNamed('/otp-page');
   }
@@ -380,22 +350,16 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<Map<String, dynamic>?> findUserInfo(String uid) async {
+  Future<Object?> findUserInfo(String uid) async {
     FirebaseFirestore firestoreDb = FirebaseFirestore.instance;
-
     QuerySnapshot querySnapShot = await firestoreDb
         .collection("agap_collection")
         .doc(fireStoreDoc)
         .collection('users')
         .where('uid', isEqualTo: uid)
         .get();
-    if (querySnapShot.docs.isNotEmpty) {
-      final residentInfo =
-          querySnapShot.docs.first.data() as Map<String, dynamic>?;
-      return residentInfo!;
-    }
 
-    return null;
+    return querySnapShot.docs.isNotEmpty ? querySnapShot.docs[0].data() : null;
   }
 
   Future<void> updateFCMToken(String uid) async {

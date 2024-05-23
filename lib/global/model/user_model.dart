@@ -9,7 +9,7 @@ class UserModel {
   String? birthday;
   String? address;
   String? role;
-  String profile;
+  String? profile;
   String? contactNumber;
   String? emeContactNumber;
   String? emeContactName;
@@ -57,7 +57,7 @@ class UserModel {
       // firstName: json['first_name'] as String?,
       // middleName: json['middle_name'] as String?,
       // lastName: json['last_name'] as String?,
-      profile: json['profile'] as String,
+      profile: json['profile'] as String?,
       fullName: json['full_name'] as String?,
       bloodType: json['blood_type'] as String?,
       gender: json['gender'] as String?,

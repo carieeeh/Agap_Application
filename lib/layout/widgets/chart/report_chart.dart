@@ -20,40 +20,40 @@ class _ReportChartState extends State<ReportChart> {
     );
     String text;
     switch (value.toInt()) {
-      case 0:
+      case 1:
         text = 'Jan';
         break;
-      case 1:
+      case 2:
         text = 'Feb';
         break;
-      case 2:
+      case 3:
         text = 'Mar';
         break;
-      case 3:
+      case 4:
         text = 'Apr';
         break;
-      case 4:
+      case 5:
         text = 'May';
         break;
-      case 5:
+      case 6:
         text = 'Jun';
         break;
-      case 6:
+      case 7:
         text = 'Jul';
         break;
-      case 7:
+      case 8:
         text = 'Aug';
         break;
-      case 8:
+      case 9:
         text = 'Sep';
         break;
-      case 9:
+      case 10:
         text = 'Oct';
         break;
-      case 10:
+      case 11:
         text = 'Nov';
         break;
-      case 11:
+      case 12:
         text = 'Dec';
         break;
       default:
@@ -164,7 +164,7 @@ class _ReportChartState extends State<ReportChart> {
               sideTitles: SideTitles(
                 showTitles: true,
                 getTitlesWidget: leftTitleWidgets,
-                interval: 1,
+                interval: 5,
                 reservedSize: 36,
               ),
             ),
